@@ -6,8 +6,54 @@ This project won't stop until I have got a job offer.
 
 ## Table of Contents
 
+- [627 Swap Salary](#627)
 - [717 1-bit and 2-bit Characters](#717)
 - [748 Shortest Completing Word](#748)
+
+## 627
+
+Given a table `salary`, such as the one below, that has m=male and f=female values. Swap all f and m values (i.e., change all f values to m and vice versa) with a single update query and no intermediate temp table.
+
+For example:
+
+| id | name | sex | salary |
+|----|------|-----|--------|
+| 1  | A    | m   | 2500   |
+| 2  | B    | f   | 1500   |
+| 3  | C    | m   | 5500   |
+| 4  | D    | f   | 500    |
+
+After running your query, the above salary table should have the following rows:
+
+| id | name | sex | salary |
+|----|------|-----|--------|
+| 1  | A    | f   | 2500   |
+| 2  | B    | m   | 1500   |
+| 3  | C    | f   | 5500   |
+| 4  | D    | m   | 500    |
+
+Solution:
+
+```sql
+-- Solution 1
+UPDATE `salary` SET sex = (
+    CASE sex
+        WHEN 'm' THEN 'f'
+        ELSE 'm'
+    END
+)
+
+-- Solution 2
+UPDATE salary SET sex = CHAR(ASCII(sex) ^ 11);
+-- OR
+UPDATE salary SET sex = CHAR(ASCII('f') ^ ASCII('m') ^ ASCII(sex));
+-- Explanation: 
+-- ASCII('f') = 109
+-- ASCII('m') = 102
+-- 109 ^ 102 = 11
+-- 11 ^ 109 = 102
+-- 11 ^ 102 = 109
+```
 
 ## 717
 
