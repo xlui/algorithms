@@ -7,6 +7,7 @@ This project won't stop until I have got a job offer.
 ## Table of Contents
 
 - [413 Arithmetic Slices](#413)
+- [617 Merge Two Binary Trees](#617)
 - [627 Swap Salary](#627)
 - [717 1-bit and 2-bit Characters](#717)
 - [748 Shortest Completing Word](#748)
@@ -32,13 +33,13 @@ A[P], A[p + 1], ..., A[Q - 1], A[Q] is arithmetic. In particular, this means tha
 
 The function should return the number of arithmetic slices in the array A.
 
-Example:
+**Example:**
 
 > A = [1, 2, 3, 4]
 >
 > return: 3, for 3 arithmetic slices in A: [1, 2, 3], [2, 3, 4] and [1, 2, 3, 4] itself.
 
-Solution:
+**Solution:**
 
 Find the law from the numbers:
 
@@ -49,6 +50,51 @@ Find the law from the numbers:
 > 1, 2, 3, 4, 5, 6, 7 => 15 = 10 + 5 = 1 + 2 + 3 + 4 + 5
 
 And apply the law to another sequences to verify it.
+
+## 617
+
+Given two binary trees and imagine that when you put one of them to cover the other, some nodes of the two trees are overlapped while the others are not.
+
+You need to merge them into a new binary tree. The merge rule is that if two nodes overlap, then sum node values up as the new value of the merged node. Otherwise, the NOT null node will be used as the node of new tree.
+
+**Example 1:**
+
+Input: 
+	Tree 1                     Tree 2                  
+          1                         2                             
+         / \                       / \                            
+        3   2                     1   3                        
+       /                           \   \                      
+      5                             4   7                  
+Output: 
+Merged tree:
+	     3
+	    / \
+	   4   5
+	  / \   \ 
+	 5   4   7
+
+**Note:** The merging process must start from the root nodes of both trees.
+
+**Solution:**
+
+简单的二叉树合并问题，使用递归即可。
+
+```java
+TreeNode node = new TreeNode(t1.val + t2.val);
+node.left = mergeTrees(t1.left, t2.left);
+node.right = mergeTrees(t1.right, t2.right);
+return node;
+```
+
+以上方法似乎比以下方法运行的更快：
+
+```java
+t1.val += t2.val;
+t1.left = mergeTrees(t1.left, t2.left);
+t1.right = mergeTrees(t1.right, t2.right);
+return t1;
+```
 
 ## 627
 
@@ -72,7 +118,7 @@ After running your query, the above salary table should have the following rows:
 | 3  | C    | f   | 5500   |
 | 4  | D    | m   | 500    |
 
-Solution:
+**Solution:**
 
 ```sql
 -- Solution 1
@@ -101,26 +147,26 @@ We have two special characters. The first character can be represented by one bi
 
 Now given a string represented by several bits. Return whether the last character must be a one-bit character or not. The given string will always end with a zero.
 
-Example 1:
+**Example 1:**
 
 > Input: 
 > bits = [1, 0, 0]
 > Output: True
 > Explanation: The only way to decode it is two-bit character and one-bit character. So the last character is one-bit character.
 
-Example 2:
+**Example 2:**
 
 > Input: 
 > bits = [1, 1, 1, 0]
 > Output: False
 > Explanation: The only way to decode it is two-bit character and two-bit character. So the last character is NOT one-bit character.
 
-Note:
+**Note:**
 
 - 1 <= len(bits) <= 1000.
 - bits[i] is always 0 or 1.
 
-Solution:
+**Solution:**
 
 通过索引 i 的跳转，遇到 1 跳两步，遇到 0 跳一步。当 while 循环结束的时候，**通过 i 的最终位置来判断**，如果 i 的位置刚好是 bits 数组最后一个元素，则 true；如果 i 的位置跳过了最后一个元素，则 false。
 
@@ -134,7 +180,7 @@ It is guaranteed an answer exists. If there are multiple answers, return the one
 
 The license plate might have the same letter occurring multiple times. For example, given a `licensePlate` of `"PP"`, the word `"pair"` does not complete the `licensePlate`, but the word `"supper"` does.
 
-Example 1:
+**Example 1:**
 
 > Input: licensePlate = "1s3 PSt", words = ["step", "steps", "stripe", "stepple"]
 > Output: "steps"
@@ -142,20 +188,20 @@ Example 1:
 Note that the answer is not "step", because the letter "s" must occur in the word twice.
 Also note that we ignored case for the purposes of comparing whether a letter exists in the word.
 
-Example 2:
+**Example 2:**
 
 > Input: licensePlate = "1s3 456", words = ["looks", "pest", "stew", "show"]
 > Output: "pest"
 > Explanation: There are 3 smallest length words that contains the letters "s".
 We return the one that occurred first.
 
-Note:
+**Note:**
 
 1. `licensePlate` will be a string with length in range `[1, 7]`.
 1. `licensePlate` will contain digits, spaces, or letters (uppercase or lowercase).
 1. `words` will have a length in the range `[10, 1000]`.
 1. Every `words[i]` will consist of lowercase letters, and have length in range `[1, 15]`.
 
-Solution:
+**Solution:**
 
 使用 Map 存储 word 和 licensePlate 中各个字符的数量，然后通过比较判断 word 是否合法。之后再寻找合法的 word 中最短的。
