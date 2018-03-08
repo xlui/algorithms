@@ -6,12 +6,40 @@ This project won't stop until I have got a job offer.
 
 ## Table of Contents
 
+- [193 Valid Phone Numbers](#193)
 - [284 Peeking Iterator](#284)
 - [413 Arithmetic Slices](#413)
 - [617 Merge Two Binary Trees](#617)
 - [627 Swap Salary](#627)
 - [717 1-bit and 2-bit Characters](#717)
 - [748 Shortest Completing Word](#748)
+
+## 193
+
+Given a text file `file.txt` that contains list of phone numbers (one per line), write a one liner bash script to print all valid phone numbers.
+
+You may assume that a valid phone number must appear in one of the following two formats: (xxx) xxx-xxxx or xxx-xxx-xxxx. (x means a digit)
+
+You may also assume each line in the text file must not contain leading or trailing white spaces.
+
+For example, assume that `file.txt` has the following content:
+
+> 987-123-4567  
+> 123 456 7890  
+> (123) 456-7890
+
+Your script should output the following valid phone numbers:
+
+> 987-123-4567  
+> (123) 456-7890
+
+**Solution:**
+
+只是简单的 grep 和正则表达式用法。
+
+```bash
+grep -P '^(\d{3}-|\(\d{3}\)\ )\d{3}-\d{4}$' file.txt
+```
 
 ## 284
 
@@ -101,8 +129,8 @@ A sequence of number is called arithmetic if it consists of at least three eleme
 
 For example, these are arithmetic sequence:
 
-> 1, 3, 5, 7, 9
-> 7, 7, 7, 7
+> 1, 3, 5, 7, 9  
+> 7, 7, 7, 7  
 > 3, -1, -5, -9
 
 The following sequence is not arithmetic.
@@ -126,11 +154,11 @@ The function should return the number of arithmetic slices in the array A.
 
 Find the law from the numbers:
 
-> 1, 2, 3 => 1
-> 1, 2, 3, 4 => 3 = 1 + 2
-> 1, 2, 3, 4, 5 => 6 = 3 + 3 = 1 + 2 + 3
-> 1, 2, 3, 4, 5, 6 => 10 = 6 + 4 = 1 + 2 + 3 + 4
-> 1, 2, 3, 4, 5, 6, 7 => 15 = 10 + 5 = 1 + 2 + 3 + 4 + 5
+> 1, 2, 3 => 1  
+> 1, 2, 3, 4 => 3 = 1 + 2  
+> 1, 2, 3, 4, 5 => 6 = 3 + 3 = 1 + 2 + 3  
+> 1, 2, 3, 4, 5, 6 => 10 = 6 + 4 = 1 + 2 + 3 + 4  
+> 1, 2, 3, 4, 5, 6, 7 => 15 = 10 + 5 = 1 + 2 + 3 + 4 + 5  
 
 And apply the law to another sequences to verify it.
 
@@ -232,16 +260,16 @@ Now given a string represented by several bits. Return whether the last characte
 
 **Example 1:**
 
-> Input: 
-> bits = [1, 0, 0]
-> Output: True
+> Input:  
+> bits = [1, 0, 0]  
+> Output: True  
 > Explanation: The only way to decode it is two-bit character and one-bit character. So the last character is one-bit character.
 
 **Example 2:**
 
-> Input: 
-> bits = [1, 1, 1, 0]
-> Output: False
+> Input:  
+> bits = [1, 1, 1, 0]  
+> Output: False  
 > Explanation: The only way to decode it is two-bit character and two-bit character. So the last character is NOT one-bit character.
 
 **Note:**
@@ -265,16 +293,16 @@ The license plate might have the same letter occurring multiple times. For examp
 
 **Example 1:**
 
-> Input: licensePlate = "1s3 PSt", words = ["step", "steps", "stripe", "stepple"]
-> Output: "steps"
+> Input: licensePlate = "1s3 PSt", words = ["step", "steps", "stripe", "stepple"]  
+> Output: "steps"  
 > Explanation: The smallest length word that contains the letters "S", "P", "S", and "T".
 Note that the answer is not "step", because the letter "s" must occur in the word twice.
 Also note that we ignored case for the purposes of comparing whether a letter exists in the word.
 
 **Example 2:**
 
-> Input: licensePlate = "1s3 456", words = ["looks", "pest", "stew", "show"]
-> Output: "pest"
+> Input: licensePlate = "1s3 456", words = ["looks", "pest", "stew", "show"]  
+> Output: "pest"  
 > Explanation: There are 3 smallest length words that contains the letters "s".
 We return the one that occurred first.
 
