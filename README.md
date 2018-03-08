@@ -6,11 +6,94 @@ This project won't stop until I have got a job offer.
 
 ## Table of Contents
 
+- [284 Peeking Iterator](#284)
 - [413 Arithmetic Slices](#413)
 - [617 Merge Two Binary Trees](#617)
 - [627 Swap Salary](#627)
 - [717 1-bit and 2-bit Characters](#717)
 - [748 Shortest Completing Word](#748)
+
+## 284
+
+Given an Iterator class interface with methods: `next()` and `hasNext()`, design and implement a PeekingIterator that support the `peek()` operation -- it essentially peek() at the element that will be returned by the next call to next().
+
+Here is an example. Assume that the iterator is initialized to the beginning of the list: `[1, 2, 3]`.
+
+Call `next()` gets you 1, the first element in the list.
+
+Now you call `peek()` and it returns 2, the next element. Calling `next()` after that still return 2.
+
+You call `next()` the final time and it returns 3, the last element. Calling `hasNext()` after that should return false.
+
+Solution:
+
+我使用 Stack 来缓存 next 元素：
+
+```java
+package me.xlui.algo.Problem284;
+
+import java.util.Iterator;
+import java.util.Stack;
+
+public class PeekingIterator implements Iterator<Integer> {
+    private Iterator<Integer> iterator;
+    private Stack<Integer> nextValue;
+
+    public PeekingIterator(Iterator<Integer> iterator) {
+        this.iterator = iterator;
+        this.nextValue = new Stack<>();
+    }
+
+    public Integer peek() {
+        if (this.nextValue.isEmpty()) {
+            this.nextValue.push(this.iterator.next());
+        }
+        return this.nextValue.peek();
+    }
+
+    @Override
+    public boolean hasNext() {
+        return this.nextValue.isEmpty() ? iterator.hasNext() : true;
+    }
+
+    @Override
+    public Integer next() {
+        return this.nextValue.isEmpty() ? this.iterator.next() : this.nextValue.pop();
+    }
+}
+```
+
+但是更快的做法是直接使用 Integer 保存：
+
+```java
+class PeekingIterator implements Iterator<Integer> {
+    Iterator mIterator;
+    Integer next = null; 
+
+    public PeekingIterator(Iterator<Integer> iterator) {
+        mIterator = iterator;   
+        if (mIterator.hasNext()) {
+            next = (Integer)mIterator.next();
+        } 
+    }
+
+    public Integer peek() {
+        return next;
+    }
+
+    @Override
+    public Integer next() {
+        Integer res = next;
+        next = mIterator.hasNext() ? (Integer)mIterator.next() : null;
+        return res;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return next!=null;
+    }
+}
+```
 
 ## 413
 

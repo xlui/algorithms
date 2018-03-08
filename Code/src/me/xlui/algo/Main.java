@@ -1,10 +1,21 @@
 package me.xlui.algo;
 
-import me.xlui.algo.Problem413.Solution;
+import me.xlui.algo.Problem284.PeekingIteratorOptimize;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class Main {
 	public static void main(String[] args) {
-		int[] A = new int[]{1, 2, 3, 4, 5, 6, 7};
-		System.out.println(Solution.numberOfArithmeticSlices(A));
+		List<Integer> list = Arrays.asList(1, 2, 3);
+		PeekingIteratorOptimize iterator = new PeekingIteratorOptimize(list.iterator());
+		System.out.println(iterator.peek());
+		System.out.println(iterator.next());
+
+		System.out.println(iterator.peek());
+		System.out.println(iterator.next());
+
+		System.out.println(iterator.hasNext());
+		System.out.println(iterator.next());
 	}
 }
