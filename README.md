@@ -8,6 +8,7 @@ This project won't stop until I have got a job offer.
 
 - [193 Valid Phone Numbers](#193)
 - [284 Peeking Iterator](#284)
+- [400 Nth Digit](#400)
 - [413 Arithmetic Slices](#413)
 - [526 Beautiful Arrangement](#526)
 - [617 Merge Two Binary Trees](#617)
@@ -123,6 +124,46 @@ class PeekingIterator implements Iterator<Integer> {
     }
 }
 ```
+
+## 400
+
+Find the n^th digit of the infinite integer sequence 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ...
+
+**Note:**
+
+n is positive and will fit within the range of a 32-bit signed integer (n < 2^31).
+
+**Example 1:**
+
+> Input:  
+> 3
+>
+> Output:  
+> 3
+
+**Example 2:**
+
+> Input:  
+> 11
+>
+> Output:  
+> 0
+>
+> Explanation:  
+> The 11th digit of the sequence 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ... is a 0, which is part of the number 10.
+
+**Solution:**
+
+分析位数规律有：
+
+1. 个位数：1-9，一共 9 个，共 1*9 个数字
+1. 十位数：10-99，一共 90 个，共 2*90 个数字
+1. 百位数：100-999，一共 900 个，共 3*900 个数字
+1. 千位数：1000-9999，一共 9000 个，共 4*9000 个数字
+
+依此类推，我们可以先定位出给定 n 对应数字的位数，然后得出其在相应位数的数字中的位置，同时也可以得到 n 对应于数字中的位置。
+
+然后求出数字，得出要求的数字。
 
 ## 413
 
