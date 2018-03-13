@@ -10,6 +10,7 @@ This project won't stop until I have got a job offer.
 - [284 Peeking Iterator](#284)
 - [400 Nth Digit](#400)
 - [413 Arithmetic Slices](#413)
+- [517 Super Washing Machines](#517)
 - [526 Beautiful Arrangement](#526)
 - [617 Merge Two Binary Trees](#617)
 - [627 Swap Salary](#627)
@@ -55,7 +56,7 @@ Now you call `peek()` and it returns 2, the next element. Calling `next()` after
 
 You call `next()` the final time and it returns 3, the last element. Calling `hasNext()` after that should return false.
 
-Solution:
+**Solution:**
 
 我使用 Stack 来缓存 next 元素：
 
@@ -203,6 +204,69 @@ Find the law from the numbers:
 > 1, 2, 3, 4, 5, 6, 7 => 15 = 10 + 5 = 1 + 2 + 3 + 4 + 5  
 
 And apply the law to another sequences to verify it.
+
+## 517
+
+You have **n** super washing machines on a line. Initially, each washing machine has some dresses or is empty.
+
+For each **move**, you could choose **any m** (1 ≤ m ≤ n) washing machines, and pass **one dress** of each washing machine to one of its adjacent washing machines **at the same time**.
+
+Given an integer array representing the number of dresses in each washing machine from left to right on the line, you should find the **minimum number of moves** to make all the washing machines have the same number of dresses. If it is not possible to do it, return -1.
+
+**Example 1**
+
+> Input: [1,0,5]
+>
+> Output: 3
+>
+> Explanation:   
+1st move:    1     0 <-- 5    =>    1     1     4  
+2nd move:    1 <-- 1 <-- 4    =>    2     1     3    
+3rd move:    2     1 <-- 3    =>    2     2     2   
+
+**Example 2**
+
+> Input: [0,3,0]
+>
+> Output: 2
+>
+> Explanation:   
+1st move:    0 <-- 3     0    =>    1     2     0    
+2nd move:    1     2 --> 0    =>    1     1     1     
+
+**Example 3**
+
+> Input: [0,2,0]
+>
+> Output: -1
+>
+> Explanation:  
+> It's impossible to make all the three washing machines have the same number of dresses. 
+
+**Note:**
+
+1. The range of n is [1, 10000].
+1. The range of dresses number in a super washing machine is [0, 1e5].
+
+**Solution:**
+
+本题使用动态规划来解。
+
+假设有四个洗衣机，初始状态为：[0, 0, 11, 5];
+
+计算可知最终状态会变成 [4, 4, 4, 4]；
+
+将二者做差得到：[-4, -4, 7, 1]，其中负值表示当前洗衣机还需要的衣服数，正值表示当前洗衣机多余的衣服数
+
+我们要做的是将这个差值数组每一项都变为 0；
+
+对于第一个洗衣机，需要四件衣服可以从第二个洗衣机得到，那么就可以把 -4 转移给二号洗衣机，得到 [0, -8, 7, 1]；
+
+此时二号洗衣机需要 8 件衣服，转移给三号：[0, 0, -1, 1]；
+
+三号需要移动一次，从四号处获取剩下的一件；
+
+移动的最大次数就是差值数组中出现的绝对值最大的数字；
 
 ## 526
 

@@ -1,9 +1,10 @@
 package me.xlui.algo;
 
-import me.xlui.algo.Problem400.Solution;
+import me.xlui.algo.Problem517.Solution;
 
 public class Main {
 	public static void main(String[] args) {
-		System.out.println(Solution.findNthDigit(2147483647));
+		int[] numbers = new int[]{0, 0, 11, 5};
+		System.out.println(Solution.findMinMoves(numbers));
 	}
 }
