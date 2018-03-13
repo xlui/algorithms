@@ -7,6 +7,7 @@ This project won't stop until I have got a job offer.
 ## Table of Contents
 
 - [193 Valid Phone Numbers](#193)
+- [196 Delete Duplicate Emails](#196)
 - [284 Peeking Iterator](#284)
 - [400 Nth Digit](#400)
 - [413 Arithmetic Slices](#413)
@@ -43,6 +44,43 @@ Your script should output the following valid phone numbers:
 ```bash
 grep -P '^(\d{3}-|\(\d{3}\)\ )\d{3}-\d{4}$' file.txt
 ```
+
+## 196
+
+Write a SQL query to delete all duplicate email entries in a table named `Person`, keeping only unique emails based on its smallest **Id**.
+
+Id | Email
+---|---
+1 | john@example.com
+2 | bob@example.com
+3 | john@example.com
+
+Id is the primary key column for this table.
+
+For example, after running your query, the above `Person` table should have the following rows:
+
+Id | Email
+---|---
+1 | john@example.com
+2 | bob@example.com
+
+**Solution:**
+
+简单解法：
+
+```sql
+DELETE p1 FROM Person p1, Person p2 WHERE p1.Email = p2.Email AND p1.Id > p2.Id
+```
+
+更高效的解法：
+
+```sql
+DELETE FROM Person WHERE Id NOT IN (SELECT p.Id FROM (SELECT Min(Id) AS Id FROM Person GROUP BY Email) p);
+```
+
+思路是先按照 Email 进行分组，然后从分组中选出每一组最小的 Id，最后删除不在最小 Id 表中的 Id。
+
+此答案打败了 100% 的提交者。
 
 ## 284
 
