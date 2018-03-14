@@ -11,6 +11,7 @@ This project won't stop until I have got a job offer.
 - [284 Peeking Iterator](#284)
 - [400 Nth Digit](#400)
 - [413 Arithmetic Slices](#413)
+- [417 Pacific Atlantic Water Flow](#417)
 - [517 Super Washing Machines](#517)
 - [526 Beautiful Arrangement](#526)
 - [617 Merge Two Binary Trees](#617)
@@ -242,6 +243,86 @@ Find the law from the numbers:
 > 1, 2, 3, 4, 5, 6, 7 => 15 = 10 + 5 = 1 + 2 + 3 + 4 + 5  
 
 And apply the law to another sequences to verify it.
+
+## 417
+
+Given an `m` x `n` matrix of non-negative integers representing the height of each unit cell in a continent, the "Pacific ocean" touches the left and top edges of the matrix and the "Atlantic ocean" touches the right and bottom edges.
+
+Water can only flow in four directions (up, down, left, or right) from a cell to another one with height equal or lower.
+
+Find the list of grid coordinates where water can flow to both the Pacific and Atlantic ocean.
+
+**Note:**
+
+1. The order of returned grid coordinates does not matter.
+1. Both m and n are less than 150.
+
+**Example:**
+
+> Given the following 5x5 matrix:
+>
+>  Pacific ~   ~   ~   ~   ~  
+>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~  1   2   2   3  (5) &nbsp;&nbsp;*  
+>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~  3   2   3  (4) (4) *  
+>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~  2   4  (5)  3   1  &nbsp;&nbsp;*  
+>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~ (6) (7)  1   4   5  *  
+>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~ (5)  1   1   2   4  &nbsp;&nbsp;*  
+>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*  &nbsp;*   *   *   * Atlantic
+>
+> Return:
+>
+> [[0, 4], [1, 3], [1, 4], [2, 2], [3, 0], [3, 1], [4, 0]] (positions with parentheses in above matrix).
+
+**Solution:**
+
+我的思路是从海洋边缘开始处理，如果相邻节点的高度高于或者等于当前结点，就将其标记为 true。用两个 Boolean 数组来表示两个海洋，当某一位置对应两个数组的元素同时为 true 的时候就说明符合条件。
+
+```java
+private static int[] dx = {0, 0, -1, 1};
+private static int[] dy = {1, -1, 0, 0};
+
+public static List<int[]> pacificAtlantic(int[][] matrix) {
+    List<int[]> ret = new ArrayList<>();
+    if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+        return ret;
+    }
+    int n = matrix.length, m = matrix[0].length;
+    boolean[][] pacificVisited = new boolean[n][m];
+    boolean[][] atlanticVisited = new boolean[n][m];
+    // 从每一行的首尾对每一个元素进行判断，首代表 pacific，尾代表 Atlantic
+    for (int i = 0; i < n; i++) {
+        flow(pacificVisited, matrix, i, 0, n, m);
+        flow(atlanticVisited, matrix, i, m - 1, n, m);
+    }
+    // 从每一列的首尾对每一个元素进行判断，首代表 pacific，尾代表 Atlantic
+    for (int i = 0; i < m; i++) {
+        flow(pacificVisited, matrix, 0, i, n, m);
+        flow(atlanticVisited, matrix, n - 1, i, n, m);
+    }
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            if (pacificVisited[i][j] && atlanticVisited[i][j]) {
+                ret.add(new int[]{i, j});
+            }
+        }
+    }
+    return ret;
+}
+
+// 流向的含义是：当前元素小于或者等于下一个（前后左右）元素，则可以流通
+private static void flow(boolean[][] visited, int[][] matrix, int x, int y, int n, int m) {
+    visited[x][y] = true;
+    for (int i = 0; i < 4; i++) {
+        int nx = x + dx[i];
+        int ny = y + dy[i];
+        if (nx >= 0 && nx < n && ny >= 0 && ny < m) {
+            if (!visited[nx][ny] && matrix[nx][ny] >= matrix[x][y]) {
+                flow(visited, matrix, nx, ny, n, m);
+            }
+        }
+    }
+}
+```
 
 ## 517
 
