@@ -1,12 +1,9 @@
 # Dive Into Offer
 
-In order to get a job offer, I'm now training myself through [LeetCode](https://leetcode.com), and I'd like to share my code here.
+[LeetCode](https://leetcode.com) 解题集 :+1: :sunglasses:。
 
-This project won't stop until I have got a job offer.
+## 目录
 
-## Table of Contents
-
-- [中文](readme_zh_CN.md)
 - [193. Valid Phone Numbers](#193)
 - [196. Delete Duplicate Emails](#196)
 - [284. Peeking Iterator](#284)
@@ -22,26 +19,33 @@ This project won't stop until I have got a job offer.
 
 ## 193
 
-Given a text file `file.txt` that contains list of phone numbers (one per line), write a one liner bash script to print all valid phone numbers.
+有一个文本文件 `file.txt` 包含着一系列电话号码（一行一个），写出一个一行的 Bash Script 来打印出所有合法的电话号码。
 
-You may assume that a valid phone number must appear in one of the following two formats: (xxx) xxx-xxxx or xxx-xxx-xxxx. (x means a digit)
+合法的电话号码只会是下面两种格式：
 
-You may also assume each line in the text file must not contain leading or trailing white spaces.
+1. (xxx) xxx-xxxx
+1. xxx-xxx-xxxx
 
-For example, assume that `file.txt` has the following content:
+`x` 代表着数字。
+
+同时，每一行的开始和结束也不会包含空格。
+
+例如，对于文件 `file.txt`：
 
 > 987-123-4567  
 > 123 456 7890  
 > (123) 456-7890
 
-Your script should output the following valid phone numbers:
+脚本应该输出：
 
 > 987-123-4567  
 > (123) 456-7890
 
-**Solution:**
+**解法：**
 
 只是简单的 grep 和正则表达式用法。
+
+两种合法格式只有前边不同，可以使用 `|` 来表示不同的情况。
 
 ```bash
 grep -P '^(\d{3}-|\(\d{3}\)\ )\d{3}-\d{4}$' file.txt
@@ -49,7 +53,7 @@ grep -P '^(\d{3}-|\(\d{3}\)\ )\d{3}-\d{4}$' file.txt
 
 ## 196
 
-Write a SQL query to delete all duplicate email entries in a table named `Person`, keeping only unique emails based on its smallest **Id**.
+写出一个 SQL 语句来删除 `Person` 表中所有重复的 email 项，只保留重复 email 项中 **Id** 最小的项。
 
 Id | Email
 ---|---
@@ -57,16 +61,17 @@ Id | Email
 2 | bob@example.com
 3 | john@example.com
 
-Id is the primary key column for this table.
 
-For example, after running your query, the above `Person` table should have the following rows:
+Id 是表的主键.
+
+例如，在运行语句后，上述 `Person` 表应该变成以下状态：
 
 Id | Email
 ---|---
 1 | john@example.com
 2 | bob@example.com
 
-**Solution:**
+**解法：**
 
 简单解法：
 
@@ -80,23 +85,23 @@ DELETE p1 FROM Person p1, Person p2 WHERE p1.Email = p2.Email AND p1.Id > p2.Id
 DELETE FROM Person WHERE Id NOT IN (SELECT p.Id FROM (SELECT Min(Id) AS Id FROM Person GROUP BY Email) p);
 ```
 
-思路是先按照 Email 进行分组，然后从分组中选出每一组最小的 Id，最后删除不在最小 Id 表中的 Id。
+思路是先按照 Email 进行分组，并从分组中选出每一组最小的 Id，然后删除不在最小 Id 表中的 Id。
 
 此答案打败了 100% 的提交者。
 
 ## 284
 
-Given an Iterator class interface with methods: `next()` and `hasNext()`, design and implement a PeekingIterator that support the `peek()` operation -- it essentially peek() at the element that will be returned by the next call to next().
+给定一个 Iterator 类接口，接口中有方法 `next()` 和 `hasNext()`。设计并实现一个 `PeekingIterator` 类，让它支持 `peek()` 方法 —— 它返回下一次调用 `next()` 方法要返回的值。
 
-Here is an example. Assume that the iterator is initialized to the beginning of the list: `[1, 2, 3]`.
+例如，假设迭代器被初始化为列表 `[1, 2, 3]` 的开始。
 
-Call `next()` gets you 1, the first element in the list.
+调用 `next()` 方法返回列表的第一个元素 `1`。
 
-Now you call `peek()` and it returns 2, the next element. Calling `next()` after that still return 2.
+现在调用 `peek()` 方法会返回列表的第二个元素 `2`。调用 `next()` 方法也返回 `2`。
 
-You call `next()` the final time and it returns 3, the last element. Calling `hasNext()` after that should return false.
+最后，调用 `next()` 方法返回最后一个元素 `3`，调用 `hasNext()` 方法返回 `false`。
 
-**Solution:**
+**解法：**
 
 我使用 Stack 来缓存 next 元素：
 
@@ -168,13 +173,13 @@ class PeekingIterator implements Iterator<Integer> {
 
 ## 400
 
-Find the n^th digit of the infinite integer sequence 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ...
+找到无限整数序列 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ... 的第 n 个元素。
 
-**Note:**
+**注意：**
 
-n is positive and will fit within the range of a 32-bit signed integer (n < 2^31).
+n 是整数，并且 n 是 32 位有符号整数（n < 2^31）。
 
-**Example 1:**
+**例一：**
 
 > Input:  
 > 3
@@ -182,7 +187,7 @@ n is positive and will fit within the range of a 32-bit signed integer (n < 2^31
 > Output:  
 > 3
 
-**Example 2:**
+**例二：**
 
 > Input:  
 > 11
@@ -190,10 +195,10 @@ n is positive and will fit within the range of a 32-bit signed integer (n < 2^31
 > Output:  
 > 0
 >
-> Explanation:  
-> The 11th digit of the sequence 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ... is a 0, which is part of the number 10.
+> 解释:  
+> 序列 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ... 的第 11 个元素是一个 0，是 10 的一部分。
 
-**Solution:**
+**解法：**
 
 分析位数规律有：
 
@@ -202,40 +207,39 @@ n is positive and will fit within the range of a 32-bit signed integer (n < 2^31
 1. 百位数：100-999，一共 900 个，共 3*900 个数字
 1. 千位数：1000-9999，一共 9000 个，共 4*9000 个数字
 
-依此类推，我们可以先定位出给定 n 对应数字的位数，然后得出其在相应位数的数字中的位置，同时也可以得到 n 对应于数字中的位置。
+依此类推，我们可以先定位出给定 n 对应数字的位数（个、十、百、千....），然后得出其在相应位数的数字中的位置，同时也可以得到 n 对应于数字中的位置。
 
 然后求出数字，得出要求的数字。
 
 ## 413
 
-A sequence of number is called arithmetic if it consists of at least three elements and if the difference between any two consecutive elements is the same.
+如果一个序列包含至少三个元素，并且任意两个元素之间的差值相等，那么就称这个序列为 arithmetic。
 
-For example, these are arithmetic sequence:
+例如，以下是三个 arithmetic 序列：
 
 > 1, 3, 5, 7, 9  
 > 7, 7, 7, 7  
 > 3, -1, -5, -9
 
-The following sequence is not arithmetic.
+下面这个序列不是 arithmetic：
 
 > 1, 1, 2, 5, 7
 
-A zero-indexed array A consisting of N numbers is given. A slice of that array is any pair of integers (P, Q) such that 0 <= P < Q < N.
+给定一个从 0 开始计数的包含 N 个元素的数组 A。数组的一个切片是一系列整数元素（P, Q），并且 0 <= P < Q < N。
 
-A slice (P, Q) of array A is called arithmetic if the sequence:
-A[P], A[p + 1], ..., A[Q - 1], A[Q] is arithmetic. In particular, this means that P + 1 < Q.(And this means the sequence is at least 3 elements)
+如果数组 A 的切片 （P，Q）满足条件 A[P], A[p + 1], ..., A[Q - 1], A[Q]，那么称这个切片是 arithmetic。特别的说，这意味着 P + 1 < Q（并且该序列至少三个元素）。
 
-The function should return the number of arithmetic slices in the array A.
+函数需要返回数组 A 中所有的 arithmetic 切片的个数
 
-**Example:**
+**例子：**
 
 > A = [1, 2, 3, 4]
 >
 > return: 3, for 3 arithmetic slices in A: [1, 2, 3], [2, 3, 4] and [1, 2, 3, 4] itself.
 
-**Solution:**
+**解法：**
 
-Find the law from the numbers:
+找出其中的规律，仔细分析后发现适用于动态规划。
 
 > 1, 2, 3 => 1  
 > 1, 2, 3, 4 => 3 = 1 + 2  
@@ -243,24 +247,22 @@ Find the law from the numbers:
 > 1, 2, 3, 4, 5, 6 => 10 = 6 + 4 = 1 + 2 + 3 + 4  
 > 1, 2, 3, 4, 5, 6, 7 => 15 = 10 + 5 = 1 + 2 + 3 + 4 + 5  
 
-And apply the law to another sequences to verify it.
-
 ## 417
 
-Given an `m` x `n` matrix of non-negative integers representing the height of each unit cell in a continent, the "Pacific ocean" touches the left and top edges of the matrix and the "Atlantic ocean" touches the right and bottom edges.
+给定一个 `m` * `n` 的非负整数矩阵代表着每一个大陆上一个独特细胞的高度。假设太平洋接着矩阵的左边和顶边，大西洋接着矩阵的矩阵的右边和底边。
 
-Water can only flow in four directions (up, down, left, or right) from a cell to another one with height equal or lower.
+水只能通过四个方向（上、下、左、右）从一个细胞流向另一个**高度相等或者更小**的细胞
 
-Find the list of grid coordinates where water can flow to both the Pacific and Atlantic ocean.
+找到可以同时流向太平洋和大西洋的细胞的坐标。
 
-**Note:**
+**注意：**
 
-1. The order of returned grid coordinates does not matter.
-1. Both m and n are less than 150.
+1. 返回坐标的顺序不重要个
+1. m 和 n 的值都小于 150
 
-**Example:**
+**示例：**
 
-> Given the following 5x5 matrix:
+> 给定以下 5x5 的矩阵:
 >
 >  Pacific ~   ~   ~   ~   ~  
 >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~  1   2   2   3  (5) &nbsp;&nbsp;*  
@@ -270,11 +272,11 @@ Find the list of grid coordinates where water can flow to both the Pacific and A
 >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~ (5)  1   1   2   4  &nbsp;&nbsp;*  
 >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*  &nbsp;*   *   *   * Atlantic
 >
-> Return:
+> 返回:
 >
-> [[0, 4], [1, 3], [1, 4], [2, 2], [3, 0], [3, 1], [4, 0]] (positions with parentheses in above matrix).
+> [[0, 4], [1, 3], [1, 4], [2, 2], [3, 0], [3, 1], [4, 0]] (细胞的坐标).
 
-**Solution:**
+**解法：**
 
 我的思路是从海洋边缘开始处理，如果相邻节点的高度高于或者等于当前结点，就将其标记为 true。用两个 Boolean 数组来表示两个海洋，当某一位置对应两个数组的元素同时为 true 的时候就说明符合条件。
 
@@ -327,48 +329,48 @@ private static void flow(boolean[][] visited, int[][] matrix, int x, int y, int 
 
 ## 517
 
-You have **n** super washing machines on a line. Initially, each washing machine has some dresses or is empty.
+你有 **n** 个超级洗衣机排列一行。初始时，每个洗衣机里有的有一些衣服，有的没有。
 
-For each **move**, you could choose **any m** (1 ≤ m ≤ n) washing machines, and pass **one dress** of each washing machine to one of its adjacent washing machines **at the same time**.
+对于每一步**移动**，你可以选择**任意 m 个**（1 ≤ m ≤ n）洗衣机，并且**同时**传递**一件衣服**到它相邻的洗衣机里。
 
-Given an integer array representing the number of dresses in each washing machine from left to right on the line, you should find the **minimum number of moves** to make all the washing machines have the same number of dresses. If it is not possible to do it, return -1.
+给定一个整数数组代表每个洗衣机里衣服的数量，找出**最小移动次数**使得所有的洗衣机里都含有相同数目的衣服。如果不可能，返回 -1。
 
-**Example 1**
+**例一：**
 
-> Input: [1,0,5]
+> 输入: [1,0,5]
 >
-> Output: 3
+> 输出: 3
 >
-> Explanation:   
-1st move:    1     0 <-- 5    =>    1     1     4  
-2nd move:    1 <-- 1 <-- 4    =>    2     1     3    
-3rd move:    2     1 <-- 3    =>    2     2     2   
+> 解释:   
+第一次移动:    1     0 <-- 5    =>    1     1     4  
+第二次移动:    1 <-- 1 <-- 4    =>    2     1     3    
+第三次移动:    2     1 <-- 3    =>    2     2     2   
 
-**Example 2**
+**例二：**
 
-> Input: [0,3,0]
+> 输入: [0,3,0]
 >
-> Output: 2
+> 输出: 2
 >
-> Explanation:   
-1st move:    0 <-- 3     0    =>    1     2     0    
-2nd move:    1     2 --> 0    =>    1     1     1     
+> 解释:   
+第一次移动:    0 <-- 3     0    =>    1     2     0    
+第二次移动:    1     2 --> 0    =>    1     1     1     
 
-**Example 3**
+**例三：**
 
-> Input: [0,2,0]
+> 输入: [0,2,0]
 >
-> Output: -1
+> 输出: -1
 >
-> Explanation:  
-> It's impossible to make all the three washing machines have the same number of dresses. 
+> 解释:  
+> 不可能使得所有的洗衣机里含有相同数目的衣服。 
 
-**Note:**
+**注意：**
 
-1. The range of n is [1, 10000].
-1. The range of dresses number in a super washing machine is [0, 1e5].
+1. n 的范围是 [1, 10000].
+1. 洗衣机中衣服的数目范围是 [0, 1e5].
 
-**Solution:**
+**解法：**
 
 本题使用动态规划来解。
 
@@ -390,18 +392,18 @@ Given an integer array representing the number of dresses in each washing machin
 
 ## 526
 
-Suppose you have **N** integers from 1 to N. We define a beautiful arrangement as an array that is constructed by these **N** numbers successfully if one of the following is true for the ith position (1 <= i <= N) in this array:
+假设你有从 1 到 N 共 **N** 个整数。我们定义一个 “beautiful arrangement” 表示着：由这 N 个元素构成的数组的第 i 个元素（1 <= i <= N）满足以下两个条件之一：
 
-1. The number at the ith position is divisible by **i**.
-1. **i** is divisible by the number at the ith position.
+1. i 位置元素的值可以被 **i** 整除；
+1. **i** 可以被 i 位置元素的值整除。
 
-Now given N, how many beautiful arrangements can you construct?
+现在给定 N，返回 “beautiful arrangement” 的个数。
 
-**Example 1:**
+**示例1：**
 
-> Input: 2  
-> Output: 2  
-> Explanation: 
+> 输入: 2  
+> 输出: 2  
+> 解释: 
 >
 > The first beautiful arrangement is [1, 2]:
 >
@@ -415,11 +417,11 @@ Now given N, how many beautiful arrangements can you construct?
 >
 > Number at the 2nd position (i=2) is 1, and i (i=2) is divisible by 1.
 
-**Note:**
+**注意：**
 
-1. **N** is a positive integer and will not exceed 15.
+1. **N** 是整数并且不会超过 15。
 
-**Solution:**
+**解法：**
 
 这是标准的应用回溯算法的地方：
 
@@ -461,20 +463,20 @@ class Solution {
 
 ## 617
 
-Given two binary trees and imagine that when you put one of them to cover the other, some nodes of the two trees are overlapped while the others are not.
+给定两个二叉树准备进行覆盖，一些结点可能同时出现在两个树，一些可能没有。
 
-You need to merge them into a new binary tree. The merge rule is that if two nodes overlap, then sum node values up as the new value of the merged node. Otherwise, the NOT null node will be used as the node of new tree.
+你需要把这两颗树合并为一颗新的二叉树。合并的规则是，如果两个结点重复，将它们的和作为新的结点的值。否则，非空结点会被用作新树的结点。
 
-**Example 1:**
+**示例1：**
 
-Input: 
+输入: 
 	Tree 1                     Tree 2                  
           1                         2                             
          / \                       / \                            
         3   2                     1   3                        
        /                           \   \                      
       5                             4   7                  
-Output: 
+输出: 
 Merged tree:
 	     3
 	    / \
@@ -482,9 +484,11 @@ Merged tree:
 	  / \   \ 
 	 5   4   7
 
-**Note:** The merging process must start from the root nodes of both trees.
+**注意：** 
 
-**Solution:**
+合并的过程必须从两棵树的根结点开始。
+
+**解法：**
 
 简单的二叉树合并问题，使用递归即可。
 
@@ -506,9 +510,9 @@ return t1;
 
 ## 627
 
-Given a table `salary`, such as the one below, that has m=male and f=female values. Swap all f and m values (i.e., change all f values to m and vice versa) with a single update query and no intermediate temp table.
+给定一个数据库表 `salary`，其中 m 代表着 male，f 代表着 female。用一条 SQL 语句并且不使用中间表交换其中所有的 f 和 m 的值。（例如，将所有的 f 改为 m，将所有的 m 改为 f）
 
-For example:
+例如：
 
 | id | name | sex | salary |
 |----|------|-----|--------|
@@ -517,7 +521,7 @@ For example:
 | 3  | C    | m   | 5500   |
 | 4  | D    | f   | 500    |
 
-After running your query, the above salary table should have the following rows:
+执行 SQL 语句后：
 
 | id | name | sex | salary |
 |----|------|-----|--------|
@@ -526,7 +530,9 @@ After running your query, the above salary table should have the following rows:
 | 3  | C    | f   | 5500   |
 | 4  | D    | m   | 500    |
 
-**Solution:**
+**解法：**
+
+使用 CASE WHEN：
 
 ```sql
 -- Solution 1
@@ -536,6 +542,8 @@ UPDATE `salary` SET sex = (
         ELSE 'm'
     END
 )
+
+使用按位与：
 
 -- Solution 2
 UPDATE salary SET sex = CHAR(ASCII(sex) ^ 11);
