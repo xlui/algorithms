@@ -1,18 +1,20 @@
 package me.xlui.algo;
 
-import me.xlui.algo.Problem010.Solution;
+import me.xlui.algo.Problem406.Solution;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-		Assert.assertFalse(Solution.isMatch("aa", "a"));
-		Assert.assertTrue(Solution.isMatch("aa", "aa"));
-		Assert.assertFalse(Solution.isMatch("aaa", "aa"));
-		Assert.assertTrue(Solution.isMatch("aa", "a*"));
-		Assert.assertTrue(Solution.isMatch("aa", ".*"));
-		Assert.assertTrue(Solution.isMatch("ab", ".*"));
-		Assert.assertTrue(Solution.isMatch("aab", "c*a*b"));
-		Assert.assertFalse(Solution.isMatch("aaba", "ab*a*c*a"));
-		Assert.assertFalse(Solution.isMatch("ab", ".*c"));
-		System.out.println("pass!");
+		int[][] people = new int[][]{
+			new int[]{7, 0},
+			new int[]{4, 4},
+			new int[]{7, 1},
+			new int[]{5, 0},
+			new int[]{6, 1},
+			new int[]{5, 2},
+		};
+		people = Solution.reconstructQueue(people);
+		for (int[] person : people) {
+			System.out.println(person[0] + " " + person[1]);
+		}
 	}
 }

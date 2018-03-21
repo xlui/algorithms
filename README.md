@@ -12,6 +12,7 @@ This project won't stop until I have got a job offer.
 - [196. Delete Duplicate Emails](#196)
 - [284. Peeking Iterator](#284)
 - [400. Nth Digit](#400)
+- [406. Queue Reconstruction by Height](#406)
 - [413. Arithmetic Slices](#413)
 - [417. Pacific Atlantic Water Flow](#417)
 - [517. Super Washing Machines](#517)
@@ -290,6 +291,34 @@ n is positive and will fit within the range of a 32-bit signed integer (n < 2^31
 依此类推，我们可以先定位出给定 n 对应数字的位数，然后得出其在相应位数的数字中的位置，同时也可以得到 n 对应于数字中的位置。
 
 然后求出数字，得出要求的数字。
+
+## 406
+
+Suppose you have a random list of people standing in a queue. Each person is described by a pair of integers `(h, k)`, where `h` is the height of the person and `k` is the number of people in front of this person who have a height greater than or equal to `h`. Write an algorithm to reconstruct the queue.
+
+**Note:**
+
+The number of people is less than 1,100.
+
+**Example:**
+
+```
+Input:
+[[7,0], [4,4], [7,1], [5,0], [6,1], [5,2]]
+
+Output:
+[[5,0], [7,0], [5,2], [6,1], [4,4], [7,1]]
+```
+
+**Solution:**
+
+一种十分巧妙的解法是：先对 people 进行倒序排序，按照 `h` 排序，如果 `h` 相等则按照 `k` 排序。
+
+然后以 `k` 为索引往一个新的列表中插入。
+
+这种方法利用了排序后的有序性和题目规则限制。
+
+另外，匿名内部类的实现方式执行起来似乎比 lambda 表达式快一点点。
 
 ## 413
 
