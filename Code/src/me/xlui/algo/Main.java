@@ -1,20 +1,17 @@
 package me.xlui.algo;
 
-import me.xlui.algo.Problem406.Solution;
+import me.xlui.algo.Problem101.Solution;
+import me.xlui.algo.Problem101.TreeNode;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-		int[][] people = new int[][]{
-			new int[]{7, 0},
-			new int[]{4, 4},
-			new int[]{7, 1},
-			new int[]{5, 0},
-			new int[]{6, 1},
-			new int[]{5, 2},
-		};
-		people = Solution.reconstructQueue(people);
-		for (int[] person : people) {
-			System.out.println(person[0] + " " + person[1]);
-		}
+		TreeNode treeNode = new TreeNode(1);
+		treeNode.left = new TreeNode(2);
+		treeNode.right = new TreeNode(2);
+		treeNode.left.left = new TreeNode(3);
+		treeNode.left.right = new TreeNode(4);
+		treeNode.right.left = new TreeNode(4);
+		treeNode.right.right = new TreeNode(3);
+		System.out.println(Solution.deque(treeNode));
 	}
 }

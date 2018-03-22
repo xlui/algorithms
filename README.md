@@ -8,6 +8,7 @@ This project won't stop until I have got a job offer.
 
 - [中文](readme_zh_CN.md)
 - [10. Regular Expression Matching](#10)
+- [101. Symmetric Tree](#101)
 - [193. Valid Phone Numbers](#193)
 - [196. Delete Duplicate Emails](#196)
 - [284. Peeking Iterator](#284)
@@ -105,6 +106,121 @@ public static boolean isMatch(String s, String p) {
 ```
 
 掉头发了....
+
+## 101
+
+Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).
+
+For example, this binary tree `[1,2,2,3,4,4,3]` is symmetric:
+
+```
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3
+```
+
+But the following `[1,2,2,null,3,null,3]` is not:
+
+```
+    1
+   / \
+  2   2
+   \   \
+   3    3
+```
+
+**Solution:**
+
+使用递归可以很明确的得出结果：
+
+```java
+public static boolean isSymmetrix(TreeNode root) {
+    if (root == null) {
+        return true;
+    }
+    return treeEqual(root.left, root.right);
+}
+
+private static boolean treeEqual(TreeNode tree1, TreeNode tree2) {
+    if (tree1 == null && tree2 == null) {
+        return true;
+    }
+    if (tree1 == null || tree2 == null) {
+        return false;
+    }
+    if (tree1.val != tree2.val) {
+        return false;
+    } else {
+        return treeEqual(tree1.left, tree2.right) && treeEqual(tree1.right, tree2.left);
+    }
+}
+```
+
+另一种解法是通过双向队列：
+
+```java
+public static boolean deque(TreeNode root) {
+    if (root == null) {
+        return true;
+    }
+
+    TreeNode preNode = null, postNode = null;
+    Deque<TreeNode> deque = new LinkedList<>();
+    deque.addFirst(root.left);
+    deque.addLast(root.right);
+
+    while (!deque.isEmpty()) {
+        preNode = deque.pollFirst();
+        postNode = deque.pollLast();
+        if (preNode == null && postNode == null) {
+            continue;
+        }
+        if (preNode == null || postNode == null) {
+            return false;
+        }
+        if (preNode.val != postNode.val) {
+            return false;
+        } else {
+            deque.addFirst(preNode.right);
+            deque.addFirst(preNode.left);
+            deque.addLast(postNode.left);
+            deque.addLast(postNode.right);
+        }
+    }
+    return true;
+}
+```
+
+这种方法就是按步照搬的一个一个比较了。
+
+标准答案给了一种使用普通队列的方式：
+
+```java
+public boolean isSymmetric(TreeNode root) {
+    Queue<TreeNode> q = new LinkedList<>();
+    q.add(root);
+    q.add(root);
+    while (!q.isEmpty()) {
+        TreeNode t1 = q.poll();
+        TreeNode t2 = q.poll();
+        if (t1 == null && t2 == null) 
+            continue;
+        if (t1 == null || t2 == null) 
+            return false;
+        if (t1.val != t2.val) 
+            return false;
+        q.add(t1.left);
+        q.add(t2.right);
+        q.add(t1.right);
+        q.add(t2.left);
+    }
+    return true;
+}
+```
+
+思路与双端队列相同。
 
 ## 193
 
