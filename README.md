@@ -18,6 +18,7 @@ This project won't stop until I have got a job offer.
 - [417. Pacific Atlantic Water Flow](#417)
 - [517. Super Washing Machines](#517)
 - [526. Beautiful Arrangement](#526)
+- [605. Can Place Flowers](#605)
 - [617. Merge Two Binary Trees](#617)
 - [627. Swap Salary](#627)
 - [717. 1-bit and 2-bit Characters](#717)
@@ -690,6 +691,71 @@ class Solution {
 }
 ```
 
+## 605
+
+Suppose you have a long flowerbed in which some of the plots are planted and some are not. However, flowers cannot be planted in adjacent plots - they would compete for water and both would die.
+
+Given a flowerbed (represented as an array containing 0 and 1, where 0 means empty and 1 means not empty), and a number `n`, return if `n` new flowers can be planted in it without violating the no-adjacent-flowers rule.
+
+**Example 1:**
+
+> Input: flowerbed = [1,0,0,0,1], n = 1
+>
+> Output: True
+
+**Example 2:**
+
+> Input: flowerbed = [1,0,0,0,1], n = 2
+>
+> Output: False
+
+**Note:**
+
+1. The input array won't violate no-adjacent-flowers rule.
+1. The input array size is in the range of [1, 20000].
+1. `n` is a non-negative integer which won't exceed the input array size.
+
+**Solution:**
+
+分析题义，如果可以将 n 朵花都放进去，就返回 true，且花朵必须两两不相连。
+
+那么要插入的位置只有两种情况：
+
+1. 当前位置之前的元素是 0，当前元素是 0，后续元素也是 0
+1. 当前位置之前的元素是 0，当前元素是 0，当前元素是最后一个元素
+
+这样我们可以通过一个 `flag`（true表示前一个元素为 0，false表示前一个元素为 1） 值来判断是否符合条件。对于首个元素的情况，我们可以将 flag 根据第一个元素的不同预设为不同的值（如果首元素为 1，则 flag 预设为 false；如果首元素为 0，则 flag 预设为 true）。
+
+代码：
+
+```java
+public class Solution {
+    public static boolean canPlaceFlowers(int[] flowerbed, int n) {
+        boolean flag = flowerbed[0] != 1;
+
+        for (int i = 0, len = flowerbed.length; i < len; i++) {
+            if (flag) { // flag 为 true 表示上一位是 0
+                if (flowerbed[i] == 0) {
+                    if ((i < len - 1 && flowerbed[i + 1] == 0) || i == len - 1) {
+                        flowerbed[i] = 1;
+                        n--;
+                        flag = false;
+                    }
+                } else {
+                    flag = false;
+                }
+            } else { // 上一位是 1
+                if (flowerbed[i] == 0) {
+                    flag = true;
+                }
+            }
+        }
+
+        return n <= 0;
+    }
+}
+```
+
 ## 617
 
 Given two binary trees and imagine that when you put one of them to cover the other, some nodes of the two trees are overlapped while the others are not.
@@ -870,5 +936,32 @@ while the minimum difference in this tree is 1, it occurs between node 1 and nod
 
 **Note:**
 
-The size of the BST will be between 2 and `100`.
-The BST is always valid, each node's value is an integer, and each node's value is different.
+1. The size of the BST will be between 2 and `100`.
+1. The BST is always valid, each node's value is an integer, and each node's value is different.
+
+**Solution:**
+
+考虑到这是一个 BST,所以我们可以通过中序遍历来得到有序序列,对这个序列相邻元素求最小值即可得到结果:
+
+```java
+public static int minDiffInBST(TreeNode root) {
+    int min = Integer.MAX_VALUE, tmp;
+    List<Integer> numbers = new LinkedList<>();
+    inOrderTraversal(root, numbers);
+    for (int i = 1, len = numbers.size(); i < len; i++) {
+        tmp = numbers.get(i) - numbers.get(i - 1);
+        if (tmp < min) {
+            min = tmp;
+        }
+    }
+    return min;
+}
+
+private static void inOrderTraversal(TreeNode root, List<Integer> list) {
+    if (root != null) {
+        inOrderTraversal(root.left, list);
+        list.add(root.val);
+        inOrderTraversal(root.right, list);
+    }
+}
+```
