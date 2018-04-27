@@ -9,6 +9,7 @@ This project won't stop until I have got a job offer.
 - [中文](readme_zh_CN.md)
 - [10. Regular Expression Matching](#10)
 - [101. Symmetric Tree](#101)
+- [141. Linked List Cycle](#141)
 - [193. Valid Phone Numbers](#193)
 - [196. Delete Duplicate Emails](#196)
 - [284. Peeking Iterator](#284)
@@ -223,6 +224,83 @@ public boolean isSymmetric(TreeNode root) {
 ```
 
 思路与双端队列相同。
+
+## 141
+
+Given a linked list, determine if it has a cycle in it.
+
+Follow up:
+Can you solve it without using extra space?
+
+**Solution:**
+
+使用快慢指针即可：
+
+```java
+public class Solution {
+    public static boolean hasCycle(ListNode head) {
+        if (head == null) {
+            return false;
+        }
+
+        ListNode slow = head.next;
+        if (slow == null) {
+            return false;
+        }
+        ListNode fast = slow.next;
+        while (fast != null && slow != null) {
+            if (fast == slow) {
+                return true;
+            }
+            slow = slow.next;
+            fast = fast.next;
+            if (fast != null) {
+                fast = fast.next;
+            }
+        }
+        return false;
+    }
+}
+```
+
+标准答案1 HashSet：
+
+```java
+public boolean hasCycle(ListNode head) {
+    Set<ListNode> nodesSeen = new HashSet<>();
+    while (head != null) {
+        if (nodesSeen.contains(head)) {
+            return true;
+        } else {
+            nodesSeen.add(head);
+        }
+        head = head.next;
+    }
+    return false;
+}
+```
+
+因为如果有环，那么一直 `head.next` 移动肯定会移动到同一个节点，只需要判断当前节点是否在 HashSet 即可。
+
+标准答案2 快慢指针：
+
+```java
+public boolean hasCycle(ListNode head) {
+    if (head == null || head.next == null) {
+        return false;
+    }
+    ListNode slow = head;
+    ListNode fast = head.next;
+    while (slow != fast) {
+        if (fast == null || fast.next == null) {
+            return false;
+        }
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+    return true;
+}
+```
 
 ## 193
 
