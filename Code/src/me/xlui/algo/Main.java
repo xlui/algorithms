@@ -1,14 +1,12 @@
 package me.xlui.algo;
 
+import me.xlui.algo.Problem165.Solution;
 
-import me.xlui.algo.Problem303.NumArray;
+import java.util.Arrays;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-		int[] nums = {-2, 0, 3, -5, 2, -1};
-		NumArray obj = new NumArray(nums);
-		System.out.println(obj.sumRange(0, 2));
-		System.out.println(obj.sumRange(2, 5));
-		System.out.println(obj.sumRange(0, 5));
+		System.out.println(Solution.compareVersion("1", "1.1"));
+		System.out.println(Arrays.toString("123".split("\\.")));
 	}
 }
