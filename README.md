@@ -14,6 +14,7 @@ This project won't stop until I have got a job offer.
 - [193. Valid Phone Numbers](#193)
 - [196. Delete Duplicate Emails](#196)
 - [284. Peeking Iterator](#284)
+- [303. Range Sum Query - Immutable](#303)
 - [400. Nth Digit](#400)
 - [406. Queue Reconstruction by Height](#406)
 - [413. Arithmetic Slices](#413)
@@ -510,6 +511,117 @@ class PeekingIterator implements Iterator<Integer> {
     }
 }
 ```
+
+## 303
+
+Given an integer array nums, find the sum of the elements between indices i and j (i ≤ j), inclusive.
+
+**Example:**
+
+```
+Given nums = [-2, 0, 3, -5, 2, -1]
+
+sumRange(0, 2) -> 1
+sumRange(2, 5) -> -1
+sumRange(0, 5) -> -3
+```
+
+**Note:**
+
+1. You may assume that the array does not change.
+1. There are many calls to sumRange function.
+
+**Solution:**
+
+题目很简单，但是肯定会卡数据，这题到我做的时候收获了 184 个赞和 371 个踩，我也点了踩 :)
+
+首先肯定不能直接循环，会超时。我们就要寻求一个思路来快速计算出结果。
+
+以示例为例，观察：
+
+```
+i=0, j=1 结果是 nums[0]+nums[1]
+i=0, j=2 结果是 nums[0]+nums[1]+nums[2]
+i=0, j=3 结果是 nums[0]+nums[1]+nums[2]+nums[3]
+```
+
+那我们可不可以把 `nums` 改造一下，让 `nums[k]` 的值就是 `sumRange(0, k)`(subRange 是要提交的调用函数) 呢，让我们来考察一下可行性，如果 `nums[k]` 的值是 `subRange(0, k)`，那么 `subRango(i, j)` 就是：
+
+```
+i=0, j=2 结果是 nums[0]+nums[1]+nums[2]
+i=1, j=2 结果是 nums[1]+nums[2]
+i=0, j=3 结果是 nums[0]+nums[1]+nums[2]+nums[3]
+i=1, j=3 结果是 nums[1]+nums[2]+nums[3]
+```
+
+就等于 `nums[j]-nums[i-1]`。
+
+代码：
+
+```java
+public class NumArray {
+    // 1 2 3 4 5
+    // 1 3 6 10 15
+    private int[] nums;
+
+    public NumArray(int[] nums) {
+        for (int i = 1, len = nums.length; i < len; i++) {
+            nums[i] += nums[i - 1];
+        }
+        this.nums = nums;
+    }
+
+    public int sumRange(int i, int j) {
+        if (0 == i) {
+            return nums[j];
+        }
+        return nums[j] - nums[i - 1];
+    }
+}
+```
+
+标准答案1：
+
+利用map缓存
+
+```java
+private Map<Pair<Integer, Integer>, Integer> map = new HashMap<>();
+
+public NumArray(int[] nums) {
+    for (int i = 0; i < nums.length; i++) {
+        int sum = 0;
+        for (int j = i; j < nums.length; j++) {
+            sum += nums[j];
+            map.put(Pair.create(i, j), sum);
+        }
+    }
+}
+
+public int sumRange(int i, int j) {
+    return map.get(Pair.create(i, j));
+}
+```
+
+标准答案2：
+
+更好的缓存策略
+
+```java
+private int[] sum;
+
+public NumArray(int[] nums) {
+    sum = new int[nums.length + 1];
+    for (int i = 0; i < nums.length; i++) {
+        sum[i + 1] = sum[i] + nums[i];
+    }
+}
+
+public int sumRange(int i, int j) {
+    return sum[j + 1] - sum[i];
+}
+```
+
+免去了我的解法中的一层判断
 
 ## 400
 
