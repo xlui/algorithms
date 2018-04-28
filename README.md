@@ -10,6 +10,7 @@ This project won't stop until I have got a job offer.
 - [10. Regular Expression Matching](#10)
 - [101. Symmetric Tree](#101)
 - [141. Linked List Cycle](#141)
+- [171. Excel Sheet Column Number](#171)
 - [193. Valid Phone Numbers](#193)
 - [196. Delete Duplicate Emails](#196)
 - [284. Peeking Iterator](#284)
@@ -299,6 +300,68 @@ public boolean hasCycle(ListNode head) {
         fast = fast.next.next;
     }
     return true;
+}
+```
+
+## 171
+
+Given a column title as appear in an Excel sheet, return its corresponding column number.
+
+For example:
+
+```
+    A -> 1
+    B -> 2
+    C -> 3
+    ...
+    Z -> 26
+    AA -> 27
+    AB -> 28 
+    ...
+```
+
+**Example 1:**
+
+```
+Input: "A"
+Output: 1
+```
+
+**Example 2:**
+
+```
+Input: "AB"
+Output: 28
+```
+
+**Example 3:**
+
+```
+Input: "ZY"
+Output: 701
+```
+
+**Solution:**
+
+写入一个字母，两个字母，三个字母时的计算规则即可得出规律：
+
+```
+1, (s[0]-'A'+1)
+2, (s[0]-'A'+1)*26 + (s[1]-'A'+1)
+3, (s[0]-'A'+1)*26*26+(s[1]-'A'+1)*26+(s[3]-'A'+1)
+```
+
+代码：
+
+```java
+public static int titleToNumber(String s) {
+    char[] input = s.toCharArray();
+    int len = input.length;
+    int ret = 0;
+    for (int i = len - 1; i >= 0; i--) {
+        ret += (input[i] - 'A' + 1) * Math.pow(26, (len - 1 - i));
+    }
+    return ret;
 }
 ```
 
