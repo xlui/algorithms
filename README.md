@@ -9,6 +9,7 @@ This project won't stop until I have got a job offer.
 - [中文](readme_zh_CN.md)
 - [10. Regular Expression Matching](#10)
 - [101. Symmetric Tree](#101)
+- [125. Valid Palindrome](#125)
 - [141. Linked List Cycle](#141)
 - [165. Compare Version Numbers](#165)
 - [171. Excel Sheet Column Number](#171)
@@ -227,6 +228,43 @@ public boolean isSymmetric(TreeNode root) {
 ```
 
 思路与双端队列相同。
+
+## 125
+
+Given a string, determine if it is a palindrome, considering only alphanumeric characters and ignoring cases.
+
+**Note:** For the purpose of this problem, we define empty string as valid palindrome.
+
+**Example 1:**
+
+```
+Input: "A man, a plan, a canal: Panama"
+Output: true
+```
+
+**Example 2:**
+
+```
+Input: "race a car"
+Output: false
+```
+
+**Solution:**
+
+使用 Stream API 剔除不合法数据，然后将 String 翻转比较即可。
+
+代码：
+
+```java
+public static boolean isPalindrome(String s) {
+    String f = Arrays.asList(s.split(""))
+            .parallelStream()   // 并行流
+            .filter(s1 -> s1.matches("[a-zA-Z0-9]"))    // 剔除不合法字段
+            .map(String::toLowerCase)                   // 全部转为小写
+            .collect(Collectors.joining());             // 收集为 String
+    return f.equals(new StringBuilder(f).reverse().toString()); // 跟 Reverse 之后的 String 比较
+}
+```
 
 ## 141
 
