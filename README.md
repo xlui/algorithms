@@ -16,6 +16,7 @@ This project won't stop until I have got a job offer.
 - [171. Excel Sheet Column Number](#171)
 - [193. Valid Phone Numbers](#193)
 - [196. Delete Duplicate Emails](#196)
+- [279. Perfect Squares](#279)
 - [284. Peeking Iterator](#284)
 - [303. Range Sum Query - Immutable](#303)
 - [400. Nth Digit](#400)
@@ -592,6 +593,47 @@ DELETE FROM Person WHERE Id NOT IN (SELECT p.Id FROM (SELECT Min(Id) AS Id FROM 
 思路是先按照 Email 进行分组，然后从分组中选出每一组最小的 Id，最后删除不在最小 Id 表中的 Id。
 
 此答案打败了 100% 的提交者。
+
+## 279
+
+Given a positive integer n, find the least number of perfect square numbers (for example, `1, 4, 9, 16, ...`) which sum to n.
+
+For example, given n = `12`, return `3` because `12 = 4 + 4 + 4`; given n = `13`, return `2` because `13 = 4 + 9`.
+
+**Solution:**
+
+使用动态规划来解，状态转移方程：
+
+```
+dp[i] = min(i, dp[i-k]+1)   // k=[1, ..., j], j <= n
+```
+
+代码：
+
+```java
+public static int numSquares(int n) {
+    if (0 == n) {
+        return 0;
+    }
+    List<Integer> perfectSquares = new LinkedList<>();
+    int current = 1, square = 1;
+    while ((square = current * current) <= n) {
+        perfectSquares.add(square);
+        current++;
+    }
+    int[] dp = new int[n + 1];
+    for (int i = 1; i < dp.length; i++) {
+        int solutions = i;
+        for (Integer perfectSquare : perfectSquares) {
+            if (perfectSquare > i)
+                break;
+            solutions = Math.min(solutions, dp[i - perfectSquare] + 1);
+        }
+        dp[i] = solutions;
+    }
+    return dp[n];
+}
+```
 
 ## 284
 

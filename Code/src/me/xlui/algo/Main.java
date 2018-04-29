@@ -1,12 +1,10 @@
 package me.xlui.algo;
 
-import me.xlui.algo.Problem038.Solution;
+import me.xlui.algo.Problem279.Solution;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-//		System.out.println(Solution.countAndSay(1));
-//		System.out.println(Solution.countAndSay(4));
-		System.out.println(Solution.countAndSay(5));
-		System.out.println(Solution.countAndSay(6));
+		System.out.println(Solution.numSquares(12));
+		System.out.println(Solution.numSquares(13));
 	}
 }
