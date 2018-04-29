@@ -8,6 +8,7 @@ This project won't stop until I have got a job offer.
 
 - [中文](readme_zh_CN.md)
 - [10. Regular Expression Matching](#10)
+- [38. Count and Say](#38)
 - [101. Symmetric Tree](#101)
 - [125. Valid Palindrome](#125)
 - [141. Linked List Cycle](#141)
@@ -113,6 +114,79 @@ public static boolean isMatch(String s, String p) {
 ```
 
 掉头发了....
+
+## 38
+
+The count-and-say sequence is the sequence of integers with the first five terms as following:
+
+```
+1.     1
+2.     11
+3.     21
+4.     1211
+5.     111221
+```
+
+`1` is read off as `"one 1"` or `11`.
+`11` is read off as `"two 1s"` or `21`.
+`21` is read off as `"one 2, then one 1"` or `1211`.
+
+Given an integer n, generate the nth term of the count-and-say sequence.
+
+Note: Each term of the sequence of integers will be represented as a string.
+
+**Example 1:**
+
+```
+Input: 1
+Output: "1"
+```
+
+**Example 2:**
+
+```
+Input: 4
+Output: "1211"
+```
+
+**Solution:**
+
+这题的描述可是相当的不清晰，我也是看了讨论区才真正理解了题义，如果再添一条示例就容易理解多了：
+
+```
+6.      312211
+```
+
+如果只有一个**不重复的数字**，那么本数列的内容是 `1+该数字`；
+
+每一个 n 的序列都是基于之前一个序列生成的，如果前一个序列有重复的数字，那么本次数列的内容就是 `重复次数+重复的数字`。
+
+这样，用递归就比较简单了
+
+代码：
+
+```java
+public static String countAndSay(int n) {
+    if (1 == n) {
+        return "1";
+    }
+    String str = countAndSay(n - 1) + ".";
+    char[] chars = str.toCharArray();
+    int count = 1;
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0, len = chars.length - 1; i < len; i++) {
+        if (chars[i] == chars[i + 1]) {
+            count++;
+        } else {
+            sb.append(count).append(chars[i]);
+            count = 1;
+        }
+    }
+    return sb.toString();
+}
+```
+
+其中，在 str 后加 `"."` 是为了做一个标记，因为 `"."` 不可能跟数列中元素相等，这里表示达到数列结尾
 
 ## 101
 
