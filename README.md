@@ -10,6 +10,7 @@ This project won't stop until I have got a job offer.
 - [10. Regular Expression Matching](#10)
 - [38. Count and Say](#38)
 - [101. Symmetric Tree](#101)
+- [120. Triangle](#120)
 - [125. Valid Palindrome](#125)
 - [141. Linked List Cycle](#141)
 - [165. Compare Version Numbers](#165)
@@ -304,6 +305,66 @@ public boolean isSymmetric(TreeNode root) {
 ```
 
 思路与双端队列相同。
+
+## 120
+
+Given a triangle, find the minimum path sum from top to bottom. Each step you may move to adjacent numbers on the row below.
+
+For example, given the following triangle
+
+```
+[
+     [2],
+    [3,4],
+   [6,5,7],
+  [4,1,8,3]
+]
+```
+
+The minimum path sum from top to bottom is `11` (i.e., 2 + 3 + 5 + 1 = 11).
+
+**Solution:**
+
+这题很直观，第一眼就想到了暴力求解。。当然立马就否决了，明显用自底向上的动态规划可解，我们先把数据格式化一下：
+
+```
+2
+3 4
+6 5 7
+4 1 8 3
+```
+
+状态转移方程：
+
+```
+dp[i][j] = Math.min(dp[i + 1][j], dp[i + 1][j + 1]) + dp[i][j]
+```
+
+dp 结束后的数组：
+
+```
+11
+9 10
+7 6 10
+4 1 8 3
+```
+
+思想就是：求当前行（从倒数第二行开始，最后一行无需计算）的下一行的两个元素中较小的一个然后加上当前行的值（更新 dp）
+
+代码：
+
+```java
+public static int minimumTotal(List<List<Integer>> triangle) {
+    for (int i = triangle.size() - 2; i >= 0; i--) {
+        for (int j = 0, len = triangle.get(i).size(); j < len; j++) {
+            triangle.get(i).set(j, Math.min(triangle.get(i + 1).get(j), triangle.get(i + 1).get(j + 1)) + triangle.get(i).get(j));
+        }
+    }
+    return triangle.get(0).get(0);
+}
+```
+
+这里就地复用 `triangle`，两重循环结束后，`triangle[0][0]` 的值即为最小和。
 
 ## 125
 
