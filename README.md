@@ -21,6 +21,7 @@ This project won't stop until I have got a job offer.
 - [284. Peeking Iterator](#284)
 - [303. Range Sum Query - Immutable](#303)
 - [350. Intersection of Two Arrays II](#350)
+- [357. Count Numbers with Unique Digits](#357)
 - [400. Nth Digit](#400)
 - [406. Queue Reconstruction by Height](#406)
 - [413. Arithmetic Slices](#413)
@@ -934,6 +935,39 @@ public static int[] intersect(int[] nums1, int[] nums2) {
         result[i] = resultList.get(i);
     }
     return result;
+}
+```
+
+## 357
+
+Given a **non-negative** integer n, count all numbers with unique digits, x, where 0 ≤ x < 10n.
+
+**Example:**
+
+Given n = 2, return 91. (The answer should be the total numbers in the range of 0 ≤ x < 100, excluding `[11,22,33,44,55,66,77,88,99]`)
+
+**Solution:**
+
+其实是一个数学问题，分析如下：
+
+n = 1，共 10 个
+n = 2，共 10 + 9\*9 = 91 个
+n = 3，共 10 + 81 + 9\*9\*8 = 739 个
+....
+
+代码：
+
+```java
+public static int countNumbersWithUniqueDigits(int n) {
+    if (0 == n) {
+        return 1;
+    }
+    int res = 10, base = 9;
+    for (int i = 2; i <= n; i++) {
+        base = base * (9 - i + 2);
+        res += base;
+    }
+    return res;
 }
 ```
 
