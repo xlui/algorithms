@@ -19,6 +19,7 @@ This project won't stop until I have got a job offer.
 - [279. Perfect Squares](#279)
 - [284. Peeking Iterator](#284)
 - [303. Range Sum Query - Immutable](#303)
+- [350. Intersection of Two Arrays II](#350)
 - [400. Nth Digit](#400)
 - [406. Queue Reconstruction by Height](#406)
 - [413. Arithmetic Slices](#413)
@@ -827,6 +828,52 @@ public int sumRange(int i, int j) {
 ```
 
 免去了我的解法中的一层判断
+
+## 350
+
+Given two arrays, write a function to compute their intersection.
+
+**Example:**
+
+Given nums1 = `[1, 2, 2, 1]`, nums2 = `[2, 2]`, return `[2, 2]`.
+
+**Note:**
+
+- Each element in the result should appear as many times as it shows in both arrays.
+- The result can be in any order.
+
+**Follow up:**
+
+- What if the given array is already sorted? How would you optimize your algorithm?
+- What if nums1's size is small compared to nums2's size? Which algorithm is better?
+- What if elements of nums2 are stored on disk, and the memory is limited such that you cannot load all elements into the memory at once?
+
+**Solution:**
+
+使用 Map 统计其中一个数组每个元素个数，然后用另一个数组进行匹配即可
+
+代码：
+
+```java
+public static int[] intersect(int[] nums1, int[] nums2) {
+    Map<Integer, Integer> map = new HashMap<>();
+    List<Integer> resultList = new ArrayList<>();
+    for (int i : nums1) {
+        map.put(i, map.getOrDefault(i, 0) + 1);
+    }
+    for (int i : nums2) {
+        if (map.containsKey(i) && map.get(i) > 0) {
+            resultList.add(i);
+            map.put(i, map.get(i) - 1);
+        }
+    }
+    int[] result = new int[resultList.size()];
+    for (int i = 0, len = resultList.size(); i < len; i++) {
+        result[i] = resultList.get(i);
+    }
+    return result;
+}
+```
 
 ## 400
 
