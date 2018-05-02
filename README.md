@@ -9,6 +9,7 @@ This project won't stop until I have got a job offer.
 - [中文](readme_zh_CN.md)
 - [10. Regular Expression Matching](#10)
 - [38. Count and Say](#38)
+- [39. Combination Sum](#39)
 - [101. Symmetric Tree](#101)
 - [120. Triangle](#120)
 - [125. Valid Palindrome](#125)
@@ -192,6 +193,68 @@ public static String countAndSay(int n) {
 ```
 
 其中，在 str 后加 `"."` 是为了做一个标记，因为 `"."` 不可能跟数列中元素相等，这里表示达到数列结尾
+
+## 39
+
+Given a **set** of candidate numbers (`candidates`) (**without duplicates**) and a target number (`target`), find all unique combinations in `candidates` where the candidate numbers sums to `target`.
+
+The **same** repeated number may be chosen from `candidates` unlimited number of times.
+
+**Note:**
+
+1. All numbers (including target) will be positive integers.
+1. The solution set must not contain duplicate combinations.
+
+**Example 1:**
+
+```
+Input: candidates = [2,3,6,7], target = 7,
+A solution set is:
+[
+  [7],
+  [2,2,3]
+]
+```
+
+**Example 2:**
+
+```
+Input: candidates = [2,3,5], target = 8,
+A solution set is:
+[
+  [2,2,2,2],
+  [2,3,3],
+  [3,5]
+]
+```
+
+**Solution:**
+
+分析一下就能看出来，用动态规划状态数组难以更新，状态太多，这时候就要想到用回溯来做。
+
+代码：
+
+```java
+public static List<List<Integer>> combinationSum(int[] candidates, int target) {
+    Arrays.sort(candidates);    // 排序避免过多费时费力的判断
+    List<List<Integer>> result = new ArrayList<>();
+    Deque<Integer> tmp = new ArrayDeque<>();
+    dfs(result, tmp, candidates, target, 0);
+    return result;
+}
+
+private static void dfs(List<List<Integer>> result, Deque<Integer> tmp, int[] candidates, int target, int j) {
+    if (target == 0) {
+        result.add(new ArrayList<>(tmp));
+        return;                 // 符合条件，直接返回
+    }
+    for (int i = j; i < candidates.length && target >= candidates[i]; i++) {
+        tmp.add(candidates[i]);
+        dfs(result, tmp, candidates, target - candidates[i], i);
+        tmp.pollLast();
+    }
+}
+```
 
 ## 101
 
