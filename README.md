@@ -29,6 +29,7 @@ This project won't stop until I have got a job offer.
 - [413. Arithmetic Slices](#413)
 - [417. Pacific Atlantic Water Flow](#417)
 - [492. Construct the Rectangle](#492)
+- [515. Find Largest Value in Each Tree Row](#515)
 - [517. Super Washing Machines](#517)
 - [526. Beautiful Arrangement](#526)
 - [605. Can Place Flowers](#605)
@@ -1431,6 +1432,51 @@ public int[] constructRectangle(int area) {
     }
 
     return res; 
+}
+```
+
+## 515
+
+You need to find the largest value in each row of a binary tree.
+
+**Example:**
+
+```
+Input: 
+
+          1
+         / \
+        3   2
+       / \   \  
+      5   3   9 
+
+Output: [1, 3, 9]
+```
+
+**Solution:**
+
+可以使用 BFS 来做，利用队列，每一次添加一层元素进去，然后求最大值加入结果列表，然后循环计算下一层。
+
+我的解法是利用先序遍历（DFS），在遍历的时候比较当前值与结果列表中对应位置的值的大小：
+
+```java
+public static List<Integer> largestValues(TreeNode root) {
+    List<Integer> list = new ArrayList<>(); // 直接将最大值设置在 list 相应位置上
+    getMax(root, list, 0);
+    return list;
+}
+
+private static void getMax(TreeNode root, List<Integer> list, int depth) {
+    if (root == null) {
+        return;
+    }
+    if (depth == list.size()) {
+        list.add(root.val); // 第一次到的时候，直接设置当前元素为该 depth 最大值
+    } else {
+        list.set(depth, Math.max(list.get(depth), root.val)); // 否则，按情况更新
+    }
+    getMax(root.left, list, depth + 1);
+    getMax(root.right, list, depth + 1);
 }
 ```
 
