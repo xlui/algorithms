@@ -21,6 +21,7 @@ This project won't stop until I have got a job offer.
 - [279. Perfect Squares](#279)
 - [284. Peeking Iterator](#284)
 - [303. Range Sum Query - Immutable](#303)
+- [342. Power of Four](#342)
 - [350. Intersection of Two Arrays II](#350)
 - [357. Count Numbers with Unique Digits](#357)
 - [400. Nth Digit](#400)
@@ -955,6 +956,83 @@ public int sumRange(int i, int j) {
 ```
 
 免去了我的解法中的一层判断
+
+## 342
+
+Given an integer (signed 32 bits), write a function to check whether it is a power of 4.
+
+**Example:**
+
+Given num = 16, return true. Given num = 5, return false.
+
+**Solution:**
+
+根据条件构造 HashSet，函数中直接判断即可：
+
+```java
+private final static Set<Integer> set = new HashSet<Integer>() {{
+    add(1);
+    add(1 << 2);
+    add(1 << 4);
+    add(1 << 6);
+    add(1 << 8);
+    add(1 << 10);
+    add(1 << 12);
+    add(1 << 14);
+    add(1 << 16);
+    add(1 << 18);
+    add(1 << 20);
+    add(1 << 22);
+    add(1 << 24);
+    add(1 << 26);
+    add(1 << 28);
+    add(1 << 30);
+}};
+
+public static boolean isPowerOfFour(int num) {
+    return set.contains(num);
+}
+```
+
+或者直接 switch-case 暴力解：
+
+```java
+public boolean isPowerOfFour(int num) {
+    switch (num) {
+        case 0x00000001:
+        case 0x00000004:
+        case 0x00000010:
+        case 0x00000040:
+        case 0x00000100:
+        case 0x00000400:
+        case 0x00001000:
+        case 0x00004000:
+        case 0x00010000:
+        case 0x00040000:
+        case 0x00100000:
+        case 0x00400000:
+        case 0x01000000:
+        case 0x04000000:
+        case 0x10000000:
+        case 0x40000000:
+            return true;
+        default:
+            return false;
+    }
+}
+```
+
+但是更好的是利用位操作，我也想到了，但是不知道具体怎么做。。
+
+```java
+public boolean isPowerOfFour(int num) {
+    return num > 0 && (num & (num - 1)) == 0 && (num & 0x55555555) != 0;
+}
+```
+
+思路涉及到一个知识点：**如果一个数 num 是 2 的 N 次方，那么 num & (num - 1) = 0**
+
+这里首先判断 num 是否是 2 的 N 次方，然后判断 1 是否在合适的位置上。
 
 ## 350
 
