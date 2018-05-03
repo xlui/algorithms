@@ -36,6 +36,7 @@ This project won't stop until I have got a job offer.
 - [717. 1-bit and 2-bit Characters](#717)
 - [748. Shortest Completing Word](#748)
 - [783. Minimum Distance Between BST Nodes](#783)
+- [806. Number of Lines To Write String](#806)
 
 ## 10
 
@@ -1074,6 +1075,26 @@ n is positive and will fit within the range of a 32-bit signed integer (n < 2^31
 
 然后求出数字，得出要求的数字。
 
+```java
+public static int findNthDigit(int n) {
+    int digitCount = 1; // 整数位数
+    long digitNum = 9;   // 该位数情况下整数个数
+
+    // digitCount * digitNum = 该位数情况下，数字个数
+    while (n > digitCount * digitNum) {
+        n -= digitCount * digitNum;
+        ++digitCount;
+        digitNum *= 10;
+    }
+
+    int position = (n - 1) / digitCount;    // 在该位数情况下，n 的位置
+    int index = (n - 1) % digitCount;       // 要求的数字在 n 中的位置
+
+    int number = (int) (Math.pow(10, digitCount - 1) + position);
+    return Integer.parseInt(String.valueOf(String.valueOf(number).charAt(index)));
+}
+```
+
 ## 406
 
 Suppose you have a random list of people standing in a queue. Each person is described by a pair of integers `(h, k)`, where `h` is the height of the person and `k` is the number of people in front of this person who have a height greater than or equal to `h`. Write an algorithm to reconstruct the queue.
@@ -1101,6 +1122,25 @@ Output:
 这种方法利用了排序后的有序性和题目规则限制。
 
 另外，匿名内部类的实现方式执行起来似乎比 lambda 表达式快一点点。
+
+```java
+public static int[][] reconstructQueue(int[][] people) {
+    // 按身高倒序排列，身高相同的按 k 排列
+    Arrays.sort(people, (c1, c2) -> {
+        if (c1[0] != c2[0]) {
+            return c2[0] - c1[0];
+        } else {
+            return c1[1] - c2[1];
+        }
+    });
+    List<int[]> ret = new ArrayList<>();
+    // 然后将排序好的元素一一插入 List
+    for (int[] person : people) {
+        ret.add(person[1], person);
+    }
+    return ret.toArray(new int[people.length][]);
+}
+```
 
 ## 413
 
@@ -1140,6 +1180,21 @@ Find the law from the numbers:
 > 1, 2, 3, 4, 5, 6, 7 => 15 = 10 + 5 = 1 + 2 + 3 + 4 + 5  
 
 And apply the law to another sequences to verify it.
+
+```java
+public static int numberOfArithmeticSlices(int[] A) {
+    int ret = 0;
+    int[] count = new int[A.length];
+    Arrays.fill(count, 0);
+    for (int i = 2, len = A.length; i < len; i++) {
+        if (A[i] - A[i - 1] == A[i - 1] - A[i - 2]) {
+            count[i] = count[i - 1] + 1;
+        }
+        ret += count[i];
+    }
+    return ret;
+}
+```
 
 ## 417
 
@@ -1363,6 +1418,27 @@ Given an integer array representing the number of dresses in each washing machin
 三号需要移动一次，从四号处获取剩下的一件；
 
 移动的最大次数就是差值数组中出现的绝对值最大的数字；
+
+```java
+public static int findMinMoves(int[] machines) {
+    int sum = 0;
+    for (int machine : machines) {
+        sum += machine;
+    }
+
+    if (sum % machines.length != 0) {
+        return -1;
+    }
+
+    int average = sum / machines.length;
+    int reverse = 0, ret = 0;
+    for (int machine : machines) {
+        reverse += machine - average;
+        ret = Math.max(ret, Math.max(Math.abs(reverse), machine - average));
+    }
+    return ret;
+}
+```
 
 ## 526
 
@@ -1619,6 +1695,19 @@ Now given a string represented by several bits. Return whether the last characte
 
 通过索引 i 的跳转，遇到 1 跳两步，遇到 0 跳一步。当 while 循环结束的时候，**通过 i 的最终位置来判断**，如果 i 的位置刚好是 bits 数组最后一个元素，则 true；如果 i 的位置跳过了最后一个元素，则 false。
 
+```java
+public static boolean isOneBitCharacter(int[] bits) {
+    int len = bits.length, i = 0;
+    while (i < len - 1) {
+        if (0 == bits[i])
+            i++;
+        else
+            i += 2;
+    }
+    return i == len - 1;
+}
+```
+
 ## 748
 
 Find the minimum length word from a given dictionary `words`, which has all the letters from the string `licensePlate`. Such a word is said to complete the given string `licensePlate`.
@@ -1654,6 +1743,48 @@ We return the one that occurred first.
 **Solution:**
 
 使用 Map 存储 word 和 licensePlate 中各个字符的数量，然后通过比较判断 word 是否合法。之后再寻找合法的 word 中最短的。
+
+```java
+public static String shortestCompletingWord(String licensePlate, String[] words) {
+    // 对 licensePlate 去重、小写化、排序后，存储为字符列表
+    List<String> plate = Arrays.stream(licensePlate.split(""))
+            .filter(c -> c.matches("[a-zA-Z]"))
+            .map(String::toLowerCase)
+            .sorted()
+            .collect(Collectors.toList());
+    Map<String, Integer> licenseMap = new HashMap<>();
+    int min = Integer.MAX_VALUE;
+    String ret = "";
+
+    for (String s : plate) {
+        licenseMap.put(s, licenseMap.getOrDefault(s, 0) + 1);
+    }
+    for (String word : words) {
+        if (isValid(licenseMap, word)) {
+            if (word.length() < min) {
+                min = word.length();
+                ret = word;
+            }
+        }
+    }
+    return ret;
+}
+
+// 判断 word 是否合法
+private static boolean isValid(Map<String, Integer> licenseMap, String word) {
+    Map<String, Integer> wordMap = new HashMap<>();
+    for (String s : word.split("")) {
+        wordMap.put(s, wordMap.getOrDefault(s, 0) + 1);
+    }
+    for (String key : licenseMap.keySet()) {
+        if (wordMap.getOrDefault(key, 0).compareTo(licenseMap.get(key)) < 0) {
+            // 如果 licensePlate 对应的 Map 里有 key，且 key 的数量大于 word 中相应 key 的数量，则返回 false
+            return false;
+        }
+    }
+    return true;
+}
+```
 
 ## 783
 
@@ -1709,3 +1840,71 @@ private static void inOrderTraversal(TreeNode root, List<Integer> list) {
     }
 }
 ```
+
+## 806
+
+We are to write the letters of a given string `S`, from left to right into lines. Each line has maximum width 100 units, and if writing a letter would cause the width of the line to exceed 100 units, it is written on the next line. We are given an array `widths`, an array where widths[0] is the width of 'a', widths[1] is the width of 'b', ..., and widths[25] is the width of 'z'.
+
+Now answer two questions: how many lines have at least one character from `S`, and what is the width used by the last such line? Return your answer as an integer list of length 2.
+
+**Example 1:**
+
+```
+Input: 
+widths = [10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10]
+S = "abcdefghijklmnopqrstuvwxyz"
+Output: [3, 60]
+Explanation: 
+All letters have the same length of 10. To write all 26 letters,
+we need two full lines and one line with 60 units.
+```
+
+**Example 2:**
+
+```
+Input: 
+widths = [4,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10]
+S = "bbbcccdddaaa"
+Output: [2, 4]
+Explanation: 
+All letters except 'a' have the same length of 10, and 
+"bbbcccdddaa" will cover 9 * 10 + 2 * 4 = 98 units.
+For the last 'a', it is written on the second line because
+there is only 2 units left in the first line.
+So the answer is 2 lines, plus 4 units in the second line.
+```
+
+**Note:**
+
+- The length of `S` will be in the range [1, 1000].
+- `S` will only contain lowercase letters.
+- `widths` is an array of length `26`.
+- `widths[i]` will be in the range of `[2, 10]`.
+
+**Solution:**
+
+这题的意思是给定一个字符串和一个 width 数组，其中 width 数组中是每个字符的单位，每一行能放最大 100 单位的字符，要求出最终放好后的行数和最后一行的单位数。
+
+需要注意的是，如果 a 的单位是 4，而一行已经放了 98 单位的情况，这种情况下，a 只能被放入下一行。
+
+直接计算即可：
+
+```java
+public static int[] numberOfLines(int[] widths, String S) {
+    int total = 0;
+    int[] result = new int[2];
+    char[] chars = S.toCharArray();
+    for (char aChar : chars) {
+        total += widths[aChar - 'a'];
+        if (total > 100) {
+            result[0]++;
+            total = widths[aChar - 'a'];    // 对应需要注意的点
+        }
+    }
+    result[0]++;
+    result[1] = total;
+    return result;
+}
+```
+
+此答案打败了 100% 的提交者.

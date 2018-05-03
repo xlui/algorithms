@@ -1,27 +1,17 @@
 package me.xlui.algo;
 
-import me.xlui.algo.Problem039.Solution;
+import me.xlui.algo.Problem806.Solution;
 
-import java.util.List;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        List<List<Integer>> lists;
-        lists = Solution.combinationSum(new int[]{2, 3, 6, 7}, 7);
-        for (List<Integer> list : lists) {
-            System.out.println(list);
-        }
+        int[] width = {10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10};
+        String s = "abcdefghijklmnopqrstuvwxyz";
+        System.out.println(Arrays.toString(Solution.numberOfLines(width, s)));
 
-        System.out.println();
-        lists = Solution.combinationSum(new int[]{2, 3, 5}, 8);
-        for (List<Integer> list : lists) {
-            System.out.println(list);
-        }
-
-        System.out.println();
-        lists = Solution.combinationSum(new int[]{8, 7, 4, 3}, 11);
-        for (List<Integer> list : lists) {
-            System.out.println(list);
-        }
+        width = new int[]{4, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10};
+        s = "bbbcccdddaaa";
+        System.out.println(Arrays.toString(Solution.numberOfLines(width, s)));
     }
 }
