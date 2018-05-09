@@ -10,6 +10,7 @@ This project won't stop until I have got a job offer.
 - [10. Regular Expression Matching](#10)
 - [38. Count and Say](#38)
 - [39. Combination Sum](#39)
+- [100. Same Tree](#100)
 - [101. Symmetric Tree](#101)
 - [120. Triangle](#120)
 - [125. Valid Palindrome](#125)
@@ -257,6 +258,68 @@ private static void dfs(List<List<Integer>> result, Deque<Integer> tmp, int[] ca
         tmp.add(candidates[i]);
         dfs(result, tmp, candidates, target - candidates[i], i);
         tmp.pollLast();
+    }
+}
+```
+
+## 100
+
+Given two binary trees, write a function to check if they are the same or not.
+
+Two binary trees are considered the same if they are structurally identical and the nodes have the same value.
+
+**Example 1:**
+
+```
+Input:     1         1
+          / \       / \
+         2   3     2   3
+
+        [1,2,3],   [1,2,3]
+
+Output: true
+```
+
+**Example 2:**
+
+```
+Input:     1         1
+          /           \
+         2             2
+
+        [1,2],     [1,null,2]
+
+Output: false
+```
+
+**Example 3:**
+
+```
+Input:     1         1
+          / \       / \
+         2   1     1   2
+
+        [1,2,1],   [1,1,2]
+
+Output: false
+```
+
+**Solution:**
+
+直接使用递归来做即可：
+
+```java
+public boolean isSameTree(TreeNode p, TreeNode q) {
+    if (p == null) {
+        return q == null;
+    }
+    if (q == null) {
+        return false;
+    }
+    if (p.val == q.val) {
+        return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+    } else {
+        return false;
     }
 }
 ```
