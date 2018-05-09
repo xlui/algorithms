@@ -18,6 +18,7 @@ This project won't stop until I have got a job offer.
 - [171. Excel Sheet Column Number](#171)
 - [193. Valid Phone Numbers](#193)
 - [196. Delete Duplicate Emails](#196)
+- [215. Kth Largest Element in an Array](#215)
 - [279. Perfect Squares](#279)
 - [284. Peeking Iterator](#284)
 - [303. Range Sum Query - Immutable](#303)
@@ -724,6 +725,72 @@ DELETE FROM Person WHERE Id NOT IN (SELECT p.Id FROM (SELECT Min(Id) AS Id FROM 
 思路是先按照 Email 进行分组，然后从分组中选出每一组最小的 Id，最后删除不在最小 Id 表中的 Id。
 
 此答案打败了 100% 的提交者。
+
+## 215
+
+Find the **k**th largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.
+
+**Example 1:**
+
+```
+Input: [3,2,1,5,6,4] and k = 2
+Output: 5
+```
+
+**Example 2:**
+
+```
+Input: [3,2,3,1,2,4,5,5,6] and k = 4
+Output: 4
+```
+
+**Note:**
+
+You may assume k is always valid, 1 ≤ k ≤ array's length.
+
+**Solution:**
+
+这题一开始我想用快排，快排之后直接取第 num.length - k 个元素即可。 
+
+还有一种做法是用快速选择（[QuickSelect](https://zh.wikipedia.org/wiki/%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9)），快速选择做法同快速排序差不多，但是在进一步的时候只选择关注的一部分，而不是像快速排序一样两个子部分都递归。
+
+```java
+public static int findKthLargest(int[] nums, int k) {
+    // 传递的参数 k 是数组中第 k 大元素前的元素个数
+    // 比如要求第 2 大元素，数组为 [3, 2, 1, 5, 6, 4]，则传递给 quickSelect 的最后一个参数是 5，因为 5 前面共有 5 个元素
+    return nums[quickSelect(nums, 0, nums.length - 1, nums.length - k + 1)];
+}
+
+/*
+    * 快排的思路，每次选一个基准值，然后将数组分为 比基准值高 和 比基准值低 两部分
+    * 不同于快排的地方是，我们只需要关注特定数量的数字。因为我们是从数列中选第几大的数字，所以我们只需要关注划分后的某一部分（前半部分或者后半部分）
+    */
+private static int quickSelect(int[] nums, int left, int right, int k) {
+    int i = left, j = right, pivot = nums[right];   // 选择最后一个元素作为基准值。更好的算法是取首中尾的中位数作为基准值
+    // 循环保证从 left 到 i 的所有数都小于等于 pivot，从 i 到 right-1 所有数都大于 pivot
+    while (i < j) {
+        if (nums[i++] > pivot) {
+            swap(nums, --i, --j);
+        }
+    }
+    swap(nums, i, right);   // 将 pivot 交换到合适位置
+    int c = i - left + 1;   // 计算 pivot 前有多少个元素
+
+    if (c == k) {       // 如果元素个数恰好为 k 个，则成功找到需要的元素
+        return i;
+    } else if (c > k) { // 如果个数比 k 大，说明我们选择的 pivot 过大，则要找的元素应该在左边
+        return quickSelect(nums, left, i - 1, k);
+    } else {            // 如果个数比 k 小，则说明应该从右边找
+        return quickSelect(nums, i + 1, right, k - c);
+    }
+}
+
+private static void swap(int[] nums, int i, int j) {
+    int tmp = nums[i];
+    nums[i] = nums[j];
+    nums[j] = tmp;
+}
+```
 
 ## 279
 
