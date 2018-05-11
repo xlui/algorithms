@@ -26,6 +26,7 @@ This project won't stop until I have got a job offer.
 - [342. Power of Four](#342)
 - [350. Intersection of Two Arrays II](#350)
 - [357. Count Numbers with Unique Digits](#357)
+- [387. First Unique Character in a String](#387)
 - [400. Nth Digit](#400)
 - [406. Queue Reconstruction by Height](#406)
 - [413. Arithmetic Slices](#413)
@@ -1242,6 +1243,60 @@ public static int countNumbersWithUniqueDigits(int n) {
         res += base;
     }
     return res;
+}
+```
+
+## 387
+
+Given a string, find the first non-repeating character in it and return it's index. If it doesn't exist, return -1.
+
+**Examples:**
+
+```
+s = "leetcode"
+return 0.
+
+s = "loveleetcode",
+return 2.
+```
+
+**Note:**
+
+ You may assume the string contain only lowercase letters.
+
+**Solution:**
+
+很简单，遍历输入串构建一个字符对应个数数组，根据每个输入字符在输入串中的个数依次填充数组。然后再遍历一次数组，找到第一个在字符对应个数数组中值为 1 的元素，返回其下标；如果没找到，返回 -1.
+
+一共对输入串遍历了两次。
+
+```java
+public class Solution {
+    public int firstUniqChar(String s) {
+        int[] alphabet = new int[26];
+        char[] chars = s.toCharArray();
+        for (char aChar : chars) {
+            alphabet[aChar - 'a']++;
+        }
+        for (int i = 0; i < chars.length; i++) {
+            if (alphabet[chars[i] - 'a'] == 1) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        String input1 = "leetcode";
+        String input2 = "loveleetcode";
+        // expect -1
+        System.out.println(solution.firstUniqChar(""));
+        // expect 0
+        System.out.println(solution.firstUniqChar(input1));
+        // expect 2
+        System.out.println(solution.firstUniqChar(input2));
+    }
 }
 ```
 
