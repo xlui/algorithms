@@ -15,6 +15,7 @@ This project won't stop until I have got a job offer.
 - [120. Triangle](#120)
 - [125. Valid Palindrome](#125)
 - [141. Linked List Cycle](#141)
+- [143. Reorder List](#143)
 - [165. Compare Version Numbers](#165)
 - [171. Excel Sheet Column Number](#171)
 - [193. Valid Phone Numbers](#193)
@@ -612,6 +613,63 @@ public boolean hasCycle(ListNode head) {
         fast = fast.next.next;
     }
     return true;
+}
+```
+
+## 143
+
+Given a singly linked list L: L0→L1→…→Ln-1→Ln,
+reorder it to: L0→Ln→L1→Ln-1→L2→Ln-2→…
+
+You may **not** modify the values in the list's nodes, only nodes itself may be changed.
+
+**Example 1:**
+
+```
+Given 1->2->3->4, reorder it to 1->4->2->3.
+```
+
+**Example 2:**
+
+```
+Given 1->2->3->4->5, reorder it to 1->5->2->4->3.
+```
+
+**Solution:**
+
+思路是先找到链表的后半部分，记录中间的结点，将后半部分转置，然后归并即可
+
+```java
+public void reorderList(ListNode head) {
+    if (head == null || head.next == null) {
+        return;
+    }
+
+    ListNode
+            n1 = head,
+            n2 = head;
+    while (n2.next != null && n2.next.next != null) {
+        n1 = n1.next;
+        n2 = n2.next.next;
+    }
+
+    ListNode nodeMiddle = n1, current = nodeMiddle.next, tmp;
+    while (current.next != null) {
+        tmp = current.next;
+        current.next = tmp.next;
+        tmp.next = nodeMiddle.next;
+        nodeMiddle.next = tmp;
+    }
+
+    n1 = head;
+    n2 = nodeMiddle.next;
+    while (n1 != nodeMiddle) {
+        nodeMiddle.next = n2.next;
+        n2.next = n1.next;
+        n1.next = n2;
+        n1 = n2.next;
+        n2 = nodeMiddle.next;
+    }
 }
 ```
 
