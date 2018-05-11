@@ -41,6 +41,7 @@ This project won't stop until I have got a job offer.
 - [717. 1-bit and 2-bit Characters](#717)
 - [748. Shortest Completing Word](#748)
 - [783. Minimum Distance Between BST Nodes](#783)
+- [788. Rotated Digits](#788)
 - [806. Number of Lines To Write String](#806)
 - [819. Most Common Word](#819)
 
@@ -2147,6 +2148,71 @@ private static void inOrderTraversal(TreeNode root, List<Integer> list) {
         inOrderTraversal(root.left, list);
         list.add(root.val);
         inOrderTraversal(root.right, list);
+    }
+}
+```
+
+## 788
+
+X is a good number if after rotating each digit individually by 180 degrees, we get a valid number that is different from X.  Each digit must be rotated - we cannot choose to leave it alone.
+
+A number is valid if each digit remains a digit after rotation. 0, 1, and 8 rotate to themselves; 2 and 5 rotate to each other; 6 and 9 rotate to each other, and the rest of the numbers do not rotate to any other number and become invalid.
+
+Now given a positive number `N`, how many numbers X from `1` to `N` are good?
+
+**Example:**
+
+```
+Input: 10
+Output: 4
+Explanation: 
+There are four good numbers in the range [1, 10] : 2, 5, 6, 9.
+Note that 1 and 10 are not good numbers, since they remain unchanged after rotating.
+```
+
+**Note:**
+
+- N  will be in range `[1, 10000]`.
+
+
+**Solution:**
+
+构造一个旋转对应关系的 map，然后对每个数字一位一位进行判断即可。
+
+```java
+public class Solution {
+    public int rotatedDigits(int N) {
+        int ret = 0, tmp;
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>(){{
+            put(0,0);put(1,1);put(8,8);put(2,5);put(5,2);put(6,9);put(9,6);
+        }};
+        for (int i = 1; i <= N; i++) {
+            int currentNum = i;
+            int calcNum = 0;
+            int degree = 0;
+            boolean isValid = true;
+            while (currentNum != 0) {
+                tmp = currentNum % 10;
+                if (map.containsKey(tmp)) {
+                    calcNum += map.get(tmp) * Math.pow(10, degree);
+                    currentNum /= 10;
+                } else {
+                    isValid = false;
+                    break;
+                }
+                degree++;
+            }
+            if (isValid && calcNum != i) {
+                ret++;
+            }
+        }
+        return ret;
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        System.out.println(solution.rotatedDigits(10));
+        System.out.println(solution.rotatedDigits(857));
     }
 }
 ```
