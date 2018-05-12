@@ -33,6 +33,7 @@ This project won't stop until I have got a job offer.
 - [413. Arithmetic Slices](#413)
 - [417. Pacific Atlantic Water Flow](#417)
 - [492. Construct the Rectangle](#492)
+- [503. Next Greater Element II](#503)
 - [515. Find Largest Value in Each Tree Row](#515)
 - [517. Super Washing Machines](#517)
 - [526. Beautiful Arrangement](#526)
@@ -1677,6 +1678,53 @@ public int[] constructRectangle(int area) {
     }
 
     return res; 
+}
+```
+
+## 503
+
+Given a circular array (the next element of the last element is the first element of the array), print the Next Greater Number for every element. The Next Greater Number of a number x is the first greater number to its traversing-order next in the array, which means you could search circularly to find its next greater number. If it doesn't exist, output -1 for this number.
+
+**Example 1:**
+
+```
+Input: [1,2,1]
+Output: [2,-1,2]
+Explanation: The first 1's next greater number is 2; 
+The number 2 can't find next greater number; 
+The second 1's next greater number needs to search circularly, which is also 2.
+```
+
+**Note:**
+
+The length of given array won't exceed 10000.
+
+**Solution:**
+
+这题可以暴力解，对于每个元素，从元素当前位置往后遍历数组两遍，找最大元素，找不到就设置对应返回数组位置值为 -1.
+
+更好的做法是利用栈，遍历两遍数组（题目要求循环数组），通过循环变量对 n 取余取出当前数字。如果栈不为空，并且栈顶元素小于当前数字，说明当前数字是栈顶元素右边的第一个较大数，将结果数组中栈顶元素对应下标的值设置为 当前数字。
+
+然后如果循环变量小于 n，将循环变量压入栈。
+
+```java
+public int[] nextGreaterElements(int[] nums) {
+    int length = nums.length, current;
+    int[] res = new int[length];
+    LinkedList<Integer> stack = new LinkedList<>();
+
+    Arrays.fill(res, -1);
+    for (int i = 0; i < length * 2; i++) {
+        current = nums[i % length];
+        while (!stack.isEmpty() && nums[stack.peekLast()] < current) {
+            res[stack.peekLast()] = current;
+            stack.pollLast();
+        }
+        if (i < length) {
+            stack.addLast(i);
+        }
+    }
+    return res;
 }
 ```
 
