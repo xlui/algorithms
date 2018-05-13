@@ -1,5 +1,7 @@
 # Dive Into Offer
 
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/xlui/dive-into-offer/blob/master/LICENSE)
+
 In order to get a job offer, I'm now training myself through [LeetCode](https://leetcode.com), and I'd like to share my code here.
 
 This project won't stop until I have got a job offer.
@@ -13,6 +15,7 @@ This project won't stop until I have got a job offer.
 - [100. Same Tree](#100)
 - [101. Symmetric Tree](#101)
 - [120. Triangle](#120)
+- [121. Best Time to Buy and Sell Stock](#121)
 - [125. Valid Palindrome](#125)
 - [141. Linked List Cycle](#141)
 - [143. Reorder List](#143)
@@ -502,6 +505,60 @@ public static int minimumTotal(List<List<Integer>> triangle) {
 ```
 
 这里就地复用 `triangle`，两重循环结束后，`triangle[0][0]` 的值即为最小和。
+
+## 121
+
+Say you have an array for which the i^th element is the price of a given stock on day i.
+
+If you were only permitted to complete at most one transaction (i.e., buy one and sell one share of the stock), design an algorithm to find the maximum profit.
+
+Note that you cannot sell a stock before you buy one.
+
+**Example 1:**
+
+```
+Input: [7,1,5,3,6,4]
+Output: 5
+Explanation: Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6-1 = 5.
+             Not 7-1 = 6, as selling price needs to be larger than buying price.
+```
+
+**Example 2:**
+
+```
+Input: [7,6,4,3,1]
+Output: 0
+Explanation: In this case, no transaction is done, i.e. max profit = 0.
+```
+
+**Solution:**
+
+利用两个变量 min、max，min初始值设为数组第一个元素，max初始值设置为 0。
+
+迭代一次数组，每次计算当前值和 min 的差值。如果差值大于 max，则将 max 更新为差值。
+
+对于当前值，如果当前值小于 min，说明有更小的，更新 min 为当前值。
+
+总结来说是 min 与 max 同步更新。
+
+```java
+public int maxProfit(int[] prices) {
+    if (prices.length == 0) {
+        return 0;
+    }
+    int min = prices[0], max = 0, current = 0;
+    for (int price : prices) {
+        current = price - min;
+        if (price < min) {
+            min = price;
+        }
+        if (current > max) {
+            max = current;
+        }
+    }
+    return max;
+}
+```
 
 ## 125
 
