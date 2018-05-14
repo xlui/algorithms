@@ -8,7 +8,7 @@ This project won't stop until I have got a job offer.
 
 ## Table of Contents
 
-- [中文](readme_zh_CN.md)
+- [1. Two Sum](#1)
 - [10. Regular Expression Matching](#10)
 - [38. Count and Say](#38)
 - [39. Combination Sum](#39)
@@ -49,6 +49,68 @@ This project won't stop until I have got a job offer.
 - [788. Rotated Digits](#788)
 - [806. Number of Lines To Write String](#806)
 - [819. Most Common Word](#819)
+
+## 1
+
+Given an array of integers, return **indices** of the two numbers such that they add up to a specific target.
+
+You may assume that each input would have **exactly** one solution, and you may not use the same element twice.
+
+**Example:**
+
+```
+Given nums = [2, 7, 11, 15], target = 9,
+
+Because nums[0] + nums[1] = 2 + 7 = 9,
+return [0, 1].
+```
+
+**Solution:**
+
+找出数组中和为给定值的两个元素的下标。直接计算和肯定是低效的，可以转化一下问题：找出数组中是否存在元素 a 满足 `tagget-a = b ` 并且 b 也在数组中。
+
+一种思路是直接利用 list：
+
+```java
+public int[] twoSum(int[] nums, int target) {
+    if (nums.length < 2) {
+        return null;
+    }
+    List<Integer> list = new ArrayList<>();
+    for (int num : nums) {
+        list.add(num);
+    }
+    for (int i = 0, len = list.size(); i < len; i++) {
+        int tmp = list.indexOf(target - list.get(i));
+        if (tmp != i && tmp != -1) {
+            return new int[]{i, tmp};
+        }
+    }
+    return null;
+}
+```
+
+这种解法是可以预见的低效的，因为 indexOf 耗费太多时间。
+
+我们可以利用 HashMap 优化一下：
+
+```java
+public int[] twoSum(int[] nums, int target) {
+    int[] result = new int[2];
+    int tmp = 0;
+    Map<Integer, Integer> res = new HashMap<>();
+    for (int i = 0; i < nums.length; i++) {
+        tmp = target - nums[i];
+        if (res.containsKey(tmp)) {
+            result[0] = res.get(tmp);
+            result[1] = i;
+            break;
+        }
+        res.put(nums[i], i);
+    }
+    return result;
+}
+```
 
 ## 10
 
