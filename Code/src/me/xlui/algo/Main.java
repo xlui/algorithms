@@ -1,7 +1,7 @@
 package me.xlui.algo;
 
-import me.xlui.algo.Problem100.Solution;
-import me.xlui.algo.Problem100.TreeNode;
+import me.xlui.algo.p100.Solution;
+import me.xlui.algo.p100.TreeNode;
 
 public class Main {
     public static void main(String[] args) throws Exception {

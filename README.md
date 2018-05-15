@@ -23,6 +23,7 @@ This project won't stop until I have got a job offer.
 - [171. Excel Sheet Column Number](#171)
 - [193. Valid Phone Numbers](#193)
 - [196. Delete Duplicate Emails](#196)
+- [207. Course Schedule](#207)
 - [215. Kth Largest Element in an Array](#215)
 - [279. Perfect Squares](#279)
 - [284. Peeking Iterator](#284)
@@ -968,6 +969,84 @@ DELETE FROM Person WHERE Id NOT IN (SELECT p.Id FROM (SELECT Min(Id) AS Id FROM 
 思路是先按照 Email 进行分组，然后从分组中选出每一组最小的 Id，最后删除不在最小 Id 表中的 Id。
 
 此答案打败了 100% 的提交者。
+
+## 207
+
+There are a total of n courses you have to take, labeled from `0` to `n-1`.
+
+Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which is expressed as a pair: `[0,1]`
+
+Given the total number of courses and a list of prerequisite `pairs`, is it possible for you to finish all courses?
+
+**Example 1:**
+
+```
+Input: 2, [[1,0]] 
+Output: true
+Explanation: There are a total of 2 courses to take. 
+             To take course 1 you should have finished course 0. So it is possible.
+```
+
+**Example 2:**
+
+```
+Input: 2, [[1,0],[0,1]]
+Output: false
+Explanation: There are a total of 2 courses to take. 
+             To take course 1 you should have finished course 0, and to take course 0 you should
+             also have finished course 1. So it is impossible.
+```
+
+**Note:**
+
+1. The input prerequisites is a graph represented by a list of edges, not adjacency matrices. Read more about how a graph is represented.
+1. You may assume that there are no duplicate edges in the input prerequisites.
+
+**Hints:**
+
+1. This problem is equivalent to finding if a cycle exists in a directed graph. If a cycle exists, no topological ordering exists and therefore it will be impossible to take all courses.
+1. Topological Sort via DFS - A great video tutorial (21 minutes) on Coursera explaining the basic concepts of Topological Sort.
+1. Topological sort could also be done via BFS.
+
+**Solution:**
+
+根据题意，有一个先驱课程列表，每个列表是某个课程的前驱对，要找出是否能够修完所有课程。考虑不能修完课程的情况，即前驱列表中存在相互依赖（0 依赖 1，同时 1 也依赖 0）。
+
+可以利用拓扑排序来解：
+
+```java
+public boolean canFinish(int numCourses, int[][] prerequisites) {
+    int[] inDegree = new int[numCourses];
+    Queue<Integer> queue = new LinkedList<>();
+
+    for (int[] prerequisite : prerequisites) {
+        inDegree[prerequisite[0]]++;
+    }
+    for (int i = 0; i < inDegree.length; i++) {
+        if (inDegree[i] == 0) {
+            queue.add(i);
+        }
+    }
+    int count = queue.size();
+    while (!queue.isEmpty()) {
+        int t = queue.poll();
+        for (int[] prerequisite : prerequisites) {
+            if (t == prerequisite[1]) {
+                int l = prerequisite[0];
+                inDegree[l]--;
+                if (inDegree[l] == 0) {
+                    queue.add(l);
+                    ++count;
+                }
+            }
+        }
+    }
+
+    return count == numCourses;
+}
+```
+
+根据结点的入度（依赖该结点的结点个数）来进行拓扑排序，队列中只放入入度为 0 的结点。
 
 ## 215
 
