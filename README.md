@@ -31,6 +31,7 @@ This project won't stop until I have got a job offer.
 - [342. Power of Four](#342)
 - [350. Intersection of Two Arrays II](#350)
 - [357. Count Numbers with Unique Digits](#357)
+- [367. Valid Perfect Square](#367)
 - [387. First Unique Character in a String](#387)
 - [400. Nth Digit](#400)
 - [406. Queue Reconstruction by Height](#406)
@@ -1503,6 +1504,68 @@ public static int countNumbersWithUniqueDigits(int n) {
     return res;
 }
 ```
+
+## 367
+
+Given a positive integer num, write a function which returns True if num is a perfect square else False.
+
+**Note:**
+
+Do not use any built-in library function such as `sqrt`.
+
+**Example 1:**
+
+```
+Input: 16
+Returns: True
+```
+
+**Example 2:**
+
+```
+Input: 14
+Returns: False
+```
+
+**Solution:**
+
+一种做法是先求给定数的一半，然后循环判断：
+
+```java
+public boolean isPerfectSquare(int num) {
+    int middle = num / 2 + 1;
+    for (int i = 0; i <= middle; i++) {
+        if (num == i * i) {
+            return true;
+        }
+    }
+    return false;
+}
+```
+
+根据此思路的一个优化：
+
+```java
+public boolean isPerfectSquare(int num) {
+    long l = 1;
+    long r = (num / 2) + 1;
+    
+    while (l <= r) {
+        long m = (l + r) / 2;
+        
+        if (m * m == num) 
+            return true;
+        else if (m * m < num) 
+            l = m + 1;
+        else 
+            r = m - 1;
+    }
+    return false;
+}
+```
+
+减少了很多无用的判断。
+
 
 ## 387
 
