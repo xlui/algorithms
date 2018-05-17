@@ -19,6 +19,7 @@ This project won't stop until I have got a job offer.
 - [125. Valid Palindrome](#125)
 - [141. Linked List Cycle](#141)
 - [143. Reorder List](#143)
+- [144. Binary Tree Preorder Traversal](#144)
 - [165. Compare Version Numbers](#165)
 - [171. Excel Sheet Column Number](#171)
 - [193. Valid Phone Numbers](#193)
@@ -794,6 +795,73 @@ public void reorderList(ListNode head) {
     }
 }
 ```
+
+## 144
+
+Given a binary tree, return the preorder traversal of its nodes' values.
+
+**Example:**
+
+```
+Input: [1,null,2,3]
+   1
+    \
+     2
+    /
+   3
+
+Output: [1,2,3]
+```
+
+**Follow up:**
+
+Recursive solution is trivial, could you do it iteratively?
+
+**Solution:**
+
+二叉树的先序遍历，递归解法：
+
+```java
+public List<Integer> preorderTraversal(TreeNode root) {
+    List<Integer> ret = new LinkedList<>();
+    preorderTraversal(root, ret);
+    return ret;
+}
+
+private void preorderTraversal(TreeNode root, List<Integer> list) {
+    if (root != null) {
+        list.add(root.val);
+        preorderTraversal(root.left, list);
+        preorderTraversal(root.right, list);
+    }
+}
+```
+
+非递归解法：
+
+```java
+public List<Integer> preorderTraversal(TreeNode root) {
+    List<Integer> list = new LinkedList<>();
+    LinkedList<TreeNode> stack = new LinkedList<>();
+    TreeNode node = root;
+
+    while (node != null || !stack.isEmpty()) {
+        while (node != null) {
+            list.add(node.val);
+            stack.push(node);
+            node = node.left;
+        }
+        if (!stack.isEmpty()) {
+            node = stack.pop();
+            node = node.right;
+        }
+    }
+
+    return list;
+}
+```
+
+非递归解法主要利用栈，左子结点先入栈，右子节点后入栈。该解法打败了 98% 的提交者。
 
 ## 165
 
