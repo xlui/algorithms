@@ -14,6 +14,7 @@ This project won't stop until I have got a job offer.
 - [39. Combination Sum](#39)
 - [100. Same Tree](#100)
 - [101. Symmetric Tree](#101)
+- [114. Flatten Binary Tree to Linked List](#114)
 - [120. Triangle](#120)
 - [121. Best Time to Buy and Sell Stock](#121)
 - [125. Valid Palindrome](#125)
@@ -510,6 +511,64 @@ public boolean isSymmetric(TreeNode root) {
 ```
 
 思路与双端队列相同。
+
+## 114
+
+Given a binary tree, flatten it to a linked list in-place.
+
+For example, given the following tree:
+
+```
+    1
+   / \
+  2   5
+ / \   \
+3   4   6
+```
+
+The flattened tree should look like:
+
+```
+1
+ \
+  2
+   \
+    3
+     \
+      4
+       \
+        5
+         \
+          6
+```
+
+**Solution:**
+
+利用栈做先序遍历，不断把左结点挂在右结点上。
+
+```java
+public void flatten(TreeNode root) {
+    if (root == null) {
+        return;
+    }
+    LinkedList<TreeNode> stack = new LinkedList<>();
+    stack.push(root);
+    TreeNode node;
+    while (!stack.isEmpty()) {
+        node = stack.pop();
+        if (node.right != null) {
+            stack.push(node.right);
+        }
+        if (node.left != null) {
+            stack.push(node.left);
+        }
+        node.left = null;
+        if (!stack.isEmpty()) {
+            node.right = stack.peek();
+        }
+    }
+}
+```
 
 ## 120
 
