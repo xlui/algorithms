@@ -10,6 +10,7 @@ This project won't stop until I have got a job offer.
 
 - [1. Two Sum](#1)
 - [10. Regular Expression Matching](#10)
+- [28. Implement strStr()](#28)
 - [38. Count and Say](#38)
 - [39. Combination Sum](#39)
 - [100. Same Tree](#100)
@@ -199,6 +200,76 @@ public static boolean isMatch(String s, String p) {
 ```
 
 掉头发了....
+
+## 28
+
+Implement [strStr()](http://www.cplusplus.com/reference/cstring/strstr/).
+
+Return the index of the first occurrence of needle in haystack, or **-1** if needle is not part of haystack.
+
+**Example 1:**
+
+```
+Input: haystack = "hello", needle = "ll"
+Output: 2
+```
+
+**Example 2:**
+
+```
+Input: haystack = "aaaaa", needle = "bba"
+Output: -1
+```
+
+**Clarification:**
+
+What should we return when `needle` is an empty string? This is a great question to ask during an interview.
+
+For the purpose of this problem, we will return 0 when `needle` is an empty string. This is consistent to C's [strStr()](http://www.cplusplus.com/reference/cstring/strstr/) and Java's [indexOf()](https://docs.oracle.com/javase/7/docs/api/java/lang/String.html#indexOf(java.lang.String).
+
+**Solution:**
+
+手动实现一遍 Java 中的 indexOf：
+
+```java
+public int strStr(String haystack, String needle) {
+    if (needle.length() == 0) {
+        return 0;
+    }
+
+    char[] sources = haystack.toCharArray();
+    char[] needles = needle.toCharArray();
+    int sl = sources.length, nl = needles.length;
+    int result;
+    for (int i = 0; i < sl; i++) {
+        if (sources[i] == needles[0]) {
+            int si = i, ni = 0, match = 0; // needle index
+            result = i;
+            while (si < sl && ni < nl && sources[si] == needles[ni]) {
+                match++;
+                si++;
+                ni++;
+            }
+            if (match == nl) {
+                return result;
+            }
+        }
+    }
+    return -1;
+}
+```
+
+没有任何优化的版本速度当然也是惨不忍睹的。。
+
+调用 API：
+
+```java
+public int strStr(String haystack, String needle) {
+    return haystack.indexOf(needle);
+}
+```
+
+打败了 100% 的 Java 提交者，没意义 :smile:
 
 ## 38
 
