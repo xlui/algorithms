@@ -40,6 +40,7 @@ This project won't stop until I have got a job offer.
 - [406. Queue Reconstruction by Height](#406)
 - [413. Arithmetic Slices](#413)
 - [417. Pacific Atlantic Water Flow](#417)
+- [467. Unique Substrings in Wraparound String](#467)
 - [492. Construct the Rectangle](#492)
 - [503. Next Greater Element II](#503)
 - [515. Find Largest Value in Each Tree Row](#515)
@@ -2057,6 +2058,72 @@ private static void flow(boolean[][] visited, int[][] matrix, int x, int y, int 
             }
         }
     }
+}
+```
+
+## 467
+
+Consider the string `s` to be the infinite wraparound string of "abcdefghijklmnopqrstuvwxyz", so `s` will look like this: "...zabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcd....".
+
+Now we have another string `p`. Your job is to find out how many unique non-empty substrings of `p` are present in `s`. In particular, your input is the string `p` and you need to output the number of different non-empty substrings of `p` in the string `s`.
+
+**Note:**
+
+`p` consists of only lowercase English letters and the size of p might be over 10000.
+
+**Example 1:**
+
+```
+Input: "a"
+Output: 1
+
+Explanation: Only the substring "a" of string "a" is in the string s.
+```
+
+**Example 2:**
+
+```
+Input: "cac"
+Output: 2
+Explanation: There are two substrings "a", "c" of string "cac" in the string s.
+```
+
+**Example 3:**
+
+```
+Input: "zab"
+Output: 6
+Explanation: There are six substrings "z", "a", "b", "za", "ab", "zab" of string "zab" in the string s.
+```
+
+**Solution:**
+
+判断 p 的非空子串中有多少是 s 的子串，其中 s 是 `"abcd...xyzabcd......"` 形式的无限串。也就是求 p 中非空连续子串的个数，其中 `z` 后是 `a`。
+
+对于这题，我们可以只考虑 26 个字符分别作为子串结尾时的情况。这种考虑的依据是：
+
+1. 以某个字符结尾的最大子串个数等于以该字符结尾的连续子串个数。例如 `abcd`，以 `d` 结尾的最大子串个数是 `4`，分别是 `abcd`, `bcd`, `cd`, `d`。
+1. 如果 p 中存在重复字符，我们只需要考虑最长的串。例如 `abcdbcd`，以 `d` 结尾的最大字串是 4，并且由后面 `bcd` 所推导出的所有子串都已经包含在 `abcd` 推导出的子串中了。
+1. 不管 `p` 中连续子串有多长，它始终包含在 `s` 中，因为 `s` 无限长。
+1. 最后，我们将所有 26 个字符结尾的子串的长度相加，就是我们需要的结果。
+
+```java
+public int findSubstringInWraproundString(String p) {
+    int[] count = new int[26];
+    char[] input = p.toCharArray();
+    int tmpMax = 0;
+    for (int i = 0; i < input.length; i++) {
+        if (i > 0 && (input[i] - input[i - 1] == 1 || input[i - 1] - input[i] == 25)) {
+            tmpMax++;
+        } else {
+            tmpMax = 1;
+        }
+
+        int index = input[i] - 'a';
+        count[index] = Math.max(count[index], tmpMax);
+    }
+
+    return Arrays.stream(count).sum();
 }
 ```
 
