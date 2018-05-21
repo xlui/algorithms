@@ -49,6 +49,7 @@ This project won't stop until I have got a job offer.
 - [605. Can Place Flowers](#605)
 - [617. Merge Two Binary Trees](#617)
 - [627. Swap Salary](#627)
+- [676. Implement Magic Dictionary](#676)
 - [717. 1-bit and 2-bit Characters](#717)
 - [748. Shortest Completing Word](#748)
 - [783. Minimum Distance Between BST Nodes](#783)
@@ -2607,6 +2608,85 @@ UPDATE salary SET sex = CHAR(ASCII('f') ^ ASCII('m') ^ ASCII(sex));
 -- 109 ^ 102 = 11
 -- 11 ^ 109 = 102
 -- 11 ^ 102 = 109
+```
+
+## 676
+
+Implement a magic directory with `buildDict`, and `search` methods.
+
+For the method `buildDict`, you'll be given a list of non-repetitive words to build a dictionary.
+
+For the method `search`, you'll be given a word, and judge whether if you modify **exactly** one character into **another** character in this word, the modified word is in the dictionary you just built.
+
+**Example 1:**
+
+```
+Input: buildDict(["hello", "leetcode"]), Output: Null
+Input: search("hello"), Output: False
+Input: search("hhllo"), Output: True
+Input: search("hell"), Output: False
+Input: search("leetcoded"), Output: False
+```
+
+**Note:**
+
+1. You may assume that all the inputs are consist of lowercase letters a-z.
+1. For contest purpose, the test data is rather small by now. You could think about highly efficient algorithm after the contest.
+1. Please remember to RESET your class variables declared in class MagicDictionary, as static/class variables are persisted across multiple test cases. Please see [here](https://leetcode.com/faq/#different-output) for more details.
+
+**Solution:**
+
+让自己实现一个 MagicDictionary 类，并实现 buildDict 和 search 方法。关于 buildDict 方法没有什么要说的，放进一个 HashSet 即可。关于 search，可以对 word 的每一个字符，分别用 a-z （除去字符本身）来替换，然后判断是否在 HashSet 中：
+
+```java
+class MagicDictionary {
+    private Set<String> dictSet = new HashSet<>();
+
+    /**
+        * Initialize your data structure here.
+        */
+    public MagicDictionary() {
+
+    }
+
+    /**
+        * Build a dictionary through a list of words
+        */
+    public void buildDict(String[] dict) {
+        Collections.addAll(dictSet, dict);
+    }
+
+    /**
+        * Returns if there is any word in the trie that equals to the given word after modifying exactly one character
+        */
+    public boolean search(String word) {
+        char[] words = word.toCharArray();
+        for (int i = 0, len = words.length; i < len; i++) {
+            char w = words[i];
+            for (char j = 'a'; j <= 'z'; j++) {
+                if (j == w) {
+                    continue;
+                }
+                words[i] = j;
+                if (dictSet.contains(String.valueOf(words))) {
+                    return true;
+                }
+            }
+            words[i] = w;
+        }
+        return false;
+    }
+
+    public static void main(String[] args) {
+        MagicDictionary magicDictionary = new MagicDictionary();
+        magicDictionary.buildDict(new String[]{"hello", "leetcode"});
+        assert !magicDictionary.search("hello");
+        assert magicDictionary.search("hhllo");
+        assert !magicDictionary.search("hell");
+        assert !magicDictionary.search("leetcoded");
+        assert !magicDictionary.search("leetcode");
+    }
+}
 ```
 
 ## 717
