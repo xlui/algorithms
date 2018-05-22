@@ -22,6 +22,7 @@ This project won't stop until I have got a job offer.
 - [141. Linked List Cycle](#141)
 - [143. Reorder List](#143)
 - [144. Binary Tree Preorder Traversal](#144)
+- [162. Find Peak Element](#162)
 - [165. Compare Version Numbers](#165)
 - [171. Excel Sheet Column Number](#171)
 - [193. Valid Phone Numbers](#193)
@@ -994,6 +995,91 @@ public List<Integer> preorderTraversal(TreeNode root) {
 ```
 
 非递归解法主要利用栈，左子结点先入栈，右子节点后入栈。该解法打败了 98% 的提交者。
+
+## 162
+
+A peak element is an element that is greater than its neighbors.
+
+Given an input array `nums`, where `nums[i] ≠ nums[i+1]`, find a peak element and return its index.
+
+The array may contain multiple peaks, in that case return the index to any one of the peaks is fine.
+
+You may imagine that `nums[-1] = nums[n] = -∞`.
+
+**Example 1:**
+
+```
+Input: nums = [1,2,3,1]
+Output: 2
+Explanation: 3 is a peak element and your function should return the index number 2.
+```
+
+**Example 2:**
+
+```
+Input: nums = [1,2,1,3,5,6,4]
+Output: 1 or 5 
+Explanation: Your function can return either index number 1 where the peak element is 2, 
+             or index number 5 where the peak element is 6.
+```
+
+**Note:**
+
+Your solution should be in logarithmic complexity.
+
+**Solution:**
+
+直接暴力做也可以 AC：
+
+```java
+public int findPeakElement(int[] nums) {
+    if (nums.length <= 1) {
+        return 0;
+    }
+    if (nums[0] > nums[1]) {
+        return 0;
+    }
+    if (nums[nums.length - 1] > nums[nums.length - 2]) {
+        return nums.length - 1;
+    }
+    for (int i = 1; i < nums.length - 1; i++) {
+        if (nums[i] > nums[i - 1] && nums[i] > nums[i + 1]) {
+            return i;
+        }
+    }
+    return -1;
+}
+```
+
+根据题意，我们可以知道，数组中任意一个合适元素均可，上面的解法我们求出的始终是第一个合适的元素，做了较多判断。可以从题目特点总结出第二种解法：
+
+```java
+public int findPeakElement(int[] nums) {
+    if (nums.length == 1)
+        return 0;
+    for (int i = 0; i < nums.length - 1; i++) {
+        if (nums[i] > nums[i + 1])
+            return i;
+    }
+    return nums.length - 1;
+}
+```
+
+但是题目里说了可以在 log 时间复杂度内完成，可以依据二分查找的思想简化算法：
+
+```java
+public int findPeakElement(int[] nums) {
+    int l = 0, r = nums.length - 1;
+    while (l < r) {
+        int mid = (l + r) / 2;
+        if (nums[mid] > nums[mid + 1])
+            r = mid;
+        else
+            l = mid + 1;
+    }
+    return l;
+}
+```
 
 ## 165
 
