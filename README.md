@@ -53,6 +53,7 @@ This project won't stop until I have got a job offer.
 - [627. Swap Salary](#627)
 - [676. Implement Magic Dictionary](#676)
 - [717. 1-bit and 2-bit Characters](#717)
+- [744. Find Smallest Letter Greater Than Target](#744)
 - [748. Shortest Completing Word](#748)
 - [783. Minimum Distance Between BST Nodes](#783)
 - [788. Rotated Digits](#788)
@@ -2856,6 +2857,67 @@ public static boolean isOneBitCharacter(int[] bits) {
             i += 2;
     }
     return i == len - 1;
+}
+```
+
+## 744
+
+Given a list of sorted characters `letters` containing only lowercase letters, and given a target letter `target`, find the smallest element in the list that is larger than the given target.
+
+Letters also wrap around. For example, if the target is `target = 'z'` and `letters = ['a', 'b']`, the answer is `'a'`.
+
+**Examples:**
+
+```
+Input:
+letters = ["c", "f", "j"]
+target = "a"
+Output: "c"
+
+Input:
+letters = ["c", "f", "j"]
+target = "c"
+Output: "f"
+
+Input:
+letters = ["c", "f", "j"]
+target = "d"
+Output: "f"
+
+Input:
+letters = ["c", "f", "j"]
+target = "g"
+Output: "j"
+
+Input:
+letters = ["c", "f", "j"]
+target = "j"
+Output: "c"
+
+Input:
+letters = ["c", "f", "j"]
+target = "k"
+Output: "c"
+```
+
+**Note:**
+
+1. `letters` has a length in range `[2, 10000]`.
+1. `letters` consists of lowercase letters, and contains at least 2 unique letters.
+1. `target` is a lowercase letter.
+
+**Solution:**
+
+直接进行查找即可，如果找不到比 target 大的元素，返回第一个元素（Letters also wrap around）。
+
+```java
+public char nextGreatestLetter(char[] letters, char target) {
+    for (char letter : letters) {
+        if (letter > target) {
+            return letter;
+        }
+    }
+    return letters[0];
 }
 ```
 
