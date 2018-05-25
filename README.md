@@ -42,6 +42,7 @@ This project won't stop until I have got a job offer.
 - [406. Queue Reconstruction by Height](#406)
 - [413. Arithmetic Slices](#413)
 - [417. Pacific Atlantic Water Flow](#417)
+- [445. Add Two Numbers II](#445)
 - [467. Unique Substrings in Wraparound String](#467)
 - [492. Construct the Rectangle](#492)
 - [503. Next Greater Element II](#503)
@@ -2190,6 +2191,82 @@ private static void flow(boolean[][] visited, int[][] matrix, int x, int y, int 
     }
 }
 ```
+
+## 445
+
+You are given two `non-empty` linked lists representing two non-negative integers. The most significant digit comes first and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.
+
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+
+**Example:**
+
+```
+Input: (7 -> 2 -> 4 -> 3) + (5 -> 6 -> 4)
+Output: 7 -> 8 -> 0 -> 7
+```
+
+**Solution:**
+
+将两个链表转置然后归并可解：
+
+```java
+public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    l1 = reverse(l1);
+    l2 = reverse(l2);
+
+    ListNode node = new ListNode(-1), cur = node;
+    boolean carry = false;
+    while ((l1 != null && l2 != null) || carry) {
+        int sum;
+        if (carry) {
+            sum = (l1 != null ? l1.val : 0) + (l2 != null ? l2.val : 0) + 1;
+            l1 = l1 == null ? null : l1.next;
+            l2 = l2 == null ? null : l2.next;
+        } else {
+            sum = l1.val + l2.val;
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+        if (sum >= 10) {
+            cur.next = new ListNode(sum % 10);
+            carry = true;
+        } else {
+            cur.next = new ListNode(sum);
+            carry = false;
+        }
+        cur = cur.next;
+    }
+    while (l1 != null) {
+        cur.next = new ListNode(l1.val);
+        l1 = l1.next;
+        cur = cur.next;
+    }
+    while (l2 != null) {
+        cur.next = new ListNode(l2.val);
+        l2 = l2.next;
+        cur = cur.next;
+    }
+
+    return reverse(node.next);
+}
+
+private ListNode reverse(ListNode head) {
+    if (head == null || head.next == null) {
+        return head;
+    }
+
+    ListNode ret = null, next = null;
+    while (head != null) {
+        next = head.next;
+        head.next = ret;
+        ret = head;
+        head = next;
+    }
+    return ret;
+}
+```
+
+题中还说了一种不改变链表的情况求解，可以使用栈来做。
 
 ## 467
 
