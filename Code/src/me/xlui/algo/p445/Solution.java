@@ -1,7 +1,5 @@
 package me.xlui.algo.p445;
 
-import com.sun.org.apache.bcel.internal.generic.LNEG;
-
 public class Solution {
 	public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
 		l1 = reverse(l1);

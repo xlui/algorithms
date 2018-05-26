@@ -52,6 +52,7 @@ This project won't stop until I have got a job offer.
 - [605. Can Place Flowers](#605)
 - [617. Merge Two Binary Trees](#617)
 - [627. Swap Salary](#627)
+- [645. Set Mismatch](#645)
 - [676. Implement Magic Dictionary](#676)
 - [717. 1-bit and 2-bit Characters](#717)
 - [744. Find Smallest Letter Greater Than Target](#744)
@@ -2815,6 +2816,49 @@ UPDATE salary SET sex = CHAR(ASCII('f') ^ ASCII('m') ^ ASCII(sex));
 -- 11 ^ 109 = 102
 -- 11 ^ 102 = 109
 ```
+
+## 645
+
+The set `S` originally contains numbers from 1 to `n`. But unfortunately, due to the data error, one of the numbers in the set got duplicated to another number in the set, which results in repetition of one number and loss of another number.
+
+Given an array `nums` representing the data status of this set after the error. Your task is to firstly find the number occurs twice and then find the number that is missing. Return them in the form of an array.
+
+**Example 1:**
+
+```
+Input: nums = [1,2,2,4]
+Output: [2,3]
+```
+
+**Note:**
+
+1. The given array size will in the range [2, 10000].
+1. The given array's numbers won't have any order.
+
+**Solution:**
+
+将输入依次映射到一个个数数组，数组下标代表输入数组的数，数组元素代表该下标出现的次数。映射完成后扫描该数组即可得出缺的数（元素值为 0）和重复的数（元素值为 2）
+
+```java
+public int[] findErrorNums(int[] nums) {
+    int[] ret = new int[2];
+    int[] store = new int[nums.length + 1];
+    for (int num : nums) {
+        store[num] = store[num] + 1;
+    }
+    for (int i = 1; i < nums.length + 1; i++) {
+        if (store[i] == 0) {
+            ret[1] = i;
+        }
+        if (store[i] == 2) {
+            ret[0] = i;
+        }
+    }
+    return ret;
+}
+```
+
+此提交打败了 100% 的 java 提交者。
 
 ## 676
 
