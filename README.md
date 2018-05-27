@@ -30,6 +30,7 @@ This project won't stop until I have got a job offer.
 - [196. Delete Duplicate Emails](#196)
 - [207. Course Schedule](#207)
 - [215. Kth Largest Element in an Array](#215)
+- [235. Lowest Common Ancestor of a Binary Search Tree](#235)
 - [279. Perfect Squares](#279)
 - [284. Peeking Iterator](#284)
 - [303. Range Sum Query - Immutable](#303)
@@ -1443,6 +1444,69 @@ private static void swap(int[] nums, int i, int j) {
     int tmp = nums[i];
     nums[i] = nums[j];
     nums[j] = tmp;
+}
+```
+
+## 235
+
+Given a binary search tree (BST), find the lowest common ancestor (LCA) of two given nodes in the BST.
+
+According to [the definition of LCA on Wikipedia](https://en.wikipedia.org/wiki/Lowest_common_ancestor): “The lowest common ancestor is defined between two nodes p and q as the lowest node in T that has both p and q as descendants (where we allow **a node to be a descendant of itself**).”
+
+Given binary search tree:  root = [6,2,8,0,4,7,9,null,null,3,5]
+
+```
+        _______6______
+       /              \
+    ___2__          ___8__
+   /      \        /      \
+   0      _4       7       9
+         /  \
+         3   5
+```
+
+**Example 1:**
+
+```
+Input: root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 8
+Output: 6
+Explanation: The LCA of nodes 2 and 8 is 6.
+```
+
+**Example 2:**
+
+```
+Input: root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 4
+Output: 2
+Explanation: The LCA of nodes 2 and 4 is 2, since a node can be a descendant of itself 
+             according to the LCA definition.
+```
+
+**Note:**
+
+1. All of the nodes' values will be unique.
+1. p and q are different and both values will exist in the BST.
+
+**Solution:**
+
+根据 LCA 的规则我们可以推断出：
+
+1. 如果两个结点在当前结点左右侧，那么 LCA 就是当前节点
+
+由此可以得出解法：
+
+```java
+public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    while (root != null) {
+        if (root.val < p.val && root.val < q.val) {
+            root = root.right;
+        } else if (root.val > p.val && root.val > q.val) {
+            root = root.left;
+        } else {
+            break;
+        }
+    }
+    return root;
 }
 ```
 
