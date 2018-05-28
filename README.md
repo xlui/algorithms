@@ -38,6 +38,7 @@ This project won't stop until I have got a job offer.
 - [350. Intersection of Two Arrays II](#350)
 - [357. Count Numbers with Unique Digits](#357)
 - [367. Valid Perfect Square](#367)
+- [374. Guess Number Higher or Lower](#374-guess-number-higher-or-lower)
 - [387. First Unique Character in a String](#387)
 - [400. Nth Digit](#400)
 - [406. Queue Reconstruction by Height](#406)
@@ -1961,6 +1962,57 @@ public boolean isPerfectSquare(int num) {
 
 减少了很多无用的判断。
 
+## [374 Guess Number Higher or Lower](https://leetcode.com/problems/guess-number-higher-or-lower/description/)
+
+猜数字游戏，给定一个位置的数字，要我们从一个范围中找出这个数字。给出了判断准确性的办法，`guess()`。
+
+第一种解法是利用中间值判断，不是中间值的话就根据判断结果增大或者缩小两边边界：
+
+```java
+public int guessNumber(int n) {
+    int left = 0, right = n;
+    if (0 == guess(n)) {
+        return n;
+    }
+    while (true) {
+        int middle = (left + right) >>> 1;
+        int result = guess(middle);
+        if (result > 0) {
+            left--;
+        } else if (result < 0) {
+            right++;
+        } else {
+            return middle;
+        }
+    }
+}
+```
+
+但是这种解法随着给定的数与 n 的接近程度其循环次数也逐渐增大，当给定数就是 n 或者 0 时，时间复杂度是 O(N)，超时。
+
+根据上面算法的思想，我们可以进一步延伸出这题的解法：当判断不是中间值的时候，更新左右边界可以更新的更大一点：
+
+```java
+public int guessNumber(int n) {
+    int left = 0, right = n;
+    if (0 == guess(n)) {
+        return n;
+    }
+    while (true) {
+        int middle = (left + right) >>> 1;
+        int result = guess(middle);
+        if (result > 0) {
+            left = middle;
+        } else if (result < 0) {
+            right = middle;
+        } else {
+            return middle;
+        }
+    }
+}
+```
+
+这个算法在特定情况下会无限循环（n = 1，给定值也是 1），所以在 while 之前加了一层判断。
 
 ## 387
 
