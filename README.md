@@ -10,6 +10,7 @@ This project won't stop until I have got a job offer.
 
 - [1. Two Sum](#1)
 - [10. Regular Expression Matching](#10)
+- [16. 3Sum Closest](#16-3sum-closest)
 - [28. Implement strStr()](#28)
 - [38. Count and Say](#38)
 - [39. Combination Sum](#39)
@@ -209,6 +210,64 @@ public static boolean isMatch(String s, String p) {
 ```
 
 掉头发了....
+
+## [16 3Sum Closest](https://leetcode.com/problems/3sum-closest/description/)
+
+要求从数组中选出三个数，使其之和与 target 相差最小。先来暴力解：
+
+```java
+public int silly(int[] nums, int target) {
+    int minDiff = Integer.MAX_VALUE;
+    int result = 0;
+    for (int i = 0; i < nums.length; i++) {
+        for (int j = i + 1; j < nums.length; j++) {
+            for (int k = j + 1; k < nums.length; k++) {
+                int tmp = nums[i] + nums[j] + nums[k];
+                int diff = Math.abs(target - tmp);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    result = tmp;
+                }
+            }
+        }
+    }
+    return result;
+}
+```
+
+三重循环直接 AC？？？
+
+对于上面的算法，我们可以简单优化一下。先将数组进行排序，最外层循环不动，对于内层两个循环，我们可以利用数组有序的特点对其计算方式进行优化。可以考虑内层两个数分别取 i 之后的第一个数与最后一个数，因为有序，所以如果三个数的和大于 target，则需要取倒数第二个数进行计算；如果小于 target，则应取 i 之后第二个数，依次类推。这样就得到了高效的算法二：
+
+```java
+public int threeSumClosest(int[] nums, int target) {
+    Arrays.sort(nums);
+
+    int minDiff = Integer.MAX_VALUE;
+    int result = 0;
+    for (int i = 0; i < nums.length - 1; i++) {
+        int iLeft = i + 1;
+        int iRight = nums.length - 1;
+        while (iLeft < iRight) {
+            int tmp = nums[i] + nums[iLeft] + nums[iRight];
+            int diff = Math.abs(target - tmp);
+            if (diff < minDiff) {
+                minDiff = diff;
+                result = tmp;
+            }
+
+            if (tmp > target) {
+                iRight--;
+            } else if (tmp < target) {
+                iLeft++;
+            } else {
+                return tmp;
+            }
+        }
+    }
+    return result;
+}
+```
 
 ## 28
 
