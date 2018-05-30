@@ -56,6 +56,7 @@ This project won't stop until I have got a job offer.
 - [617. Merge Two Binary Trees](#617)
 - [627. Swap Salary](#627)
 - [645. Set Mismatch](#645)
+- [673. Number of Longest Increasing Subsequence](#673-number-of-longest-increasing-subsequence)
 - [676. Implement Magic Dictionary](#676)
 - [717. 1-bit and 2-bit Characters](#717)
 - [744. Find Smallest Letter Greater Than Target](#744)
@@ -3034,6 +3035,47 @@ public int[] findErrorNums(int[] nums) {
 ```
 
 此提交打败了 100% 的 java 提交者。
+
+## [673 Number of Longest Increasing Subsequence](https://leetcode.com/problems/number-of-longest-increasing-subsequence/description/)
+
+此题要找最长递增子序列的个数，一般能想到的就是 dp 了。直接对问题分析比较复杂，我们可以从另一个角度来看。考虑以 i 元素为递增子序列最后一个元素的情况，我们用 `length` 数组表示以某元素结尾的递增子序列的最大，用 `numbers` 数组表示对应长度的递增子序列个数。初始两个数组中元素均为 1.
+
+现在我们遍历数组，对于 i 元素，遍历其之前的元素：
+
+1. 如果 nums[j] > nums[i] 则不做考虑，因为不是递增序列。
+1. 如果 length[i] < length[j] + 1，表明出现了更长的递增序列，将 length[i] 更新为 length[j] + 1，同时将 numbers[i] 更新为 numbers[j]，因为有了更长的递增子序列，所有原来的 numbers[i] 已经无用
+1. 如果 length[i] == length[j] + 1，则表明以 i 结尾，最大长度为 length[i] 的子序列又出现了一个，此时我们需要更新 numbers 数组：numbers[i] = numbers[i] + numbers[j]
+
+解法：
+
+```java
+public int findNumberOfLIS(int[] nums) {
+    int maxLen = 0, maxNum = 0;
+    int[] lengths = new int[nums.length];
+    int[] subsequence = new int[nums.length];
+
+    for (int i = 0; i < nums.length; i++) {
+        lengths[i] = subsequence[i] = 1;
+        for (int j = 0; j < i; j++) {
+            if (nums[i] > nums[j]) {
+                if (lengths[i] == lengths[j] + 1) {
+                    subsequence[i] += subsequence[j];
+                } else if (lengths[i] < lengths[j] + 1) {
+                    lengths[i] = lengths[j] + 1;
+                    subsequence[i] = subsequence[j];
+                }
+            }
+        }
+        if (maxLen == lengths[i]) {
+            maxNum += subsequence[i];
+        } else if (maxLen < lengths[i]) {
+            maxLen = lengths[i];
+            maxNum = subsequence[i];
+        }
+    }
+    return maxNum;
+}
+```
 
 ## 676
 
