@@ -58,6 +58,7 @@ This project won't stop until I have got a job offer.
 - [645. Set Mismatch](#645)
 - [673. Number of Longest Increasing Subsequence](#673-number-of-longest-increasing-subsequence)
 - [676. Implement Magic Dictionary](#676)
+- [706. Design HashMap](#706-design-hashMap)
 - [717. 1-bit and 2-bit Characters](#717)
 - [744. Find Smallest Letter Greater Than Target](#744)
 - [748. Shortest Completing Word](#748)
@@ -3155,6 +3156,10 @@ class MagicDictionary {
     }
 }
 ```
+
+## [706 Design HashMap](https://leetcode.com/problems/design-hashmap/description/)
+
+设计实现 HashMap，内存存储 (int, int)，很简单，利用链表解决冲突即可。
 
 ## 717
 
