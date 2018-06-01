@@ -32,6 +32,7 @@ This project won't stop until I have got a job offer.
 - [207. Course Schedule](#207)
 - [215. Kth Largest Element in an Array](#215)
 - [235. Lowest Common Ancestor of a Binary Search Tree](#235)
+- [242. Valid Anagram](#242-valid-anagram)
 - [279. Perfect Squares](#279)
 - [284. Peeking Iterator](#284)
 - [303. Range Sum Query - Immutable](#303)
@@ -1571,6 +1572,53 @@ public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
     return root;
 }
 ```
+
+## [242 Valid Anagram](https://leetcode.com/problems/valid-anagram/description/)
+
+给定两个字符串，判断是否是相同字母异构词。
+
+解法一，将字符串转换为 char 数组，排序后比对：
+
+```java
+public boolean isAnagram(String s, String t) {
+    int len1 = s.length(), len2 = t.length();
+    if (len1 != len2) {
+        return false;
+    }
+    char[] sChars = s.toCharArray();
+    char[] tChars = t.toCharArray();
+    Arrays.sort(sChars);
+    Arrays.sort(tChars);
+    for (int i = 0; i < len1; i++) {
+        if (sChars[i] != tChars[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+```
+
+解法二,用一个 int[26] 数组存储 s 中字符出现频率，对于 t 中出现的字符，减去对应的数组值，最后判断数组是否全部为 0：
+
+```java
+public boolean isAnagram(String s, String t) {
+    int[] frequent = new int[26];
+    for (char c : s.toCharArray()) {
+        frequent[c - 'a']++;
+    }
+    for (char c : t.toCharArray()) {
+        frequent[c - 'a']--;
+    }
+    for (int i : frequent) {
+        if (i != 0) {
+            return false;
+        }
+    }
+    return true;
+}
+```
+
+此解法战胜了 96% 的 Java 提交者。
 
 ## 279
 
