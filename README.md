@@ -9,6 +9,7 @@ This project won't stop until I have got a job offer.
 ## Table of Contents
 
 - [1. Two Sum](#1)
+- [7. Reverse Integer](#7-reverse-integer)
 - [10. Regular Expression Matching](#10)
 - [16. 3Sum Closest](#16-3sum-closest)
 - [28. Implement strStr()](#28)
@@ -125,6 +126,48 @@ public int[] twoSum(int[] nums, int target) {
             break;
         }
         res.put(nums[i], i);
+    }
+    return result;
+}
+```
+
+## [7 Reverse Integer](https://leetcode.com/problems/reverse-integer/description/)
+
+翻转整数，比如把 123 翻转为 321. 不考虑越界的情况下很简单，每次求 x 对 10 的余数，然后用一个 res 乘 10 加上余数即可，循环直到 x 为 0. 但是题目明显要求考虑越界。
+
+```
+Integer.MAX_VALUE = 2147483647，Integer.MIN_VALUE = -2147483648
+```
+
+判断是否越界的时候，我们只需要判断 `abs(res) > 214748364` 即可。我们来分析一下为什么不需要检查 `abs(res) == 214748364` 的情况。x（参数） 是一个整数，所以 x 的范围也是 -2148473648 ~ 2147483647，则如果 x 是 10 位数，翻转后最后一位必定是 1 或 2（不可能是 0，0 代表 x 是 9 位数），即 res 最终必定为 2147483641 或 2147483642。又因为 2147483642 对应的 x 是 2463847421 已经超出了 int 的范围，所以当 res 为 214748364 时，x 只可能是 2147483641，所以不需要检查 res 是否等于 214748364。
+
+```java
+public int reverse(int x) {
+    int result = 0;
+    while (x != 0) {
+        if (Math.abs(result) > Integer.MAX_VALUE / 10) {
+            return 0;
+        }
+        result = result * 10 + x % 10;
+        x /= 10;
+    }
+    return result;
+}
+```
+
+中间的判断过程时分费时，我们也可以不做判断，即：
+
+```java
+public int reverse1(int x) {
+    int prev = 0, result = 0, tmp;
+    while (x != 0) {
+        tmp = x % 10;
+        result = result * 10 + tmp;
+        if ((result - tmp) / 10 != prev) {
+            return 0;
+        }
+        prev = result;
+        x /= 10;
     }
     return result;
 }
