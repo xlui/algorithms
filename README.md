@@ -58,6 +58,7 @@ This project won't stop until I have got a job offer.
 - [617. Merge Two Binary Trees](#617)
 - [627. Swap Salary](#627)
 - [645. Set Mismatch](#645)
+- [659. Split Array into Consecutive Subsequences](#659-split-array-into-consecutive-subsequences)
 - [673. Number of Longest Increasing Subsequence](#673-number-of-longest-increasing-subsequence)
 - [676. Implement Magic Dictionary](#676)
 - [706. Design HashMap](#706-design-hashMap)
@@ -3127,6 +3128,46 @@ public int[] findErrorNums(int[] nums) {
 ```
 
 此提交打败了 100% 的 java 提交者。
+
+## [659 Split Array into Consecutive Subsequences](https://leetcode.com/problems/split-array-into-consecutive-subsequences/description/)
+
+给定一个可能包含重复数字的升序序列，要求将其划分为数个子序列，每个子序列至少包含 3 个元素并且是**连续递增子序列**。所以对于序列 [1,2,3,4,5]，解法 `[1,2,3,4,5]` 是可行的，这样我们就想到贪心算法。
+
+设置两个 Map，一个保存序列中数字个数（frequent），另一个保存**某个连续递增子序列之后的数字**以及其可能出现的次数（exist）。
+
+遍历序列，对于序列中的每一个数字 x：
+
+1. 如果 frequent(x) = 0，则直接跳过，开始下一轮循环
+1. 如果 exist(x) > 0，说明可以把 x 连接到某个连续递增子序列之后，也说明一定存在以 x+1 结尾的子序列（贪心），分别更新 exist(x)、exist(x+1)、frequent(x)
+1. 如果 exist(x) <= 0，说明不存在 x 可以连接到的子序列，我们需要判断能否以 x 为开头开启一个子序列，即判断 frequent(x+1) > 0 && frequent(x+2) > 0，如果存在，则更新 frequent(x)、frequent(x+1)、frequent(x+2)、exist(x+3)
+
+```java
+public boolean isPossible(int[] nums) {
+    Map<Integer, Integer> frequent = new HashMap<>();
+    Map<Integer, Integer> exist = new HashMap<>();
+    for (int num : nums) {
+        frequent.put(num, frequent.getOrDefault(num, 0) + 1);
+    }
+    for (int num : nums) {
+        if (frequent.getOrDefault(num, 0) == 0) {
+            continue;
+        }
+        if (exist.getOrDefault(num, 0) > 0) {
+            exist.put(num, exist.get(num) - 1);
+            exist.put(num + 1, exist.getOrDefault(num + 1, 0) + 1);
+            frequent.put(num, frequent.get(num) - 1);
+        } else if (frequent.getOrDefault(num + 1, 0) > 0 && frequent.getOrDefault(num + 2, 0) > 0) {
+            frequent.put(num + 1, frequent.get(num + 1) - 1);
+            frequent.put(num + 2, frequent.get(num + 2) - 1);
+            exist.put(num + 3, exist.getOrDefault(num + 3, 0) + 1);
+            frequent.put(num, frequent.get(num) - 1);
+        } else {
+            return false;
+        }
+    }
+    return true;
+}
+```
 
 ## [673 Number of Longest Increasing Subsequence](https://leetcode.com/problems/number-of-longest-increasing-subsequence/description/)
 
