@@ -32,6 +32,7 @@ This project won't stop until I have got a job offer.
 - [196. Delete Duplicate Emails](#196)
 - [207. Course Schedule](#207)
 - [215. Kth Largest Element in an Array](#215)
+- [229. Majority Element II](#229-majority-element-II)
 - [235. Lowest Common Ancestor of a Binary Search Tree](#235)
 - [242. Valid Anagram](#242-valid-anagram)
 - [279. Perfect Squares](#279)
@@ -1551,6 +1552,30 @@ private static void swap(int[] nums, int i, int j) {
     int tmp = nums[i];
     nums[i] = nums[j];
     nums[j] = tmp;
+}
+```
+
+## [229 Majority Element II](https://leetcode.com/problems/majority-element-ii/description/)
+
+给定一个有 n 个整数的数组，找出其中出现次数大于 `n/3` 的元素。
+
+用 HashMap 存储元素及其出现次数，然后遍历 HashMap 判断次数是否合适即可：
+
+```java
+public List<Integer> majorityElement(int[] nums) {
+    List<Integer> result = new ArrayList<>(nums.length);
+    Map<Integer, Integer> map = new HashMap<>();
+    int frequent = nums.length / 3;
+
+    for (int num : nums) {
+        map.put(num, map.getOrDefault(num, 0) + 1);
+    }
+    for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+        if (entry.getValue() > frequent) {
+            result.add(entry.getKey());
+        }
+    }
+    return result;
 }
 ```
 
