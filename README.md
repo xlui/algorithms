@@ -4,13 +4,14 @@
 
 In order to get a job offer, I'm now training myself through [LeetCode](https://leetcode.com), and I'd like to share my code here.
 
-This project won't stop until I have got a job offer.
+This project won't stop until it contains all the problems in leetcode.
 
 ## Table of Contents
 
 - [1. Two Sum](#1)
 - [7. Reverse Integer](#7-reverse-integer)
 - [10. Regular Expression Matching](#10)
+- [15. 3Sum](#15-3Sum)
 - [16. 3Sum Closest](#16-3sum-closest)
 - [28. Implement strStr()](#28)
 - [38. Count and Say](#38)
@@ -258,6 +259,36 @@ public static boolean isMatch(String s, String p) {
 ```
 
 掉头发了....
+
+## [15 3Sum](https://leetcode.com/problems/3sum/description/)
+
+给定一个数组，找出数组中三个元素和为 0 的序列，不允许重复。其实 16 是 15 的衍生，我们直接采用 16 第二种解法。即，先将数组排序，然后对于数组中的每一个元素，考虑其和之后第一个元素与最后一个元素之和，如果和为 0，则得到结果，如果和大于 0，则应选择倒数第二个元素，如果和小于 0，则应该选该元素之后第二个元素。
+
+```java
+public List<List<Integer>> threeSum(int[] nums) {
+    Set<List<Integer>> result = new HashSet<>();
+    if (nums == null || nums.length < 3) {
+        return new ArrayList<>();
+    }
+    Arrays.sort(nums);
+
+    for (int i = 0; i < nums.length; i++) {
+        int left = i + 1;
+        int right = nums.length - 1;
+        while (left < right) {
+            int sum = nums[i] + nums[left] + nums[right];
+            if (sum == 0) {
+                result.add(Arrays.asList(nums[i], nums[left++], nums[right--]));
+            } else if (sum < 0) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+    }
+    return new ArrayList<>(result);
+}
+```
 
 ## [16 3Sum Closest](https://leetcode.com/problems/3sum-closest/description/)
 
