@@ -51,6 +51,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [417. Pacific Atlantic Water Flow](#417)
 - [445. Add Two Numbers II](#445)
 - [467. Unique Substrings in Wraparound String](#467)
+- [482. License Key Formatting](#482-license-key-formatting)
 - [492. Construct the Rectangle](#492)
 - [503. Next Greater Element II](#503)
 - [515. Find Largest Value in Each Tree Row](#515)
@@ -2659,6 +2660,50 @@ public int findSubstringInWraproundString(String p) {
     return Arrays.stream(count).sum();
 }
 ```
+
+## [482 License Key Formatting](https://leetcode.com/problems/license-key-formatting/description/)
+
+题目要求我们对 License key 进行格式化，保证将给定的 key 格式化为以 `-` 分隔的固定长度 K 的大写字符串，不要求长度为 K 但是必须有至少一个元素（也就是禁止 `-abcd-efgh` 的情况）。
+
+思路是先将 `-` 去除，得到新的字符串 str ，然后在固定位置插入 `-`，按照题目约束，插入 `-` 的位置是确定的，即：str.len() - K, str.len() - 2K, ... str.len() - nK。其中 str.len() - nK > 0。
+
+```java
+public String licenseKeyFormatting(String S, int K) {
+    StringBuilder sb = new StringBuilder(Arrays.stream(S.split("-"))
+            .parallel()
+            .map(String::toUpperCase)
+            .collect(Collectors.joining())
+    );
+    for (int i = sb.length() - K; i > 0; i -= K) {
+        sb.insert(i, "-");
+    }
+    return sb.toString();
+}
+```
+
+但是不知道是 Stream API 还是 Spring#split 方法的原因，该解法运行的十分慢。所以我们有了第二种解法：
+
+```java
+public String licenseKeyFormatting(String S, int K) {
+    int len = S.length();
+    StringBuilder sb = new StringBuilder(len + len / K);
+    for (int i = len - 1, j = 0; i >= 0; i--) {
+        char c = S.charAt(i);
+        if (c == '-') {
+            continue;
+        } else if (c > 96) {
+            c -= 32;
+        }
+        if (j++ % K == 0) {
+            sb.append('-');
+        }
+        sb.append(c);
+    }
+    return sb.length() == 0 ? "" : sb.deleteCharAt(0).reverse().toString();
+}
+```
+
+思路是从后往前，利用 StringBuilder 构建字符串，每经过一个原有的 `-` 就跳过，每添加特定数目的字符后就添加一个 `-`。最后再将多余的第一个 `-` 删除，字符数组倒置即可。
 
 ## 492
 
