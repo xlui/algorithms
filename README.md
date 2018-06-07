@@ -34,6 +34,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [207. Course Schedule](#207)
 - [215. Kth Largest Element in an Array](#215)
 - [229. Majority Element II](#229-majority-element-II)
+- [232. Implement Queue using Stacks](#232-implement-queue-using-stacks)
 - [235. Lowest Common Ancestor of a Binary Search Tree](#235)
 - [242. Valid Anagram](#242-valid-anagram)
 - [279. Perfect Squares](#279)
@@ -1608,6 +1609,63 @@ public List<Integer> majorityElement(int[] nums) {
         }
     }
     return result;
+}
+```
+
+## [232 Implement Queue using Stacks](https://leetcode.com/problems/implement-queue-using-stacks/description/)
+
+通过栈实现队列。这题十分简单，利用两个栈，一个作为 pushStack，一个作为 popStack，选择在 `push`、`pop`、`peek` 的时候同步数据即可。同步数据即把 pushStack 的数据全部弹出到 popStack 中，必须是全部弹出，否则会有数据错乱问题。
+
+```java
+public class MyQueue {
+	private LinkedList<Integer> pushStack;
+	private LinkedList<Integer> popStack;
+
+	/**
+	 * Initialize your data structure here.
+	 */
+	public MyQueue() {
+		pushStack = new LinkedList<>();
+		popStack = new LinkedList<>();
+	}
+
+	/**
+	 * Push element x to the back of queue.
+	 */
+	public void push(int x) {
+		pushStack.push(x);
+	}
+
+	/**
+	 * Removes the element from in front of queue and returns that element.
+	 */
+	public int pop() {
+		if (popStack.isEmpty()) {
+			while (!pushStack.isEmpty()) {
+				popStack.push(pushStack.pop());
+			}
+		}
+		return popStack.pop();
+	}
+
+	/**
+	 * Get the front element.
+	 */
+	public int peek() {
+		if (popStack.isEmpty()) {
+			while (!pushStack.isEmpty()) {
+				popStack.push(pushStack.pop());
+			}
+		}
+		return popStack.peek();
+	}
+
+	/**
+	 * Returns whether the queue is empty.
+	 */
+	public boolean empty() {
+		return pushStack.isEmpty() && popStack.isEmpty();
+	}
 }
 ```
 
