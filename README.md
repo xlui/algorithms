@@ -16,6 +16,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [28. Implement strStr()](#28)
 - [38. Count and Say](#38)
 - [39. Combination Sum](#39)
+- [49. Group Anagrams](#49-group-anagrams)
 - [100. Same Tree](#100)
 - [101. Symmetric Tree](#101)
 - [112. Path Sum](#112)
@@ -554,6 +555,61 @@ private static void dfs(List<List<Integer>> result, Deque<Integer> tmp, int[] ca
     }
 }
 ```
+
+## [49 Group Anagrams](https://leetcode.com/problems/group-anagrams/description/)
+
+将字符串数据按照一定规则分组，规则是任何字母颠倒的字符串分为一组。比如 `"eat"` 与 `"tea"` 以及 `"ate"`，需要分为一组。
+
+看到这题，一上来就想到了用 hash 来做，即将字符串利用一个与字母顺序无关的 `hash` 函数映射为 `int`，然后利用 HashMap 来构建结果。
+
+首先尝试了最简单的 hash :)
+
+```java
+private int hash(String str) {
+    int hash = 1;
+    char[] chars = str.toCharArray();
+    for (char aChar : chars) {
+        hash *= aChar;
+    }
+    return hash;
+}
+```
+
+结果不用说，出现碰撞 Wrong Answer。。
+
+然后就想，有没有一种根据字母来计算 hash，而且碰撞比较少的方法呢？质数！
+
+```java
+// 26 prime numbers
+private static int[] prime = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103};
+
+private int hash(String str) {
+    int hash = 1;
+    char[] chars = str.toCharArray();
+    for (char aChar : chars) {
+        hash *= prime[aChar - 'a'];
+    }
+    return hash;
+}
+
+public List<List<String>> groupAnagrams(String[] strs) {
+    Map<Integer, List<String>> map = new HashMap<>();
+    for (String str : strs) {
+        int hash = hash(str);
+        List<String> list = map.getOrDefault(hash, new ArrayList<>());
+        list.add(str);
+        map.put(hash, list);
+    }
+    return new ArrayList<>(map.values());
+}
+```
+
+完美！打败了 95% 的 Java 提交者。
+
+当然这种做法是取巧了，在数据量巨大的情况下，必然会发生碰撞从而导致结果出错。LeetCode  给出的两种正统做法如下：
+
+1. 先排序，后比较
+1. 通过统计字符串中字符个数判断是否为相同但是颠倒字母的字符串
 
 ## 100
 
