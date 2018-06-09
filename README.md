@@ -59,6 +59,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [515. Find Largest Value in Each Tree Row](#515)
 - [517. Super Washing Machines](#517)
 - [526. Beautiful Arrangement](#526)
+- [563. Binary Tree Tilt](#563-binary-tree-tilt)
 - [605. Can Place Flowers](#605)
 - [617. Merge Two Binary Trees](#617)
 - [627. Swap Salary](#627)
@@ -3143,6 +3144,31 @@ class Solution {
     int[] res = {1, 2, 3, 8, 10, 36, 41, 132, 250, 700, 750, 4010, 4237, 10680, 24679};
     return res[N-1];
     }
+}
+```
+
+## [563 Binary Tree Tilt](https://leetcode.com/problems/binary-tree-tilt/description/)
+
+找出树的倾斜度，树的倾斜度被定义为树上所有节点的倾斜度，一个节点的倾斜度为其左子树的值之和与其右子树的和的差值，叶子节点的倾斜度为 0。
+
+因为涉及到左右子树的值之和，所以只能使用递归来做：
+
+```java
+private int sum;
+
+public int findTilt(TreeNode root) {
+    System.out.println(helper(root));
+    return sum;
+}
+
+private int helper(TreeNode root) {
+    if (root == null) {
+        return 0;
+    }
+    int left = helper(root.left);
+    int right = helper(root.right);
+    sum += Math.abs(left - right);
+    return left + root.val + right;
 }
 ```
 
