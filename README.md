@@ -13,6 +13,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [10. Regular Expression Matching](#10)
 - [15. 3Sum](#15-3Sum)
 - [16. 3Sum Closest](#16-3sum-closest)
+- [24. Swap Nodes in Pairs](#24-swap-nodes-in-pairs)
 - [28. Implement strStr()](#28)
 - [38. Count and Say](#38)
 - [39. Combination Sum](#39)
@@ -349,6 +350,24 @@ public int threeSumClosest(int[] nums, int target) {
         }
     }
     return result;
+}
+```
+
+## [24 Swap Nodes in Pairs](https://leetcode.com/problems/swap-nodes-in-pairs/description/)
+
+要求我们把相邻的链表节点交换位置，并返回交换后的头结点。
+
+这道题有两种解法：一种是顺序遍历链表，依次交换然后返回；一种是利用递归，因为每次函数调用返回的都是链表的头结点，我们可以利用这个特性来做：
+
+```java
+public ListNode swapPairs(ListNode head) {
+    if (head == null || head.next == null) {
+        return head;
+    }
+    ListNode node = head.next;
+    head.next = swapPairs(node.next);
+    node.next=head;
+    return node;
 }
 ```
 
