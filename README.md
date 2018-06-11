@@ -35,6 +35,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [196. Delete Duplicate Emails](#196)
 - [207. Course Schedule](#207)
 - [215. Kth Largest Element in an Array](#215)
+- [217. Contains Duplicate](#217-contains-duplicate)
 - [229. Majority Element II](#229-majority-element-II)
 - [232. Implement Queue using Stacks](#232-implement-queue-using-stacks)
 - [235. Lowest Common Ancestor of a Binary Search Tree](#235)
@@ -1634,9 +1635,9 @@ public static int findKthLargest(int[] nums, int k) {
 }
 
 /*
-    * 快排的思路，每次选一个基准值，然后将数组分为 比基准值高 和 比基准值低 两部分
-    * 不同于快排的地方是，我们只需要关注特定数量的数字。因为我们是从数列中选第几大的数字，所以我们只需要关注划分后的某一部分（前半部分或者后半部分）
-    */
+* 快排的思路，每次选一个基准值，然后将数组分为 比基准值高 和 比基准值低 两部分
+* 快速选择不同于快排的地方是，我们只需要关注特定数量的数字。因为我们是从数列中选第几大的数字，所以我们只需要关注划分后的某一部分（前半部分或者后半部分）
+*/
 private static int quickSelect(int[] nums, int left, int right, int k) {
     int i = left, j = right, pivot = nums[right];   // 选择最后一个元素作为基准值。更好的算法是取首中尾的中位数作为基准值
     // 循环保证从 left 到 i 的所有数都小于等于 pivot，从 i 到 right-1 所有数都大于 pivot
@@ -1661,6 +1662,28 @@ private static void swap(int[] nums, int i, int j) {
     int tmp = nums[i];
     nums[i] = nums[j];
     nums[j] = tmp;
+}
+```
+
+## [217 Contains Duplicate](https://leetcode.com/problems/contains-duplicate/description/)
+
+判断数组中是否出现相同元素，有三种解法：
+
+1. 对每个元素判断其是否在数组中重复出现（低效）
+1. 先将数组排序，然后遍历数组，判断当前元素是否等于后一个元素
+1. 利用 HashSet，首先判断元素是否在 set 中，不在则添加
+
+```java
+public boolean containsDuplicate(int[] nums) {
+    // 避免扩容
+    Set<Integer> set = new HashSet<>(nums.length);
+    for (int num : nums) {
+        if (set.contains(num)) {
+            return true;
+        }
+        set.add(num);
+    }
+    return false;
 }
 ```
 
