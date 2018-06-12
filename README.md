@@ -40,6 +40,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [232. Implement Queue using Stacks](#232-implement-queue-using-stacks)
 - [235. Lowest Common Ancestor of a Binary Search Tree](#235)
 - [242. Valid Anagram](#242-valid-anagram)
+- [275. H-Index II](#275-h-index-ii)
 - [279. Perfect Squares](#279)
 - [284. Peeking Iterator](#284)
 - [303. Range Sum Query - Immutable](#303)
@@ -1877,6 +1878,51 @@ public boolean isAnagram(String s, String t) {
 ```
 
 此解法战胜了 96% 的 Java 提交者。
+
+## [275 H-Index II](https://leetcode.com/problems/h-index-ii/description/)
+
+一个科学家的 h 指数是指他的 N 篇论文中有 h 篇至少有 h 个引用，并且其他 N-h 篇论文有不多于 h 个引用。
+
+例如对于引用集 `[0,1,3,5,6]`，其 h 指数为 3，因为有 3 篇论文至少有 3 个引用。
+
+注意：如果存在几个可能的 h 值，取最大的 h（贪心）
+
+解法一，直接利用循环：
+
+```java
+public int hIndex(int[] citations) {
+    int len = citations.length;
+    int max = 0;
+    for (int i = len; i > 0; i--) {
+        if (citations[len - i] >= i) {
+            if (max < i) {
+                max = i;
+            }
+        }
+    }
+    return max;
+}
+```
+
+`for` 循环中 i 表示可能的 h，算法思路应该很清晰。
+
+解法二，对解法一的优化，因为论文引用数组是升序的，所以可以利用二分来达到 logN 级别的时间复杂度：
+
+```java
+public int hIndex(int[] citations) {
+    int l = 0, r = citations.length - 1;
+
+    while (l <= r) {
+        int mid = (l + r) / 2;
+        if (citations.length - mid <= citations[mid]) {
+            r = mid - 1;
+        } else {
+            l = mid + 1;
+        }
+    }
+    return citations.length - l;
+}
+```
 
 ## 279
 
