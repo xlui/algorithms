@@ -67,6 +67,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [617. Merge Two Binary Trees](#617)
 - [627. Swap Salary](#627)
 - [645. Set Mismatch](#645)
+- [648. Replace Words](#648-replace-words)
 - [659. Split Array into Consecutive Subsequences](#659-split-array-into-consecutive-subsequences)
 - [673. Number of Longest Increasing Subsequence](#673-number-of-longest-increasing-subsequence)
 - [676. Implement Magic Dictionary](#676)
@@ -3457,6 +3458,88 @@ public int[] findErrorNums(int[] nums) {
 ```
 
 此提交打败了 100% 的 java 提交者。
+
+## [648 Replace Words](https://leetcode.com/problems/replace-words/description/)
+
+给定一个前缀数组，从给定的句子中将前缀匹配的单词转换为前缀，如果多个前缀匹配到一个单词，替换为最短的前缀。
+
+可以直接扫描输入句子求解：
+
+```java
+public String replaceWords(List<String> dict, String sentence) {
+    String[] strings = sentence.split(" ");
+    for (int i = 0; i < strings.length; i++) {
+        for (String d : dict) {
+            if (strings[i].startsWith(d)) {
+                strings[i] = d;
+            }
+        }
+    }
+    return String.join(" ", strings);
+}
+```
+
+算法时间复杂度 O（KN），K 为 dict 的长度。
+
+因为是前缀匹配，自然也可以用前缀树来求解：
+
+```java
+public String replaceWords(List<String> dict, String sentence) {
+    TrieNode root = new TrieNode(" ");
+    for (int i = 0; i < dict.size(); i++) {
+        root.insert(dict.get(i));
+    }
+    StringBuilder sb = new StringBuilder();
+    for (String word : sentence.split(" ")) {
+        String temp = root.search(word);
+        if (temp.equals(" ")) {
+            sb.append(word);
+        }
+        else {
+            sb.append(temp);
+        }
+        sb.append(" ");
+    }
+    return sb.toString().trim();
+}
+
+class TrieNode {
+    String val;
+    TrieNode[] children = new TrieNode[26];
+
+    TrieNode(String val) {
+        this.val = val;
+    }
+
+    public void insert(String word) {
+        TrieNode cur = this;
+        for (int i = 0; i < word.length(); i++) {
+            int p = word.charAt(i) - 'a';
+            if (cur.children[p] == null) {
+                cur.children[p] = new TrieNode(" ");
+            }
+            cur = cur.children[p];
+        }
+        cur.val = word;
+        return;
+    }
+
+    public String search(String word) {
+        TrieNode cur = this;
+        for (int i = 0; i < word.length(); i++) {
+            int p = word.charAt(i) - 'a';
+            if (cur.children[p] == null) {
+                return " ";
+            }
+            cur = cur.children[p];
+            if (cur.val != " ") {
+                return cur.val;
+            }
+        }
+        return " ";
+    }
+}
+```
 
 ## [659 Split Array into Consecutive Subsequences](https://leetcode.com/problems/split-array-into-consecutive-subsequences/description/)
 
