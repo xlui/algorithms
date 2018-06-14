@@ -55,6 +55,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [413. Arithmetic Slices](#413)
 - [417. Pacific Atlantic Water Flow](#417)
 - [445. Add Two Numbers II](#445)
+- [447. Number of Boomerangs](#447-number-of-boomerangs)
 - [467. Unique Substrings in Wraparound String](#467)
 - [482. License Key Formatting](#482-license-key-formatting)
 - [492. Construct the Rectangle](#492)
@@ -2798,6 +2799,49 @@ private ListNode reverse(ListNode head) {
 ```
 
 题中还说了一种不改变链表的情况求解，可以使用栈来做。
+
+## [447 Number of Boomerangs](https://leetcode.com/problems/number-of-boomerangs/description/)
+
+给定 n 个坐标点，要求寻求一个三元组 `(i,j,k)` 使得 i 到 j 的距离与 i 到 k 的距离相等，求所有的三元组的数量。由距离相等可知 
+
+```
+(i.x-j.x)^2 + (i.y-j.y)^2 = (i.x-k.x)^2 + (i.y-k.y)^2
+```
+
+解法是，遍历数组，对于当前元素，计算其他元素与其距离，然后保存距离出现的次数。在计算完所有的距离后，对于所有出现次数 f 大于等于 2 的距离，则表明对于当前节点存在 f 个节点与其距离相等，则应当在结果数量中加上：
+
+```
+f * (f - 1)
+```
+
+即从 f 个不同的点中选两个点的可能结果数。
+
+```java
+public int numberOfBoomerangs(int[][] points) {
+    if (points == null || points.length < 2) {
+        return 0;
+    }
+    int count = 0;
+    Map<Integer, Integer> map = new HashMap<>();
+    for (int i = 0, len = points.length; i < len; i++) {
+        for (int j = 0; j < len; j++) {
+            if (i == j) {
+                continue;
+            }
+            int distance = distance(points[i], points[j]);
+            map.put(distance, map.getOrDefault(distance, 0) + 1);
+        }
+        for (Map.Entry<Integer, Integer> e : map.entrySet()) {
+            if (e.getValue() > 1) {
+                int t = e.getValue();
+                count += t * (t - 1);
+            }
+        }
+        map.clear();
+    }
+    return count;
+}
+```
 
 ## 467
 
