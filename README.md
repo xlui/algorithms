@@ -17,6 +17,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [28. Implement strStr()](#28)
 - [38. Count and Say](#38)
 - [39. Combination Sum](#39)
+- [41. First Missing Positive](#41-first-missing-positive)
 - [49. Group Anagrams](#49-group-anagrams)
 - [100. Same Tree](#100)
 - [101. Symmetric Tree](#101)
@@ -577,6 +578,42 @@ private static void dfs(List<List<Integer>> result, Deque<Integer> tmp, int[] ca
         dfs(result, tmp, candidates, target - candidates[i], i);
         tmp.pollLast();
     }
+}
+```
+
+## [41 First Missing Positive](https://leetcode.com/problems/first-missing-positive/description/)
+
+要求找出数组中丢失的最小的整数，例如，对于数组 `[3,4,-1,1]`，丢失的最小整数为 `2`。
+
+这题我们可以用桶排序的思路来做，分析一下边界情况：
+
+1. 数组长度 l，数组中存在大于 l 的数。这种情况最大的丢失整数应为 l+1，可不考虑
+1. 数组元素小于 0。我们只需要把正数放到对应位置的桶里，负数与 0 可不考虑
+1. 桶里已经有对应的数。因为我们最后统计的时候是依据桶的内容来分析的，所以对于重复出现的正数，只要有一个在正确的桶里即可。
+
+```java
+public int firstMissingPositive(int[] nums) {
+    if (nums.length == 0) {
+        return 1;
+    }
+    for (int i = 0, len = nums.length; i < len; i++) {
+        if (nums[i] > 0 && nums[i] <= len && nums[nums[i] - 1] != nums[i]) {
+            swap(nums, i, nums[i] - 1);
+            i -= 1;
+        }
+    }
+    for (int i = 0; i < nums.length; i++) {
+        if (nums[i] != i + 1) {
+            return i + 1;
+        }
+    }
+    return nums.length + 1;
+}
+
+private void swap(int[] numbers, int i, int j) {
+    int t = numbers[i];
+    numbers[i] = numbers[j];
+    numbers[j] = t;
 }
 ```
 
