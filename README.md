@@ -65,6 +65,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [517. Super Washing Machines](#517)
 - [526. Beautiful Arrangement](#526)
 - [563. Binary Tree Tilt](#563-binary-tree-tilt)
+- [599. Minimum Index Sum of Two Lists](#599-minimum-index-sum-of-two-lists)
 - [605. Can Place Flowers](#605)
 - [617. Merge Two Binary Trees](#617)
 - [627. Swap Salary](#627)
@@ -3339,6 +3340,42 @@ private int helper(TreeNode root) {
     int right = helper(root.right);
     sum += Math.abs(left - right);
     return left + root.val + right;
+}
+```
+
+## [599 Minimum Index Sum of Two Lists](https://leetcode.com/problems/minimum-index-sum-of-two-lists/description/)
+
+找出两个字符串数组中相同的字符串，要求两个字符串的索引和最小。如果存在多个索引和相同、字符串相同的情形，将所有字符串加入结果数组。
+
+可以通过将一个字符串数组转换为 Map，key 为字符串，value 为索引，来加速判断过程。
+
+```java
+public String[] findRestaurant(String[] list1, String[] list2) {
+    int min = Integer.MAX_VALUE;
+    HashMap<String, Integer> map = new HashMap<>();
+    for (int i = 0; i < list2.length; i++) {
+        map.put(list2[i], i);
+    }
+
+    int another;
+    Map<Integer, List<Integer>> res = new HashMap<>();
+    for (int i = 0; i < list1.length; i++) {
+        if ((another = map.getOrDefault(list1[i], -1)) != -1) {
+            if (min >= i + another) {
+                min = i + another;
+                List<Integer> list = res.getOrDefault(min, new ArrayList<>());
+                list.add(i);
+                res.put(min, list);
+            }
+        }
+    }
+
+    List<Integer> list = res.get(min);
+    String[] result = new String[list.size()];
+    for (int i = 0; i < list.size(); i++) {
+        result[i] = list1[list.get(i)];
+    }
+    return result;
 }
 ```
 
