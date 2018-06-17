@@ -26,6 +26,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [120. Triangle](#120)
 - [121. Best Time to Buy and Sell Stock](#121)
 - [125. Valid Palindrome](#125)
+- [137. Single Number II](#137-single-number-ii)
 - [141. Linked List Cycle](#141)
 - [143. Reorder List](#143)
 - [144. Binary Tree Preorder Traversal](#144)
@@ -1097,6 +1098,27 @@ public static boolean isPalindrome(String s) {
             .map(String::toLowerCase)                   // 全部转为小写
             .collect(Collectors.joining());             // 收集为 String
     return f.equals(new StringBuilder(f).reverse().toString()); // 跟 Reverse 之后的 String 比较
+}
+```
+
+## [137 Single Number II](https://leetcode.com/problems/single-number-ii/description/)
+
+给定一个非空整数数组，其中只有一个元素只出现了一次，其他元素均出现 3 次，要求找出只出现一次的元素。
+
+我们可以利用 HashMap 存储每个元素出现的次数，然后扫描 HashMap 得出只出现一次的元素：
+
+```java
+public int singleNumber(int[] nums) {
+    Map<Integer, Integer> map = new HashMap<>();
+    for (int num : nums) {
+        map.put(num, map.getOrDefault(num, 0) + 1);
+    }
+    for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+        if (entry.getValue().equals(1)) {
+            return entry.getKey();
+        }
+    }
+    return -1;
 }
 ```
 
