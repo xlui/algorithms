@@ -66,6 +66,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [517. Super Washing Machines](#517)
 - [526. Beautiful Arrangement](#526)
 - [563. Binary Tree Tilt](#563-binary-tree-tilt)
+- [565. Array Nesting](#565-array-nesting)
 - [599. Minimum Index Sum of Two Lists](#599-minimum-index-sum-of-two-lists)
 - [605. Can Place Flowers](#605)
 - [617. Merge Two Binary Trees](#617)
@@ -3362,6 +3363,61 @@ private int helper(TreeNode root) {
     int right = helper(root.right);
     sum += Math.abs(left - right);
     return left + root.val + right;
+}
+```
+
+## [565 Array Nesting](https://leetcode.com/problems/array-nesting/description/)
+
+给定一个数组，要求找出最长的 set S，其中 S[i]={A[i], A[A[i]], A[A[A[i]]], ...}。构造 S 的规则为：
+
+> 假定 S 的第一个元素为索引 i 对应的数组元素，那么下一个元素为 A[A[i]]，并且下下个元素 A[A[A[i]]]。直到要添加的下一个元素已经在 S 中出现。
+
+最直观的解法就是直接用一个 Set 保存每一个 i 对应的结果集合，然后判断是否大于 max：
+
+```java
+public int arrayNesting(int[] nums) {
+    int max = 0;
+    Set<Integer> set = new HashSet<>();
+
+    for (int num : nums) {
+        int t = num;
+        while (!set.contains(t)) {
+            set.add(t);
+            t = nums[t];
+        }
+        if (max < set.size()) {
+            max = set.size();
+        }
+        set.clear();
+    }
+    return max;
+}
+```
+
+但是 `Time Limit Exceeded`。
+
+我们分析一下原因，根据题目要求，按照规则构建的 set S 一定会出现环，这也是 set 构建的终止条件。对于出现的环：
+
+**无论从环上的哪一个元素出发，最终都会回到当前元素。**
+
+这一点很好理解。据此，我们可以利用一个 visited 数组，将访问过的位置设置为 true，只从之前未访问过的元素开始构建 set。因为从任何访问过的位置出发，最终还是会回到该位置，是不必要的计算。
+
+```java
+public int arrayNesting(int[] nums) {
+    boolean[] visited = new boolean[nums.length];
+    int result = 0;
+    for (int i = 0; i < nums.length; i++) {
+        if (!visited[i]) {
+            int start = nums[i], count = 0;
+            do {
+                start = nums[start];
+                count++;
+                visited[start] = true;
+            } while (start != nums[i]);
+            result = Math.max(result, count);
+        }
+    }
+    return result;
 }
 ```
 
