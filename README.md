@@ -84,6 +84,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [788. Rotated Digits](#788)
 - [806. Number of Lines To Write String](#806)
 - [819. Most Common Word](#819)
+- [826. Most Profit Assigning Work](#826-most-profit-assigning-work)
 
 ## 1
 
@@ -4327,3 +4328,58 @@ public static String mostCommonWord(String paragraph, String[] banned) {
     return out;
 }
 ```
+
+## [826 Most Profit Assigning Work](https://leetcode.com/problems/most-profit-assigning-work/description/)
+
+给定 difficulty 及与之对应的 profit 数组，另外有 worker 数组，worker 数组元素代表工作者能完成的最大难度，要求计算出最大利润。
+
+可以将 difficulty 与 profit 存为一对，然后对每个 worker 单独进行考虑：
+
+```java
+public int maxProfitAssignment(int[] difficulty, int[] profit, int[] worker) {
+    int result = 0;
+    List<Pair<Integer, Integer>> list = new ArrayList<>();
+    for (int i = 0; i < difficulty.length; i++) {
+        list.add(new Pair<>(difficulty[i], profit[i]));
+    }
+    for (int w : worker) {
+        int max = 0;
+        for (Pair<Integer, Integer> pair : list) {
+            if (w >= pair.getKey()) {
+                max = Math.max(max, pair.getValue());
+            }
+        }
+        result += max;
+    }
+    return result;
+}
+```
+
+但是这种算法是低效的，时间复杂度为 O(M * N)，也无法 AC。
+
+我们考虑优化方法，上面的算法中，对于每一个 worker 都计算一遍能获得的最大 profit，显然有了不必要的计算。不必要的地方在于，假设 worker 与 difficulty 均为有序，worker[i] 对应 difficulty[j] 能取到最大利润。如果 worker[i+1] < difficulty[j+1]，则 worker[i+1] 对应的最大利润与 worker[i] 相同；如果 worker[i+1] >= difficulty[j+1]，则向后继续扫描。
+
+也就是说，我们不需要对每一个 worker 都重新计算最大利润，我们可以将 worker 与 difficulty 进行排序，然后利用一个 max 变量来保存 difficulty[i] 处可以取到的最大利润。对于大于 difficulty[i] 的，继续向后尝试取更大的利润；对于小于等于 difficulty[i] 的，则直接设置最大利润为 max。这样，我们只需要扫描一遍 difficulty 数组即可。
+
+```java
+public int maxProfitAssignment(int[] difficulty, int[] profit, int[] worker) {
+    int result = 0;
+    List<Pair<Integer, Integer>> list = new ArrayList<>();
+    for (int i = 0; i < difficulty.length; i++) {
+        list.add(new Pair<>(difficulty[i], profit[i]));
+    }
+
+    int i = 0, max = 0;
+    list.sort(Comparator.comparing(Pair::getKey));
+    Arrays.sort(worker);
+    for (int w : worker) {
+        while (i < difficulty.length && w >= list.get(i).getKey()) {
+            max = Math.max(max, list.get(i++).getValue());
+        }
+        result += max;
+    }
+    return result;
+}
+```
+
+算法的时间复杂度为 O(NlogN + QlogQ)，N 为 difficulty 数组长度，Q 为 worker 数组长度。
