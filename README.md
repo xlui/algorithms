@@ -19,6 +19,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [39. Combination Sum](#39)
 - [41. First Missing Positive](#41-first-missing-positive)
 - [49. Group Anagrams](#49-group-anagrams)
+- [76. Minimum Window Substring](#76-minimum-window-substring)
 - [100. Same Tree](#100)
 - [101. Symmetric Tree](#101)
 - [112. Path Sum](#112)
@@ -675,6 +676,121 @@ public List<List<String>> groupAnagrams(String[] strs) {
 
 1. 先排序，后比较
 1. 通过统计字符串中字符个数判断是否为相同但是颠倒字母的字符串
+
+## [76 Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/description/)
+
+> 给定字符串 S 与 T，找出 S 中最短的包含 T 中所有字符的子串。算法要求是线性时间复杂度。
+
+首先利用 Map 统计 T 中字符出现数量，然后扫描 S，统计 S 中出现 T 中字符的次数，当 T 中所有字符都出现的时候，我们认为，已经找到了一个子串。
+
+但是这个子串有可能不是最短的，我们需要从左侧将无用字符剔除。在剔除的过程中，如果遇到了一个出现在 T 中的字符，我们将其剔除，同时**根据 S 当前停的地方之前是否再次出现该字符决定是否终止剔除过程**。如果出现，则继续剔除，如果没有出现，则停止剔除过程，继续扫描 S。
+
+我们使用实例来描述上述算法。假设给定 `S = "ADOBECODEBANC", T = "ABC"`。初始，利用 Map 来统计 T 中字符数：
+
+```
+A -> 1
+B -> 1
+C -> 1
+```
+
+然后扫描 S，对于 S 中出现在 T 的字符（`map.containsKey`），将其对应 map 中的值 -1，并且利用一个 `match` 变量保存 S 中匹配字符的次数。
+
+当第一个子串出现时：
+
+```
+S = "ADOBECODEBANC"
+          |
+          i
+
+同时 map：
+A -> 0
+B -> 0
+C -> 0
+```
+
+这时，我们开始剔除过程。因为第一个字符为 `A` 出现在 T 中，我们将 `A` 剔除并且 `map[A]+=1`。因为 `map[A] > 0`，剔除过程结束，我们记录当前 left 的位置。此时 map：
+
+```
+A -> 1
+B -> 0
+C -> 0
+```
+
+然后继续扫描 S。第二次停住的地方是：
+
+```
+S = "ADOBECODEBANC"
+               |
+               i
+
+同时 map：
+A -> 0
+B -> -1
+C -> 0
+```
+
+停在 `A` 而不是 `B` 很容易理解，因为第一次 `扫描-剔除` 结束时剔除了 `A`，所以第二次扫描时直到扫到一个 `A` 才会结束。
+
+现在我们开始剔除过程，第一次剔除过程结束时 left 指针指向第二个字符（只剔除了起始的 `A`）。我们依次向后扫描，当 left 指向之后出现的第一个 T 中的字符时：
+
+```
+S = "ADOBECODEBANC"
+        |
+       left
+```
+
+我们剔除这个 `B` 并且 `map[B]+=1`，此时 `map[B]` 不大于 0，说明刚才剔除的 `B` 属于重复字符，应当继续剔除过程。之后又遇到了一个 `C`：
+
+```
+S = "ADOBECODEBANC"
+          |
+         left
+```
+
+剔除 `C` 并且 `map[C]+=1`，因为此时 `map[C] > 0`，说明此次剔除过程已经结束，继续向后扫描 S。
+
+从上面两次的 扫描-剔除 过程可以看出来，`map` 中的值的含义：
+
+1. 小于等于 0：当前扫描位置之前到剔除起始位置出现的**重复字符**个数
+1. 大于 0：期待之后扫描到的字符数 n，也即当前尚未组成要求的子串，仍需要 n 个该字符
+
+我们剔除某个字符后将其对应 map 加 1 也就容易理解了，我们剔除了一个字符，相应的还需要一个字符来组成需要的子串。
+
+```java
+public String minWindow(String s, String t) {
+    if (s == null || t == null || s.length() < t.length()) {
+        return "";
+    }
+    Map<Character, Integer> map = new HashMap<>();
+    int match = 0, min = Integer.MAX_VALUE, left = 0, minLeft = 0;
+    for (char c : t.toCharArray()) {
+        map.put(c, map.getOrDefault(c, 0) + 1);
+    }
+    for (int right = 0; right < s.length(); right++) {
+        char r = s.charAt(right);
+        if (map.containsKey(r)) {
+            map.put(r, map.get(r) - 1);
+            if (map.get(r) >= 0) {
+                match++;
+            }
+            while (match == t.length()) {
+                if (min > right - left + 1) {
+                    min = right - left + 1;
+                    minLeft = left;
+                }
+                char l = s.charAt(left++);
+                if (map.containsKey(l)) {
+                    map.put(l, map.get(l) + 1);
+                    if (map.get(l) > 0) {
+                        match--;
+                    }
+                }
+            }
+        }
+    }
+    return min == Integer.MAX_VALUE ? "" : s.substring(minLeft, minLeft + min);
+}
+```
 
 ## 100
 
