@@ -59,6 +59,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [417. Pacific Atlantic Water Flow](#417)
 - [445. Add Two Numbers II](#445)
 - [447. Number of Boomerangs](#447-number-of-boomerangs)
+- [450. Delete Node in a BST](#450-delete-node-in-a-bst)
 - [467. Unique Substrings in Wraparound String](#467)
 - [482. License Key Formatting](#482-license-key-formatting)
 - [492. Construct the Rectangle](#492)
@@ -3018,6 +3019,54 @@ public int numberOfBoomerangs(int[][] points) {
         map.clear();
     }
     return count;
+}
+```
+
+## [450 Delete Node in a BST](https://leetcode.com/problems/delete-node-in-a-bst/description/)
+
+> 从 BST 中删除一个节点，如果节点有左右孩子，任选左孩子的最大节点或者右孩子的最小节点进行替换
+
+BST 的删除，很简单。算法：
+
+1. 如果当前节点为空，则返回空
+1. 如果当前节点的值比要删除的值大，则递归调用对其左节点的删除
+1. 如果当前节点的值比要删除的值小，则递归调用对其右节点的删除
+1. 如果当前节点正是要删除的节点，有四种情况需要谈论。
+
+当当前节点是要删除的节点时：
+
+1. 当前节点为空，返回空
+1. 当前节点只有左孩子，用左孩子替换当前节点
+1. 当前节点只有右孩子，用右孩子替换当前节点
+1. 当前节点有左右孩子，用左子树的最大节点或者右子树的最小节点替换当前节点
+
+其实上面 4 中情况的前三种可以融合成一句话：
+
+```
+root = (root.left != null) ? root.left : root.right;
+```
+
+```java
+public TreeNode deleteNode(TreeNode root, int key) {
+    if (root == null) {
+        return root;
+    } else if (root.val > key) {
+        root.left = deleteNode(root.left, key);
+    } else if (root.val < key) {
+        root.right = deleteNode(root.right, key);
+    } else {
+        if (root.left != null && root.right != null) {
+            TreeNode rightMin = root.right;
+            while (rightMin.left != null) {
+                rightMin = rightMin.left;
+            }
+            root.val = rightMin.val;
+            root.right = deleteNode(root.right, root.val);
+        } else {
+            root = (root.left != null) ? root.left : root.right;
+        }
+    }
+    return root;
 }
 ```
 
