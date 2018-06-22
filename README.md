@@ -9,6 +9,7 @@ This project won't stop until it contains all the problems in leetcode.
 ## Table of Contents
 
 - [1. Two Sum](#1)
+- [4. Median of Two Sorted Arrays](#4-median-of-two-sorted-arrays)
 - [7. Reverse Integer](#7-reverse-integer)
 - [10. Regular Expression Matching](#10)
 - [15. 3Sum](#15-3Sum)
@@ -149,6 +150,35 @@ public int[] twoSum(int[] nums, int target) {
     return result;
 }
 ```
+
+## [4 Median of Two Sorted Arrays](https://leetcode.com/problems/median-of-two-sorted-arrays/description/)
+
+给定两个有序数组，要求找出两个数组的中位数。即合并之后的中位数。要求时间复杂度为 O(log (m + n))。
+
+我们可以使用归并来做，先将两个数组归并，然后求中位数：
+
+```java
+public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+    int l1 = nums1.length, l2 = nums2.length;
+    int mid = (l1 + l2) / 2;
+    int[] merge = new int[mid + 1];
+    int j = 0, k = 0;
+    for (int i = 0; i < mid + 1; i++) {
+        if (j < l1 && (k >= l2 || nums1[j] < nums2[k])) {
+            merge[i] = nums1[j++];
+        } else {
+            merge[i] = nums2[k++];
+        }
+    }
+    if ((l1 + l2) % 2 == 0) {
+        return (merge[mid - 1] + merge[mid]) / 2.0;
+    } else {
+        return (double) merge[mid];
+    }
+}
+```
+
+但是算法的时间复杂度为 O(m + n)。
 
 ## [7 Reverse Integer](https://leetcode.com/problems/reverse-integer/description/)
 
