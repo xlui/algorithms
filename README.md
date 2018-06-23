@@ -48,6 +48,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [279. Perfect Squares](#279)
 - [284. Peeking Iterator](#284)
 - [303. Range Sum Query - Immutable](#303)
+- [318. Maximum Product of Word Lengths](#318-maximum-product-of-word-lengths)
 - [342. Power of Four](#342)
 - [350. Intersection of Two Arrays II](#350)
 - [357. Count Numbers with Unique Digits](#357)
@@ -2368,6 +2369,72 @@ public int sumRange(int i, int j) {
 ```
 
 免去了我的解法中的一层判断
+
+## [318 Maximum Product of Word Lengths](https://leetcode.com/problems/maximum-product-of-word-lengths/description/)
+
+> 给定一个字符数组，求出数组中两个字符串长度之积的最大值，要求两个字符串没有任何字符相同。字符串中的字符全部为小写。
+
+问题中重要的是判断两个字符串没有任何字符相交，我们可以将一个字符串转换为 Set，然后循环判断剩余字符串是否符合条件：
+
+```java
+public int maxProduct(String[] words) {
+    int max = Integer.MIN_VALUE;
+    Arrays.sort(words, Comparator.comparing(String::length));
+    Set<Character> set = new HashSet<>();
+    for (int i = words.length - 1; i >= 0; i--) {
+        addAll(set, words[i].toCharArray());
+        for (int j = i - 1; j >= 0; j--) {
+            if (disjoint(set, words[j].toCharArray())) {
+                int t = words[i].length() * words[j].length();
+                max = Math.max(max, t);
+            }
+        }
+        set.clear();
+    }
+    return max == Integer.MIN_VALUE ? 0 : max;
+}
+
+private boolean disjoint(Set<Character> set, char[] chars) {
+    for (char aChar : chars) {
+        if (set.contains(aChar)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+private void addAll(Set<Character> set, char[] chars) {
+    for (char aChar : chars) {
+        set.add(aChar);
+    }
+}
+```
+
+解法是可行的，但是显然做了很多额外的工作。
+
+既然要判断两个字符串是否有字符共享，并且字符串中只包含小写字符。我们可以将字符串转换为一个 32 位的整数，其中低 26 位代表了字符串中每一个字符出现与否。这样，判断两个字符串是否共享字符的问题就转换为判断两个字符串对应的整数相**与**是否为 0.
+
+```java
+public int maxProduct(String[] words) {
+    int max = 0, len = words.length;
+    int[] mask = new int[len];
+    for (int i = 0; i < len; i++) {
+        for (char c : words[i].toCharArray()) {
+            mask[i] |= 1 << (c - 'a');
+        }
+    }
+    for (int i = 0; i < len - 1; i++) {
+        for (int j = i + 1; j < len; j++) {
+            if ((mask[i] & mask[j]) == 0) {
+                max = Math.max(max, words[i].length() * words[j].length());
+            }
+        }
+    }
+    return max;
+}
+```
+
+优雅，且高效。
 
 ## 342
 
