@@ -71,6 +71,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [526. Beautiful Arrangement](#526)
 - [563. Binary Tree Tilt](#563-binary-tree-tilt)
 - [565. Array Nesting](#565-array-nesting)
+- [581. Shortest Unsorted Continuous Subarray](#581-shortest-unsorted-continuous-subarray)
 - [599. Minimum Index Sum of Two Lists](#599-minimum-index-sum-of-two-lists)
 - [605. Can Place Flowers](#605)
 - [617. Merge Two Binary Trees](#617)
@@ -3681,6 +3682,98 @@ public int arrayNesting(int[] nums) {
         }
     }
     return result;
+}
+```
+
+## [581 Shortest Unsorted Continuous Subarray](https://leetcode.com/problems/shortest-unsorted-continuous-subarray/description/)
+
+> 给定一个数组，找出其中最短连续子数组的长度。要求对该子串进行排序后，数组也是有序的（递增）。
+
+最简单的思路是将数组拷贝一份，然后进行排序，将排序后的副本与原来的数组比对，从而确定子数组的起始与终止位置。
+
+```java
+public int findUnsortedSubarray(int[] nums) {
+    int[] copy = nums.clone();
+    Arrays.sort(copy);
+    int start = copy.length, end = 0;
+    for (int i = 0; i < copy.length; i++) {
+        if (copy[i] != nums[i]) {
+            start = Math.min(start, i);
+            end = Math.max(end, i);
+        }
+    }
+    return end >= start ? end - start + 1 : 0;
+}
+```
+
+算法的时间复杂度为 O(log N)。
+
+另一种算法是，分别从数组的首尾出发，找到从数组起始位置开始递增子数组的终止位置 i，以及直到数组末尾位置的递增子数组的起始位置 j。然后对 `i,j` 之间的元素求最大值与最小值，分别更新 `i,j` 到合适的位置。
+
+我们用一个实例来演示这个算法，设数组为 `[2, 6, 4, 8, 10, 9, 15]`，当判断出 `i,j` 时：
+
+```
+[2, 6, 4, 8, 10, 9, 15]
+    |            |
+    i            j
+```
+
+也就是 `i,j` 分别指向数组首尾递增序列的 终止/起始 位置。现在我们找出 `i,j` 中间数组的最大值 10 与最小值 4。
+
+我们将 `i,j` 指向子数组的外围（即 `i,j` 中间的元素为最终的子数组），如果要所得最小序列排序后整个数组也是有序的，那么子序列的最小值一定不小于 i 所指元素，子序列的最大值一定不大于 j 所指元素。依次更新 `i,j` 的指向即可。
+
+```java
+public int findUnsortedSubarray(int[] nums) {
+    int start = 0, end = nums.length - 1;
+    int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+
+    while (start < end && nums[start] <= nums[start + 1])
+        start++;
+    if (start == end) return 0;    // 数组为升序
+
+    // 这一步的时候数组不可能为升序，故不需要 end > 0 的条件
+    while (nums[end] >= nums[end - 1])
+        end--;
+
+    for (int i = start; i <= end; i++) {
+        max = Math.max(max, nums[i]);
+        min = Math.min(min, nums[i]);
+    }
+
+    while (start >= 0 && min < nums[start])
+        start--;
+    while (end <= nums.length - 1 && max > nums[end])
+        end++;
+
+    // start 多减了 1，end 多加了 1
+    return end - start - 1;
+}
+```
+
+此算法打败了 99.8% 的提交者。
+
+对于上述算法我们可以进行简化，利用两个指针同时移动。`l` 从左往右移动，`r` 从右往左移动。
+
+如果数组是递增的，则 `nums[l] == max`，同时我们更新 max。当 `nums[l] != max` 的时候，说明递增中断了，我们用变量 end 记录 l 的位置。当遍历结束时，我们可以肯定：**end 之后的元素一定是递增的！**
+
+同理，如果数组是递增的，那么从 r 往左走一定是一个递减序列，`nums[r] == min`，我们更新 min。当 `nums[r] != min` 时，说明递增中断了，我们用变量 start 记录此时 r 的位置。当遍历结束时，我们可以肯定：**start 之前的元素一定是递增的！**
+
+据此，我们得出解法三：
+
+```java
+public int findUnsortedSubarray(int[] nums) {
+    int start = 0, end = -1;
+    int max = Integer.MIN_VALUE, min = Integer.MAX_VALUE;
+
+    for (int l = 0, r = nums.length - 1; r >= 0; l++, r--) {
+        max = Math.max(max, nums[l]);
+        if (nums[l] != max) end = l;
+
+        min = Math.min(min, nums[r]);
+        if (nums[r] != min) start = r;
+    }
+
+    return end - start + 1;
 }
 ```
 
