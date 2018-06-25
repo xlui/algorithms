@@ -20,6 +20,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [39. Combination Sum](#39)
 - [41. First Missing Positive](#41-first-missing-positive)
 - [49. Group Anagrams](#49-group-anagrams)
+- [62. Unique Paths](#62-unique-paths)
 - [76. Minimum Window Substring](#76-minimum-window-substring)
 - [100. Same Tree](#100)
 - [101. Symmetric Tree](#101)
@@ -709,6 +710,35 @@ public List<List<String>> groupAnagrams(String[] strs) {
 
 1. 先排序，后比较
 1. 通过统计字符串中字符个数判断是否为相同但是颠倒字母的字符串
+
+## [62 Unique Paths](https://leetcode.com/problems/unique-paths/description/)
+
+> 给定一个坐标点，robot 从零点出发，只能往下或者往右走，求可能的路径数。
+
+robot 只能往下或者往右走，那么某个特定位置的可能路径就只取决于其上侧或者左侧节点的可能路径，是一个动态规划问题。
+
+```
+dp[i][j] = dp[i-1][j] + dp[i][j-1]
+```
+
+对于边界，即 `i=0` 或者 `j=0`，因为 robot 只能往右或者往下走，所以这种情况的路径只有 1 种。
+
+```java
+public int uniquePaths(int m, int n) {
+    int[][] dp = new int[n][m];
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            if (i == 0 || j == 0)
+                dp[i][j]=1;
+            else
+                dp[i][j] = dp[i-1][j] + dp[i][j-1];
+        }
+    }
+    return dp[n-1][m-1];
+}
+```
+
+打败了 100% 的提交者。
 
 ## [76 Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/description/)
 
