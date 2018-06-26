@@ -48,6 +48,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [275. H-Index II](#275-h-index-ii)
 - [279. Perfect Squares](#279)
 - [284. Peeking Iterator](#284)
+- [292. Nim Game](#292-nim-game)
 - [303. Range Sum Query - Immutable](#303)
 - [318. Maximum Product of Word Lengths](#318-maximum-product-of-word-lengths)
 - [342. Power of Four](#342)
@@ -2287,6 +2288,44 @@ class PeekingIterator implements Iterator<Integer> {
     public boolean hasNext() {
         return next!=null;
     }
+}
+```
+
+## [292 Nim Game](https://leetcode.com/problems/nim-game/description/)
+
+> 有一堆石块，每个人可以从其中取 1~3 个石头，取出最后一个石头的玩家获胜，每个玩家都很聪明，会选择最好的策略来取，判断你能不能赢下这个游戏。
+
+假设玩家 A 取的时候还剩下 x 个石块，则 A 有三种取法 `(x-1), (x-2), (x-3)`，对于 A 之后的玩家 B，也有三种取法。B 取完之后 A 有九种情况：
+
+```
+(x-1) B: (x-2), (x-3), (x-4)
+(x-2) B: (x-3), (x-4), (x-5)
+(x-3) B: (x-4), (x-5), (x-6)
+```
+
+如果 A 想要赢下这个游戏，则他需要保证 A 的三种取法存在一种取法使得 A 胜利。而对于 B 的每一种取法，如果 A 要胜利，则 A 必须赢下所有情况。
+
+```
+f(x) = (f(x-2)&&f(x-3)&&f(x-4)) || (f(x-3)&&f(x-4)&&f(x-5)) || (f(x-4)&&f(x-5)&&f(x-6))
+```
+
+可以看出来，如果 `f(x-4) = false`，则 A 不可能赢。
+
+我们考察 `x = 4/5/6/7/8` 的情况：
+
+```
+4: A 取 1/2/3 都不可能获胜
+5: A 取 1，获胜
+6: A 取 2，获胜
+7：A 取 3，获胜
+8：A 取 1，B 取 3，A 失败；A 取 2，B 取 2，A 失败；A 取 3，B 取 1，A 失败
+```
+
+故得出解法：
+
+```java
+public boolean canWinNim(int n) {
+    return n % 4 != 0;
 }
 ```
 
