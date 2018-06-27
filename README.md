@@ -85,6 +85,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [676. Implement Magic Dictionary](#676)
 - [706. Design HashMap](#706-design-hashMap)
 - [717. 1-bit and 2-bit Characters](#717)
+- [728. Self Dividing Numbers](#728-self-dividing-numbers)
 - [744. Find Smallest Letter Greater Than Target](#744)
 - [748. Shortest Completing Word](#748)
 - [783. Minimum Distance Between BST Nodes](#783)
@@ -4365,6 +4366,62 @@ public static boolean isOneBitCharacter(int[] bits) {
             i += 2;
     }
     return i == len - 1;
+}
+```
+
+## 728 Self Dividing Numbers
+
+> 给定上下界，求出所有的 _self-dividing number_。所谓 _self-dividing number_，即一个数字可以被其所有组成数字所整除。例如 128，可以被 `1,2,8` 整除，所以属于 _self-dividing number_。
+
+废话不多说，直接暴力求解：
+
+```java
+public List<Integer> selfDividingNumbers(int left, int right) {
+    List<Integer> list = new LinkedList<>();
+    List<Integer> digits = new LinkedList<>();
+    for (int i = left; i <= right; i++) {
+        int n = i;
+        while (n != 0) {
+            digits.add(n % 10);
+            n /= 10;
+        }
+        int count = 0;
+        for (Integer digit : digits) {
+            if (digit == 0 || i % digit != 0) {
+                break;
+            } else {
+                count++;
+            }
+        }
+        if (count == digits.size()) {
+            list.add(i);
+        }
+        digits.clear();
+    }
+    return list;
+}
+```
+
+考察上述算法，我们可以将 `digits` 所占的空间以及第二个 `for` 循环所占的时间完全优化掉，只需要在求 digit 的同时判断其是否符合条件即可。
+
+```java
+public List<Integer> selfDividingNumbers(int left, int right) {
+    List<Integer> list = new LinkedList<>();
+    for (int i = left; i <= right; i++) {
+        int n = i;
+        boolean meet = true;
+        while (n != 0) {
+            int digit = n % 10;
+            if (digit == 0 || i % digit != 0) {
+                meet = false;
+            }
+            n /= 10;
+        }
+        if (meet) {
+            list.add(i);
+        }
+    }
+    return list;
 }
 ```
 
