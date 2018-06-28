@@ -22,6 +22,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [49. Group Anagrams](#49-group-anagrams)
 - [62. Unique Paths](#62-unique-paths)
 - [76. Minimum Window Substring](#76-minimum-window-substring)
+- [83. Remove Duplicates from Sorted List](#83-remove-duplicates-from-sorted-list)
 - [100. Same Tree](#100)
 - [101. Symmetric Tree](#101)
 - [112. Path Sum](#112)
@@ -854,6 +855,44 @@ public String minWindow(String s, String t) {
         }
     }
     return min == Integer.MAX_VALUE ? "" : s.substring(minLeft, minLeft + min);
+}
+```
+
+## [83 Remove Duplicates from Sorted List](83. Remove Duplicates from Sorted List)
+
+给定一个有序链表，要求删除其中多余的重复元素。
+
+直接遍历，判断后一个节点是否与当前节点相同。如果相同，则用后一个节点的后继节点替换后一个节点；如果不同，当前节点指向后一个节点，继续。
+
+```java
+public ListNode deleteDuplicates(ListNode head) {
+    if (head == null || head.next == null) {
+        return head;
+    }
+    ListNode node = head;
+    while (node.next != null) {
+        if (node.val == node.next.val) {
+            node.next = node.next.next;
+        } else {
+            node = node.next;
+        }
+    }
+    return head;
+}
+```
+
+另一种思路是递归。对于递归到的每一个节点，确保其之后没有与当前节点重复的节点，然后对其后继节点递归调用：
+
+```java
+public ListNode deleteDuplicates(ListNode head) {
+    if (head == null) {
+        return head;
+    }
+    while (head.next != null && head.val == head.next.val) {
+        head.next = head.next.next;
+    }
+    head.next = deleteDuplicates(head.next);
+    return head;
 }
 ```
 
