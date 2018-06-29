@@ -56,6 +56,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [350. Intersection of Two Arrays II](#350)
 - [357. Count Numbers with Unique Digits](#357)
 - [367. Valid Perfect Square](#367)
+- [368. Largest Divisible Subset](#368-largest-divisible-subset)
 - [374. Guess Number Higher or Lower](#374-guess-number-higher-or-lower)
 - [387. First Unique Character in a String](#387)
 - [400. Nth Digit](#400)
@@ -2762,6 +2763,45 @@ public boolean isPerfectSquare(int num) {
 ```
 
 减少了很多无用的判断。
+
+## [368 Largest Divisible Subset](https://leetcode.com/problems/largest-divisible-subset/description/)
+
+> 给定一系列不同的正整数，从中找出最大的子集。要求子集中所有 (Si, Sj) 都符合条件 `Si % Sj = 0` 或者 `Sj % Si = 0`。
+
+我们可以先将数组排序，这样判断条件就变为了 `Si % Sj = 0, i > j`。利用动态规划，dp 数组中每个元素代表以原数组对应元素为 i 存在的最大子集数。
+
+仅仅记录最大值是无法得出最终的子集的，所以我们还需要一个 pre 数组，来记录更新 dp 时，当前元素的上一个元素。这样在 dp 完成时，可以根据 pre 数组来得出最大子序列。
+
+```java
+public List<Integer> largestDivisibleSubset(int[] nums) {
+    int max = 0, index = -1;
+    int[] dp = new int[nums.length];
+    int[] pre = new int[nums.length];
+    Arrays.sort(nums);
+
+    for (int i = 0; i < nums.length; i++) {
+        dp[i] = 1;
+        pre[i] = -1;
+        for (int j = i - 1; j >= 0; j--) {
+            if (nums[i] % nums[j] == 0 && dp[i] < 1 + dp[j]) {
+                dp[i] = 1 + dp[j];
+                pre[i] = j;
+            }
+        }
+        if (max < dp[i]) {
+            max = dp[i];
+            index = i;
+        }
+    }
+
+    List<Integer> list = new LinkedList<>();
+    while (index != -1) {
+        list.add(nums[index]);
+        index = pre[index];
+    }
+    return list;
+}
+```
 
 ## [374 Guess Number Higher or Lower](https://leetcode.com/problems/guess-number-higher-or-lower/description/)
 
