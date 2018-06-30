@@ -50,6 +50,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [279. Perfect Squares](#279)
 - [284. Peeking Iterator](#284)
 - [292. Nim Game](#292-nim-game)
+- [300. Longest Increasing Subsequence](#300-longest-increasing-subsequence)
 - [303. Range Sum Query - Immutable](#303)
 - [318. Maximum Product of Word Lengths](#318-maximum-product-of-word-lengths)
 - [342. Power of Four](#342)
@@ -2367,6 +2368,34 @@ f(x) = (f(x-2)&&f(x-3)&&f(x-4)) || (f(x-3)&&f(x-4)&&f(x-5)) || (f(x-4)&&f(x-5)&&
 ```java
 public boolean canWinNim(int n) {
     return n % 4 != 0;
+}
+```
+
+## [300 Longest Increasing Subsequence](https://leetcode.com/problems/longest-increasing-subsequence/description/)
+
+> 给定一个未排序的数组，找出其中最长的递增子序列
+
+可以考虑动态规划，建立一个 dp 数组，其中 dp[i] 表示原数组中以 nums[i] 结尾的最长递增子序列长度。这样我们扫描数组，对于数组的每一个元素 i：
+
+```
+dp[i] = Math.max(dp[i], dp[j] + 1)    j=0,...,i-1 且 dp[j] < dp[i]
+```
+
+```java
+public int lengthOfLIS(int[] nums) {
+    int max = 0;
+    int[] dp = new int[nums.length];
+
+    for (int i = 0; i < nums.length; i++) {
+        dp[i] = 1;
+        for (int j = i - 1; j >= 0; j--) {
+            if (nums[j] < nums[i]) {
+                dp[i] = Math.max(dp[i], dp[j] + 1);
+            }
+        }
+        max = Math.max(max, dp[i]);
+    }
+    return max;
 }
 ```
 
