@@ -84,6 +84,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [645. Set Mismatch](#645)
 - [648. Replace Words](#648-replace-words)
 - [659. Split Array into Consecutive Subsequences](#659-split-array-into-consecutive-subsequences)
+- [671. Second Minimum Node In a Binary Tree](#671-second-minimum-node-in-a-binary-tree)
 - [673. Number of Longest Increasing Subsequence](#673-number-of-longest-increasing-subsequence)
 - [676. Implement Magic Dictionary](#676)
 - [706. Design HashMap](#706-design-hashMap)
@@ -4308,6 +4309,54 @@ public boolean isPossible(int[] nums) {
         }
     }
     return true;
+}
+```
+
+## [671 Second Minimum Node In a Binary Tree](https://leetcode.com/problems/second-minimum-node-in-a-binary-tree/description/)
+
+> 给定一个特殊二叉树，每个节点要么有两个子节点，要么没有子节点。有两个子节点的节点的值是两个子节点中较小的节点的值。求出二叉树中第二小的值，如果没有则返回 -1.
+
+我们可以先将二叉树遍历，得到所有元素，然后找出第二小的值：
+
+```java
+public int findSecondMinimumValue(TreeNode root) {
+    if (root == null || root.left == null) {
+        return -1;
+    }
+    Set<Integer> set = new HashSet<>();
+    dfs(root, set);
+    int min = root.val, result = Integer.MAX_VALUE;
+    for (Integer integer : set) {
+        if (min < integer && result > integer) {
+            result = integer;
+        }
+    }
+    return result == Integer.MAX_VALUE ? -1 : result;
+}
+
+private void dfs(TreeNode root, Set<Integer> set) {
+    if (root != null) {
+        set.add(root.val);
+        dfs(root.left, set);
+        dfs(root.right, set);
+    }
+}
+```
+
+因为题目要求的二叉树中，最小节点一定是根节点，所以我们不用上述算法中那么多的判断，只需要在找第二小节点前将根节点删除即可：
+
+```java
+public int findSecondMinimumValue(TreeNode root) {
+    Set<Integer> set = new HashSet<>();
+    dfs(root, set);
+    set.remove(root.val);
+    int result = Integer.MAX_VALUE;
+    for (Integer integer : set) {
+        if (result > integer) {
+            result = integer;
+        }
+    }
+    return result == Integer.MAX_VALUE ? -1 : result;
 }
 ```
 
