@@ -94,6 +94,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [748. Shortest Completing Word](#748)
 - [783. Minimum Distance Between BST Nodes](#783)
 - [788. Rotated Digits](#788)
+- [792. Number of Matching Subsequences](#792-number-of-matching-subsequences)
 - [806. Number of Lines To Write String](#806)
 - [819. Most Common Word](#819)
 - [826. Most Profit Assigning Work](#826-most-profit-assigning-work)
@@ -4838,6 +4839,63 @@ public class Solution {
         System.out.println(solution.rotatedDigits(10));
         System.out.println(solution.rotatedDigits(857));
     }
+}
+```
+
+## [792 Number of Matching Subsequences](https://leetcode.com/problems/number-of-matching-subsequences/description/)
+
+> 给定字符串 `S` 以及字符串数组 `words`，找出 `words` 中是 `S` 的子串的字符串的个数。
+
+暴力求解：
+
+```java
+public int numMatchingSubseq(String S, String[] words) {
+    int match = 0;
+    for (String word : words) {
+        int iS = 0, iW = 0;
+        while (iS < S.length() && iW < word.length()) {
+            if (S.charAt(iS) == word.charAt(iW)) {
+                iS++;
+                iW++;
+            } else {
+                iS++;
+            }
+        }
+        if (iW == word.length()) {
+            match++;
+        }
+    }
+    return match;
+}
+```
+
+可以将上述判断子串代码摘出来，然后利用 `validSet, invalidSet` 来避免重复判断，但是总体上还是暴力求解。
+
+下面我们思考一种优雅的算法，时间复杂度为 O(N)。我们创建一个 `map: Map<Character, List<String>>`，将 `words` 数组中每个字符串按首字母加入对应 map 中。然后我们按字符遍历 S，对于 map 中对应字符的 List 中的每一个 `word`：如果其长度为 1，则是子序列，总数量 +1；如果长度不为 1，则去掉首字符，将剩余的字符串按首字母重新加入 map。
+
+```java
+public int numMatchingSubseq(String S, String[] words) {
+    int match = 0;
+    Map<Character, Deque<String>> map = new HashMap<>();
+    for (char i = 'a'; i <= 'z'; i++) {
+        map.put(i, new LinkedList<>());
+    }
+    for (String word : words) {
+        map.get(word.charAt(0)).add(word);
+    }
+    for (char c : S.toCharArray()) {
+        Deque<String> strings = map.get(c);
+        int size = strings.size();
+        for (int i = 0; i < size; i++) {
+            String word = strings.removeFirst();
+            if (1 == word.length()) {
+                match++;
+            } else {
+                map.get(word.charAt(1)).add(word.substring(1));
+            }
+        }
+    }
+    return match;
 }
 ```
 
