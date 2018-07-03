@@ -53,6 +53,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [300. Longest Increasing Subsequence](#300-longest-increasing-subsequence)
 - [303. Range Sum Query - Immutable](#303)
 - [318. Maximum Product of Word Lengths](#318-maximum-product-of-word-lengths)
+- [322. Coin Change](#322-coin-change)
 - [342. Power of Four](#342)
 - [350. Intersection of Two Arrays II](#350)
 - [357. Count Numbers with Unique Digits](#357)
@@ -2577,6 +2578,34 @@ public int maxProduct(String[] words) {
 ```
 
 优雅，且高效。
+
+## [322 Coin Change](https://leetcode.com/problems/coin-change/description/)
+
+> 给定一系列不同面值的硬币以及一个总数，要求找出组成总数的最少硬币数。如果不能组成，则返回 -1.
+
+首先想到的解法是：把硬币排序，然后用总数依次减去合适的最大的硬币。但是这种解法经不起推敲。例如对于 `coin=[3,7,8], amount=17`，如果按照上述算法，我们依次选择的 coin 是 `8,8`，然后因为剩余 `1` 无法从 coin 中继续选择硬币而认为无法组成 `17`。但是实际上当选择 `7,7,3` 时我们可以组成 `17`。所以这种解法是错误的。
+
+我们从另一个角度来考察问题。如果存在任意一个 amount，其可以被 `n` 个硬币组成，并且 `n` 是最小的，那么我们可以得出所有 `amount+coin[i], i=0,...n` 的最小组成硬币数：`n+1`。如果某个 `amount+coin[i]` 已经存在一个最小硬币数 `m`，我们只需要将其更新为 `Math.min(m, n+1)`。
+
+根据上面的思路我们可以设计一个 dp 算法，**利用 `dp[i]` 的值来代表 `amount=i` 时所需的最小硬币数 min**，然后逐步增大 i 直到给定的 amount。对于每一个 `i`，我们扫描 coin 数组来获取最小的 `min`，i 必须大于 `coin[j]`，因为如果 i 小于 `coin[j]`，说明 i 无法由 `coin[j]` 组成，也就无需更新。同时 `dp[i-coin[j]] != -1`，因为我们如果要更新 `min`，必须在 amount 取 i，coin 取 coin[j] 时，存在之前一个最小硬币数 `dp[i-coin[j]]`，这样我们才能通过判断更新 min：`min = Math.min(min, dp[i-coin[j]])`。
+
+语言可能有些啰嗦，直接看算法如果能看懂的话就不用看我上面的一大堆话了 :)
+
+```java
+public int coinChange(int[] coins, int amount) {
+    int[] dp = new int[amount + 1];
+    for (int i = 1; i <= amount; i++) {
+        int min = Integer.MAX_VALUE;
+        for (int coin : coins) {
+            if (i >= coin && dp[i - coin] != -1) {
+                min = Math.min(min, dp[i - coin]);
+            }
+        }
+        dp[i] = min == Integer.MAX_VALUE ? -1 : min + 1;
+    }
+    return dp[amount];
+}
+```
 
 ## 342
 
