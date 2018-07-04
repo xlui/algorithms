@@ -94,6 +94,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [744. Find Smallest Letter Greater Than Target](#744)
 - [748. Shortest Completing Word](#748)
 - [783. Minimum Distance Between BST Nodes](#783)
+- [785. Is Graph Bipartite?](#785-is-graph-bipartite)
 - [788. Rotated Digits](#788)
 - [792. Number of Matching Subsequences](#792-number-of-matching-subsequences)
 - [806. Number of Lines To Write String](#806)
@@ -4803,6 +4804,41 @@ private static void inOrderTraversal(TreeNode root, List<Integer> list) {
         list.add(root.val);
         inOrderTraversal(root.right, list);
     }
+}
+```
+
+## [785 Is Graph Bipartite](https://leetcode.com/problems/is-graph-bipartite/description/)
+
+> 给定一个无向图，判断其是否为二分图。二分图：图可以被分为两个不相交的集合 `A,B`，图中所有的边均为一个节点在 A，另一个节点在 B。
+
+我们看二分图的定义，所有的边的两个节点都不在同一集合中。根据这个性质，我们可以将两个集合分别设置为黑色与白色，然后依次给节点染色，例如给当前节点染黑色，所有邻接节点染白色。如果最终成功给所有节点染色，则说明图是二分图；如果存在两个相邻节点（在同一条边上）的颜色相同，则说明图不是二分图。
+
+根据这个思路，我们可以用 DFS 或者 BFS 来完成。
+
+```java
+public boolean isBipartite(int[][] graph) {
+    // 0(not visited), 1(black), 2(white)
+    int[] visited = new int[graph.length];
+    for (int i = 0; i < graph.length; i++) {
+        if (graph[i].length != 0 && visited[i] == 0) {
+            visited[i] = 1;
+            Queue<Integer> queue = new LinkedList<>();
+            queue.offer(i);
+            while (!queue.isEmpty()) {
+                int current = queue.poll();
+                for (int c : graph[current]) {
+                    if (visited[c] == 0) {
+                        visited[c] = (visited[current] == 1) ? 2 : 1;
+                        queue.offer(c);
+                    } else {
+                        if (visited[c] == visited[current])
+                            return false;
+                    }
+                }
+            }
+        }
+    }
+    return true;
 }
 ```
 
