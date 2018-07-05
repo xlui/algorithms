@@ -16,6 +16,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [16. 3Sum Closest](#16-3sum-closest)
 - [24. Swap Nodes in Pairs](#24-swap-nodes-in-pairs)
 - [28. Implement strStr()](#28)
+- [33. Search in Rotated Sorted Array](#33-search-in-rotated-sorted-array)
 - [38. Count and Say](#38)
 - [39. Combination Sum](#39)
 - [41. First Missing Positive](#41-first-missing-positive)
@@ -493,6 +494,55 @@ public int strStr(String haystack, String needle) {
 ```
 
 打败了 100% 的 Java 提交者，没意义 :smile:
+
+## [33 Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array/description/)
+
+> 给定一个旋转后的升序数组，从中查找特定元素。要求时间复杂度 O(log _n_)
+
+既然要求 O(log _n_) 的时间复杂度，并且数组原本是升序的，我们就可以考虑采用二分查找来完成。
+
+设转折点为旋转后数组中升序结束的第一个元素，即数组中最小元素。下面我们考虑二分查找的三种情况：
+
+1. 转折点在 mid 之后
+1. 转折点在 mid 之前
+1. 转折点在 mid
+
+对于第一种情况，转折点在 mid 之后，则 mid 之前数组为升序，我们可以先判断 target 是否落入其中：如果在，则更新 `right = mid - 1`；如果不在，则更新 `left = mid + 1`。
+
+对于第二种情况，转折点在 mid 之前，则 mid 之后数组为升序，我们可以判断 target 是否落入其中：如果在，则更新 `left = mid + 1`；如果不在，则更新 `right = mid - 1`。
+
+对于第三种情况，mid 为转折点，如果我们在进行三种情况判断前先判断 mid 位置元素是否为 target，那么之后的判断与 mid 是否是转折点无关，我们可以将这种情况并入上面两种情况的一种。而如果转折点在 mid 之后（即第一种情况），我们可以肯定 `nums[mid] > nums[right]`，于是三种情况的区分就变成了上面的比较的结果。
+
+```java
+public int search(int[] nums, int target) {
+    if (nums.length == 0) {
+        return -1;
+    }
+    int left = 0, right = nums.length - 1;
+    while (left <= right) {
+        int mid = (left + right) / 2;
+        if (nums[mid] == target) {
+            return mid;
+        }
+        if (nums[mid] > nums[right]) {
+            // 转折点在 mid 右侧，或者 min 是转折点
+            if (nums[left] <= target && target < nums[mid]) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        } else {
+            // 转折点在 mid 左侧
+            if (nums[mid] < target && target <= nums[right]) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+    }
+    return -1;
+}
+```
 
 ## 38
 
