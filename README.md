@@ -38,6 +38,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [162. Find Peak Element](#162)
 - [165. Compare Version Numbers](#165)
 - [171. Excel Sheet Column Number](#171)
+- [182. Duplicate Emails](#182-duplicate-emails)
 - [193. Valid Phone Numbers](#193)
 - [196. Delete Duplicate Emails](#196)
 - [207. Course Schedule](#207)
@@ -1797,6 +1798,20 @@ public static int titleToNumber(String s) {
     return ret;
 }
 ```
+
+## [182 Duplicate Emails](https://leetcode.com/problems/duplicate-emails/description/)
+
+> SQL 问题，给定一个表 Person(Id, Email)，找出表中重复的 Email
+
+很简单，对 `Email` 进行分组然后利用 having 判断数量大于 1 即可：
+
+```sql
+select p.Email from Person as p
+group by p.Email
+having count(*) > 1;
+```
+
+此答案打败了 99.49% 的提交者 :smile:
 
 ## 193
 
