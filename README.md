@@ -19,6 +19,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [33. Search in Rotated Sorted Array](#33-search-in-rotated-sorted-array)
 - [38. Count and Say](#38)
 - [39. Combination Sum](#39)
+- [40. Combination Sum II](#40-combination-sum-ii)
 - [41. First Missing Positive](#41-first-missing-positive)
 - [49. Group Anagrams](#49-group-anagrams)
 - [62. Unique Paths](#62-unique-paths)
@@ -676,6 +677,35 @@ private static void dfs(List<List<Integer>> result, Deque<Integer> tmp, int[] ca
         tmp.add(candidates[i]);
         dfs(result, tmp, candidates, target - candidates[i], i);
         tmp.pollLast();
+    }
+}
+```
+
+## [40 Combination Sum II](https://leetcode.com/problems/combination-sum-ii/description/)
+
+> 给定一个候选值数组 candidates 和一个目标值 target，找出候选值数组中所有和为 target 的组合
+
+回溯可解。其中需要注意的是重复问题，对于 `candidates=[1,1,7], target=8` 的情况，结果只有一个 `[1,7]`，我们在回溯的时候需要手动跳过第二个 `1` 来避免重复。
+
+```java
+public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+    Arrays.sort(candidates);
+    List<List<Integer>> result = new LinkedList<>();
+    combination(candidates, 0, target, new LinkedList<>(), result);
+    return result;
+}
+
+private void combination(int[] candidates, int current, int target, Deque<Integer> path, List<List<Integer>> result) {
+    if (target < 0) return;
+    if (target == 0) {
+        result.add(new ArrayList<>(path));
+        return;
+    }
+    for (int i = current; i < candidates.length; i++) {
+        if (i > current && candidates[i] == candidates[i - 1]) continue;
+        path.offer(candidates[i]);
+        combination(candidates, i + 1, target - candidates[i], path, result);
+        path.pollLast();
     }
 }
 ```
