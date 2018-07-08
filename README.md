@@ -78,6 +78,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [515. Find Largest Value in Each Tree Row](#515)
 - [517. Super Washing Machines](#517)
 - [526. Beautiful Arrangement](#526)
+- [561. Array Partition I](#561-array-partition-i)
 - [563. Binary Tree Tilt](#563-binary-tree-tilt)
 - [565. Array Nesting](#565-array-nesting)
 - [581. Shortest Unsorted Continuous Subarray](#581-shortest-unsorted-continuous-subarray)
@@ -3907,6 +3908,47 @@ class Solution {
     int[] res = {1, 2, 3, 8, 10, 36, 41, 132, 250, 700, 750, 4010, 4237, 10680, 24679};
     return res[N-1];
     }
+}
+```
+
+## [561 Array Partition I](https://leetcode.com/problems/array-partition-i/description/)
+
+> 给定一个长度为 `2n` 的数组，将其分为 `n` 组：`(a1,b1), (a2,b2),...(an,bn)`，使得 `min(ai,bi)` 的总和最大。
+
+要使得 `min(ai,bi)` 尽可能大，则需要把数组中较大的数分为一组。即对于 `[1,4,3,2]`，只有将 `(3,4)` 分为一组，才能得到较大的一个数。而每次我们都需要将较大的数分为一组，所以我们可以将其排序，然后只取奇数位置的数即可：
+
+```java
+public int arrayPairSum(int[] nums) {
+    int n = nums.length >> 1;
+    int sum = 0;
+    Arrays.sort(nums);
+    for (int i = 0; i < n; i++) {
+        sum += nums[i << 1];
+    }
+    return sum;
+}
+```
+
+这种算法的时间复杂度为 `O(NlogN) + O(N) = O(NlogN)`，我们可以看出来时间主要花费在排序算法上了，而对于本体，数组中整数的范围已经给定，我们可以考虑使用桶排序来替换 `Arrays#sort` 的快排，这样整体的时间复杂度就下降为 O(N)，而空间复杂度上升为 O(N)。
+
+```java
+public int arrayPairSum(int[] nums) {
+    int[] bucket = new int[20001];
+    int sum = 0;
+    boolean odd = true;
+    for (int num : nums) {
+        bucket[num + 10000]++;
+    }
+    for (int i = 0; i < bucket.length; i++) {
+        while (bucket[i] > 0) {
+            if (odd) {
+                sum += i - 10000;
+            }
+            odd = !odd;
+            bucket[i]--;
+        }
+    }
+    return sum;
 }
 ```
 
