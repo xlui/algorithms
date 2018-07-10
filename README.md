@@ -41,6 +41,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [171. Excel Sheet Column Number](#171)
 - [182. Duplicate Emails](#182-duplicate-emails)
 - [193. Valid Phone Numbers](#193)
+- [194. Transpose File](#194-transpose-file)
 - [196. Delete Duplicate Emails](#196)
 - [207. Course Schedule](#207)
 - [215. Kth Largest Element in an Array](#215)
@@ -1870,6 +1871,47 @@ Your script should output the following valid phone numbers:
 
 ```bash
 grep -P '^(\d{3}-|\(\d{3}\)\ )\d{3}-\d{4}$' file.txt
+```
+
+## [194 Transpose File](https://leetcode.com/problems/transpose-file/description/)
+
+> 给定一个文件，转置其内容。
+
+将下面内容：
+
+```
+name age
+alice 21
+ryan 30
+```
+
+转置为：
+
+```
+name alice ryan
+age 21 30
+```
+
+看似因为不能使用编程语言比较复杂，实际上我们可以利用 awk 内部支持的语法来完成：
+
+```bash
+#!/bin/bash
+awk '
+{
+    for(i=1;i<=NF;i++) {
+        if (FNR == 1) {
+                t[i]=$i;
+        } else {
+                t[i] = t[i]" "$i
+        }
+    }
+}
+END {
+    for(i = 1; t[i]!=""; i++) {
+        print t[i]
+    }
+}
+' file.txt
 ```
 
 ## 196
