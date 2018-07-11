@@ -68,6 +68,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [400. Nth Digit](#400)
 - [406. Queue Reconstruction by Height](#406)
 - [413. Arithmetic Slices](#413)
+- [416. Partition Equal Subset Sum](#416-partition-equal-subset-sum)
 - [417. Pacific Atlantic Water Flow](#417)
 - [445. Add Two Numbers II](#445)
 - [447. Number of Boomerangs](#447-number-of-boomerangs)
@@ -3213,6 +3214,78 @@ public static int[][] reconstructQueue(int[][] people) {
         ret.add(person[1], person);
     }
     return ret.toArray(new int[people.length][]);
+}
+```
+
+## [416 Partition Equal Subset Sum](https://leetcode.com/problems/partition-equal-subset-sum/description/)
+
+> 给定一个只含正整数的非空数组，判断其是否可以被分为两个和相等的子数组。
+
+要分为两个和相等的子数组，首先我们可以排除原数组和为奇数的情况。因为和相等，我们可以将问题转化为找出数组中是否存在和为 `sum/2` 的子序列。
+
+找子序列的题在 leetcode 上也不少了，但是大都给定了子序列的长度，而这道题却没有，我们需要在原数组上找。首先浮现的解法就是回溯：
+
+```java
+public boolean canPartition(int[] nums) {
+    int sum = 0;
+    for (int num : nums) {
+        sum += num;
+    }
+    if ((sum & 0x1) == 1)
+        return false;
+    return helper(nums, nums.length - 1, sum >> 1);
+}
+
+private boolean helper(int[] nums, int i, int sum) {
+    if (sum == 0) return true;
+    else if (i < 0 || sum < 0 || sum < nums[i]) {
+        return false;
+    } else {
+        return helper(nums, i - 1, sum - nums[i]) || helper(nums, i - 1, sum);
+    }
+}
+```
+
+注意在 helper 函数最后我们同时计算了选择 `nums[i]` 与不选择的情况，从而涵盖了所有可能的情况。
+
+这种解法是没问题的，但是观察代码可以注意到，我们是从右往左开始回溯的，如果从左往右开始回溯会被下面的测试用例卡死：
+
+```
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,100]
+```
+
+通过自定义测试用例，上面的解法会被下面的测试用例判定超时：
+
+```
+[100,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+```
+
+上面的测试用例是 98 个 1 与 1 个 100，其和为 198，我们要找的子数组的和是 99，在边界情况下回溯超时。
+
+我们关注 `helper` 函数的最后一行，其实这就是一个 **0/1背包问题**，我们可以使用动态规划来解。我们使用一个 dp 数组，数组元素的值代表对应下标的和是否能在原数组出现。然后我们遍历 nums 数组，对于每一个 num，我们更新一遍 dp 数组：
+
+```java
+public boolean canPartition(int[] nums) {
+    int sum = 0;
+    for (int num : nums) {
+        sum += num;
+    }
+    if ((sum & 1) == 1) {
+        return false;
+    }
+    sum >>= 1;
+    boolean[] dp = new boolean[sum + 1];
+    Arrays.fill(dp, false);
+    dp[0] = true;
+    for (int num : nums) {
+        for (int i = sum; i > 0; i--) {
+            if (i >= num) {
+                // 0/1 背包，不选择 num 与选择 num 两种情况的结合
+                dp[i] = dp[i] || dp[i - num];
+            }
+        }
+    }
+    return dp[sum];
 }
 ```
 
