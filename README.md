@@ -22,6 +22,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [40. Combination Sum II](#40-combination-sum-ii)
 - [41. First Missing Positive](#41-first-missing-positive)
 - [49. Group Anagrams](#49-group-anagrams)
+- [50. Pow(x, n)](#50-Pow_x_n)
 - [62. Unique Paths](#62-unique-paths)
 - [76. Minimum Window Substring](#76-minimum-window-substring)
 - [83. Remove Duplicates from Sorted List](#83-remove-duplicates-from-sorted-list)
@@ -804,6 +805,66 @@ public List<List<String>> groupAnagrams(String[] strs) {
 
 1. 先排序，后比较
 1. 通过统计字符串中字符个数判断是否为相同但是颠倒字母的字符串
+
+## [50 Pow_x_n](https://leetcode.com/problems/powx-n/description/)
+
+> 设计函数 Pow(x, n)，其中 -100.0 < x < 100.x，-2^31 < n < 2^31 - 1
+
+x 的类型为 double，n 的类型为 int，首先我们要考虑的就是边界问题，比如 n 的取值为以下情况：
+
+```
+0, -1, 1, Integer.MAX_VALUE, Integer.MIN_VALUE
+```
+
+对于平方有一个概念：
+
+```
+       ╭ a^(n/2) * a^(n/2), n 为偶数
+a^n = -│ a^(n/2) * a^(n/2) * a, n 为正奇数
+       ╰ a^(n/2) * a^(n/2) * a^-1, n 为负奇数
+
+5 / 2 = 2, 
+-5 / 2 = -2.
+```
+
+公式本身很好理解，这个公式的意义在于我们可以递归完成求平方的操作。
+
+对于指数（n）为负数的情况，我们可以将其转化为正数求结果，然后再用 1 除以得到的结果即可。有一点需要注意的，Integer.MIN_VALUE = -2147483648，而 Integer.MAX_VALUE = 2147483647，也就是说：-Integer.MIN_VALUE = 2147483648 = Integer.MAX_VALUE + 1，产生了溢出，在这种处理方案下，我们只能将 Integer.MIN_VALUE 单独处理：
+
+```java
+public double myPow(double x, int n) {
+    if (n == 0) {
+        return 1;
+    }
+    if (n == 1) {
+        return x;
+    }
+    if (n > 0) {
+        return (n & 0x1) == 0 ? myPow(x * x, n / 2) : myPow(x * x, n / 2) * x;
+    }
+    if (n == Integer.MIN_VALUE) {
+        return 1 / myPow(x, Integer.MAX_VALUE) / x;
+    }
+    return 1 / myPow(x, -n);
+}
+```
+
+我们也可以不用考虑 Integer.MIN_VALUE 的问题，按照上面公式中**负奇数**进行计算即可：
+
+```java
+public double myPow(double x, int n) {
+    if (n == 0) {
+        return 1;
+    }
+    double result = myPow(x, n / 2);
+    result *= result;
+    if ((n & 0x1) == 0) {
+        return result;
+    } else {
+        return n > 0 ? result * x : result / x;
+    }
+}
+```
 
 ## [62 Unique Paths](https://leetcode.com/problems/unique-paths/description/)
 
