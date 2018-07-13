@@ -23,6 +23,7 @@ This project won't stop until it contains all the problems in leetcode.
 - [41. First Missing Positive](#41-first-missing-positive)
 - [49. Group Anagrams](#49-group-anagrams)
 - [50. Pow(x, n)](#50-Pow_x_n)
+- [53. Maximum Subarray](#53-maximum-subarray)
 - [62. Unique Paths](#62-unique-paths)
 - [76. Minimum Window Substring](#76-minimum-window-substring)
 - [83. Remove Duplicates from Sorted List](#83-remove-duplicates-from-sorted-list)
@@ -863,6 +864,34 @@ public double myPow(double x, int n) {
     } else {
         return n > 0 ? result * x : result / x;
     }
+}
+```
+
+## [53 Maximum Subarray](https://leetcode.com/problems/maximum-subarray/description/)
+
+> 给定一个整数数组，找出其和最大的连续子数组
+
+题目给出的示例表明了数组中可能存在负数，这道题在 《数据结构与算法 —— C语言描述》 的第一章被详细讨论过，一共有四种解法：
+
+1. 三重循环找出所有连续子数组中最大的和
+1. 对第一种解法的优化，只需要两重循环
+1. 分治：将序列分为左、右两个子序列，分别计算左、中、右的最大连续子序列和，最终取最大值
+1. 联机算法，扫描一遍数组，如果当前元素加到 tmpSum 上比 max 大，则更新 max，如果使得 tmpSum 小于 0，则设置 tmpSum 为 0，其他情况不操作。
+
+```java
+public int maxSubArray(int[] nums) {
+    int max = Integer.MIN_VALUE;
+    int sum = 0;
+    for (int i = 0; i < nums.length; i++) {
+        sum += nums[i];
+        if (max < sum) {
+            max = sum;
+        }
+        if (sum < 0) {
+            sum = 0;
+        }
+    }
+    return max;
 }
 ```
 
