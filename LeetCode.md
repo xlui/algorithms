@@ -3,6 +3,7 @@
 ## Table of Contents
 
 - [1. Two Sum](#1)
+- [2 Add Two Numbers](#2-add-two-numbers)
 - [4. Median of Two Sorted Arrays](#4-median-of-two-sorted-arrays)
 - [7. Reverse Integer](#7-reverse-integer)
 - [10. Regular Expression Matching](#10)
@@ -164,6 +165,88 @@ public int[] twoSum(int[] nums, int target) {
         res.put(nums[i], i);
     }
     return result;
+}
+```
+
+## [2 Add Two Numbers](https://leetcode.com/problems/add-two-numbers/description/)
+
+> 给定两个链表，每个链表代表一个数字，将其相加，结果以链表形式返回
+
+没有什么弯道道，直接求和即可。不过，需要考虑十分多的情况，这道题主要考察的也是代码的鲁棒性。
+
+```java
+private int carry = 0;
+
+public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    if (l1 == null) return l2;
+    if (l2 == null) return l1;
+    ListNode node = new ListNode(-1);
+    ListNode head = node;
+    while (l1 != null && l2 != null) {
+        int sum = l1.val + l2.val + carry;
+        if (sum >= 10) {
+            sum -= 10;
+            carry = 1;
+        } else {
+            carry = 0;
+        }
+        node.next = new ListNode(sum);
+        l1 = l1.next;
+        l2 = l2.next;
+        node = node.next;
+    }
+    if (l1 != null) node = helper(l1, node);
+    if (l2 != null) node = helper(l2, node);
+    if (carry != 0) node.next = new ListNode(1);
+    carry = 0;
+    return head.next;
+}
+
+private ListNode helper(ListNode l, ListNode node) {
+    while (l != null) {
+        int sum = l.val + carry;
+        if (sum >= 10) {
+            sum -= 10;
+            carry = 1;
+        } else {
+            carry = 0;
+        }
+        node.next = new ListNode(sum);
+        l = l.next;
+        node = node.next;
+    }
+    return node;
+}
+```
+
+另一种解法是将其转换为整数相加，然后再转换回链表。
+
+```java
+public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    ListNode head = new ListNode(-1);
+    ListNode node = head;
+    int sum = 0;
+
+    while (l1 != null || l2 != null) {
+        sum /= 10;
+        if (l1 != null) {
+            sum += l1.val;
+            l1 = l1.next;
+        }
+
+        if (l2 != null) {
+            sum += l2.val;
+            l2 = l2.next;
+        }
+
+        node.next = new ListNode(sum % 10);
+        node = node.next;
+    }
+
+    if (sum / 10 == 1) {
+        node.next = new ListNode(1);
+    }
+    return head.next;
 }
 ```
 
