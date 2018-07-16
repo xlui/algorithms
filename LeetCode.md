@@ -2,8 +2,9 @@
 
 ## Table of Contents
 
-- [1. Two Sum](#1)
-- [2 Add Two Numbers](#2-add-two-numbers)
+- [1. Two Sum](#1-two-sum)
+- [2. Add Two Numbers](#2-add-two-numbers)
+- [3. Longest Substring Without Repeating Characters](#3-longest-substring-without-repeating-characters)
 - [4. Median of Two Sorted Arrays](#4-median-of-two-sorted-arrays)
 - [7. Reverse Integer](#7-reverse-integer)
 - [10. Regular Expression Matching](#10)
@@ -106,24 +107,11 @@
 - [819. Most Common Word](#819)
 - [826. Most Profit Assigning Work](#826-most-profit-assigning-work)
 
-## 1
+## [1 Two Sum](https://leetcode.com/problems/two-sum/description/)
 
-Given an array of integers, return **indices** of the two numbers such that they add up to a specific target.
+> 给定一个整数数组，找出数组中和为 `target` 的两个元素的索引。
 
-You may assume that each input would have **exactly** one solution, and you may not use the same element twice.
-
-**Example:**
-
-```
-Given nums = [2, 7, 11, 15], target = 9,
-
-Because nums[0] + nums[1] = 2 + 7 = 9,
-return [0, 1].
-```
-
-**Solution:**
-
-找出数组中和为给定值的两个元素的下标。直接计算和肯定是低效的，可以转化一下问题：找出数组中是否存在元素 a 满足 `tagget-a = b ` 并且 b 也在数组中。
+直接计算和肯定是低效的，可以转化一下问题：找出数组中是否存在元素 a 满足 `tagget-a = b ` 并且 b 也在数组中。
 
 一种思路是直接利用 list：
 
@@ -250,9 +238,74 @@ public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
 }
 ```
 
+## [3 Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/description/)
+
+> 给定一个字符串 s，找出其中最长无重复字符的子串。
+
+最简单的做法就是暴力求解，遍历出 `s` 的所有子串，然后找出最长的，当然时间复杂度为 O(n³)。
+
+根据暴力解法我们可以找出一种优化的算法，即滑动窗口。扫描一遍原字符串，对于每一个字符，尝试找到从该字符开始的最长无重复子串，然后更新最大值：
+
+```java
+public int lengthOfLongestSubstring(String s) {
+    if (s == null || s.length() == 0) {
+        return 0;
+    }
+    int max = 0;
+    Set<Character> set = new HashSet<>();
+    for (int i = 0, len = s.length(); i < len; i++) {
+        int thisMax = 0, index = i;
+        while (index < len) {
+            char c = s.charAt(index);
+            if (!set.contains(c)) {
+                set.add(c);
+                index++;
+                thisMax++;
+            } else {
+                break;
+            }
+        }
+        max = Math.max(max, thisMax);
+        set.clear();
+    }
+    return max;
+}
+```
+
+同样我们注意到，滑动窗口解法还有优化的空间。我们可以只关注重复字符，扫描一遍数组，对于重复字符 c，第一次 c 出现之前的字符可以在发现第二个 c 的时候抛弃。即，对于 `abcdefchij`，当我们发现第二个 `c` 时，我们已经知道，第一个 `c` 以及之前的元素已经无用。由此我们得出第三种解法：
+
+```java
+public int lengthOfLongestSubstring(String s) {
+    if (s == null || s.length() == 0) {
+        return 0;
+    }
+    boolean[] exist = new boolean[128];
+    int max = 0, start = 0;
+    for (int i = 0, len = s.length(); i < len; i++) {
+        char c = s.charAt(i);
+        if (exist[c]) {
+            max = Math.max(max, i - start);
+            // 我们使用 start 来记录最长无重复子串的起始位置
+            // 每次当数组中出现一个重复字符 c 的时候，将之前一个重复的 c 之前的元素设为未出现（exist[i]=false）
+            // 例如，对于 abcbefc，当扫描到第二个 c 的时候，
+            for (int j = start; j < i; j++) {
+                if (s.charAt(j) == c) {
+                    start = j + 1;
+                    break;
+                }
+                exist[s.charAt(j)] = false;
+            }
+        } else {
+            exist[c] = true;
+        }
+    }
+    return Math.max(s.length() - start, max);
+}
+```
+
 ## [4 Median of Two Sorted Arrays](https://leetcode.com/problems/median-of-two-sorted-arrays/description/)
 
-给定两个有序数组，要求找出两个数组的中位数。即合并之后的中位数。要求时间复杂度为 O(log (m + n))。
+> 给定两个有序数组，要求找出两个数组的中位数。即合并之后的中位数。要求时间复杂度为 O(log (m + n))。
 
 我们可以使用归并来做，先将两个数组归并，然后求中位数：
 
