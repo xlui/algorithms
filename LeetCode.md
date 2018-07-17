@@ -106,6 +106,7 @@
 - [806. Number of Lines To Write String](#806)
 - [819. Most Common Word](#819)
 - [826. Most Profit Assigning Work](#826-most-profit-assigning-work)
+- [849. Maximize Distance to Closest Person](#849-maximize-distance-to-closest-person)
 
 ## [1 Two Sum](https://leetcode.com/problems/two-sum/description/)
 
@@ -5740,7 +5741,7 @@ public static String mostCommonWord(String paragraph, String[] banned) {
 
 ## [826 Most Profit Assigning Work](https://leetcode.com/problems/most-profit-assigning-work/description/)
 
-给定 difficulty 及与之对应的 profit 数组，另外有 worker 数组，worker 数组元素代表工作者能完成的最大难度，要求计算出最大利润。
+> 给定 difficulty 及与之对应的 profit 数组，另外有 worker 数组，worker 数组元素代表工作者能完成的最大难度，计算出最大利润。
 
 可以将 difficulty 与 profit 存为一对，然后对每个 worker 单独进行考虑：
 
@@ -5792,3 +5793,44 @@ public int maxProfitAssignment(int[] difficulty, int[] profit, int[] worker) {
 ```
 
 算法的时间复杂度为 O(NlogN + QlogQ)，N 为 difficulty 数组长度，Q 为 worker 数组长度。
+
+## [849 Maximize Distance to Closest Person](https://leetcode.com/problems/maximize-distance-to-closest-person/description/)
+
+> 给定一个 `seats` 数组，`1` 代表着有人坐着，`0` 代表着无人，找出其中一个位置，使得 Alex 坐下后离他最近的人与他的距离最大，返回最大距离。
+
+我们可以使用两个数组来辅助，`left[i]` 代表 `i` 左侧最近的人与之距离，`right[i]` 代表 `i` 右侧与之最近的人的距离，则 `min(left[i], right[i])` 代表离 `i` 最近的人的距离。
+
+```java
+public int maxDistToClosest(int[] seats) {
+    if (seats == null || seats.length < 2) {
+        return 0;
+    }
+    int len = seats.length;
+    int[] left = new int[len];
+    int[] right = new int[len];
+    Arrays.fill(left, Integer.MAX_VALUE);
+    Arrays.fill(right, Integer.MAX_VALUE);
+    for (int i = 0; i < len; i++) {
+        if (seats[i] == 1) {
+            left[i] = 0;
+        } else if (i > 0) {
+            left[i] = left[i - 1] + 1;
+        }
+    }
+    for (int i = len - 1; i >= 0; i--) {
+        if (seats[i] == 1) {
+            right[i] = 0;
+        } else if (i < len - 1) {
+            right[i] = right[i + 1] + 1;
+        }
+    }
+
+    int res = 0;
+    for (int i = 0; i < len; i++) {
+        if (seats[i] == 0) {
+            res = Math.max(res, Math.min(left[i], right[i]));
+        }
+    }
+    return res;
+}
+```
