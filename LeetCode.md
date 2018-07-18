@@ -72,6 +72,7 @@
 - [445. Add Two Numbers II](#445)
 - [447. Number of Boomerangs](#447-number-of-boomerangs)
 - [450. Delete Node in a BST](#450-delete-node-in-a-bst)
+- [453. Minimum Moves to Equal Array Elements](#453-minimum-moves-to-equal-array-elements)
 - [467. Unique Substrings in Wraparound String](#467)
 - [482. License Key Formatting](#482-license-key-formatting)
 - [492. Construct the Rectangle](#492)
@@ -3848,6 +3849,30 @@ public TreeNode deleteNode(TreeNode root, int key) {
         }
     }
     return root;
+}
+```
+
+## [453 Minimum Moves to Equal Array Elements](https://leetcode.com/problems/minimum-moves-to-equal-array-elements/description/)
+
+> 给定一个非空数组，每次移动可以将 `n-1` 个元素加一，找出使得所有元素相等的最少移动次数。
+
+每次移动 `n-1` 个元素，移动的含义是加一。我们反向思考，问题就变成了，每次将某一个元素减一，使得所有元素相等。这样，最终的移动步数就是 `sum(array) - n*min`。
+
+```java
+public int minMoves(int[] nums) {
+    if (nums == null || nums.length == 0) {
+        return 0;
+    }
+    int min = nums[0];
+    for (int num : nums) {
+        if (min > num)
+            min = num;
+    }
+    int result = 0;
+    for (int num : nums) {
+        result += num - min;
+    }
+    return result;
 }
 ```
 
