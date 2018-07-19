@@ -26,6 +26,7 @@
 - [83. Remove Duplicates from Sorted List](#83-remove-duplicates-from-sorted-list)
 - [100. Same Tree](#100)
 - [101. Symmetric Tree](#101)
+- [103. Binary Tree Zigzag Level Order Traversal](#103-binary-tree-zigzag-level-order-traversal)
 - [112. Path Sum](#112)
 - [114. Flatten Binary Tree to Linked List](#114)
 - [120. Triangle](#120)
@@ -1313,9 +1314,7 @@ public boolean isSameTree(TreeNode p, TreeNode q) {
 
 ## 101
 
-Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).
-
-For example, this binary tree `[1,2,2,3,4,4,3]` is symmetric:
+> 给定一个二叉树，判断它是否对称。例如，如下的二叉树是对称的：
 
 ```
     1
@@ -1325,7 +1324,7 @@ For example, this binary tree `[1,2,2,3,4,4,3]` is symmetric:
 3  4 4  3
 ```
 
-But the following `[1,2,2,null,3,null,3]` is not:
+> 但是如下的二叉树不是对称的：
 
 ```
     1
@@ -1335,9 +1334,7 @@ But the following `[1,2,2,null,3,null,3]` is not:
    3    3
 ```
 
-**Solution:**
-
-使用递归可以很明确的得出结果：
+此题使用递归可以很明确的得出结果：
 
 ```java
 public static boolean isSymmetrix(TreeNode root) {
@@ -1425,6 +1422,53 @@ public boolean isSymmetric(TreeNode root) {
 ```
 
 思路与双端队列相同。
+
+## [103 Binary Tree Zigzag Level Order Traversal](https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/description/)
+
+> 以 “之” 字形遍历二叉树。
+
+- 深度为 0 时从左到右遍历
+- 深度为 1 时从右到左遍历
+- 深度为 2 时从左到右遍历
+- 深度为 3 时从右到左遍历
+- 深度为 4 时从左到右遍历
+- 深度为 5 时从右到左遍历
+
+由此可以看出，我们只需要在层次遍历的基础上加上根据深度判断遍历顺序即可：
+
+```java
+public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+    List<List<Integer>> result = new ArrayList<>();
+    if (root == null) {
+        return result;
+    }
+    LinkedList<Integer> level = new LinkedList<>();
+    LinkedList<TreeNode> queue = new LinkedList<>();
+    queue.offer(root);
+    level.offer(0);
+    while (!queue.isEmpty()) {
+        TreeNode node = queue.poll();
+        int lev = level.poll();
+        if (result.size() <= lev) {
+            result.add(new ArrayList<>());
+        }
+        if (lev % 2 == 0) {
+            result.get(lev).add(node.val);
+        } else {
+            result.get(lev).add(0, node.val);
+        }
+        if (node.left != null) {
+            queue.offer(node.left);
+            level.offer(lev + 1);
+        }
+        if (node.right != null) {
+            queue.offer(node.right);
+            level.offer(lev + 1);
+        }
+    }
+    return result;
+}
+```
 
 ## 112
 
