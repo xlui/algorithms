@@ -7,7 +7,8 @@
 - [3. Longest Substring Without Repeating Characters](#3-longest-substring-without-repeating-characters)
 - [4. Median of Two Sorted Arrays](#4-median-of-two-sorted-arrays)
 - [7. Reverse Integer](#7-reverse-integer)
-- [10. Regular Expression Matching](#10)
+- [9. Palindrome Number](#9-palindrome-number)
+- [10. Regular Expression Matching](#10-regular-expression-matching)
 - [15. 3Sum](#15-3Sum)
 - [16. 3Sum Closest](#16-3sum-closest)
 - [17. Letter Combinations of a Phone Number](#17-letter-combinations-of-a-phone-number)
@@ -377,7 +378,41 @@ public int reverse1(int x) {
 }
 ```
 
-## 10
+## [9 Palindrome Number](https://leetcode.com/problems/palindrome-number/description/)
+
+> 确定给定的数字是否是回文数字
+
+将数字转换为字符串，然后判断即可：
+
+```java
+public boolean isPalindrome(int x) {
+    String string = String.valueOf(x);
+    int len = string.length();
+    // 判断回文数中间位置，也即后续循环停止条件。
+    // 对于数字个数为奇数的，循环停止位置就在中间的数字；
+    // 对于数字个数为偶数的，循环停止位置在 n/2
+    int middle = (len & 0x1) == 1 ? len / 2 + 1 : len / 2;
+    for (int i = 0; i < middle; i++) {
+        if (string.charAt(i) != string.charAt(len - 1 - i)) {
+            return false;
+        }
+    }
+    return true;
+}
+```
+
+另一种解法是将数字颠倒然后比较两个整数（字符串）是否相等。用 Python 的话只需要一句话：
+
+```py
+def isPalindrome(self, x):
+    """
+    :type x: int
+    :rtype: bool
+    """
+    return str(x) == str(x)[::-1]
+```
+
+## [10 Regular Expression Matching](https://leetcode.com/problems/regular-expression-matching/description/)
 
 Implement regular expression matching with support for `'.'` and `'*'`.
 
