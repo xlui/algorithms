@@ -19,6 +19,7 @@
 - [39. Combination Sum](#39)
 - [40. Combination Sum II](#40-combination-sum-ii)
 - [41. First Missing Positive](#41-first-missing-positive)
+- [48. Rotate Image](#48-rotate-image)
 - [49. Group Anagrams](#49-group-anagrams)
 - [50. Pow(x, n)](#50-Pow_x_n)
 - [53. Maximum Subarray](#53-maximum-subarray)
@@ -1010,10 +1011,87 @@ public List<List<String>> groupAnagrams(String[] strs) {
 
 完美！打败了 95% 的 Java 提交者。
 
-当然这种做法是取巧了，在数据量巨大的情况下，必然会发生碰撞从而导致结果出错。LeetCode  给出的两种正统做法如下：
+当然这种做法是取巧了，在数据量巨大的情况下，必然会发生碰撞从而导致结果出错。LeetCode 给出的两种正统做法如下：
 
 1. 先排序，后比较
 1. 通过统计字符串中字符个数判断是否为相同但是颠倒字母的字符串
+
+## [48 Rotate Image](https://leetcode.com/problems/rotate-image/description/)
+
+> 给定一个 n*n 的 2D 矩阵，将其按顺时针旋转 90 度。必须就地旋转，不能使用其他的 2D 矩阵。
+
+对于矩阵：
+
+```
+[
+  [1,2,3],
+  [4,5,6],
+  [7,8,9]
+]
+```
+
+旋转后的结果是：
+
+```
+[
+  [7,4,1],
+  [8,5,2],
+  [9,6,3]
+]
+```
+
+我们可以观察前后两个矩阵，如果我们对原矩阵进行 `swap(matrix[i][j], matrix[j][i])` 得到的中间矩阵为：
+
+```
+[
+  [1,4,7],
+  [2,5,8],
+  [3,6,9]
+]
+```
+
+可以看到与结果矩阵只差对中间矩阵每一行进行 `reverse` 操作即可。如果我们先将原矩阵 `reverse`:
+
+```
+[
+  [7,8,9],
+  [4,5,6],
+  [1,2,3]
+]
+```
+
+然后 `swap`:
+
+```
+[
+  [7,4,1],
+  [8,5,2],
+  [9,6,3]
+]
+```
+
+就可以直接得到顺时针旋转 90° 的矩阵：
+
+```java
+public void rotate(int[][] matrix) {
+    if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+        return;
+    }
+    int n = matrix.length;
+    for (int begin = 0, end = n - 1; begin < end; begin++, end--) {
+        int[] tmp = matrix[begin];
+        matrix[begin] = matrix[end];
+        matrix[end] = tmp;
+    }
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            int tmp = matrix[i][j];
+            matrix[i][j] = matrix[j][i];
+            matrix[j][i] = tmp;
+        }
+    }
+}
+```
 
 ## [50 Pow_x_n](https://leetcode.com/problems/powx-n/description/)
 
