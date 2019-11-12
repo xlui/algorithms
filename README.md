@@ -1,4 +1,4 @@
-# Dive Into Offer
+# Algorithms
 
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/xlui/dive-into-offer/blob/master/LICENSE)
 
@@ -6,8 +6,8 @@
 
 ## 目录
 
-1. [LeetCode](LeetCode.md)
-1. [剑指 Offer](SwordReferToOffer.md)
+1. [LeetCode](Explaination/LeetCode.md)
+1. [剑指 Offer](Explaination/SwordReferToOffer.md)
 
 ## License
 
